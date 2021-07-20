@@ -4,6 +4,9 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <string>
+#include <memory>
+
+#include "texture.h"
 
 class SDL
 {
@@ -37,9 +40,18 @@ class SDL
 	SDL* withWEBP() { imageFlags += IMG_INIT_WEBP; return this; }
 
 	bool hasFailed() { return failed; }
-	std::string& getLastErrorMessage() { return lastErrorMessage; }
+	const std::string& getLastErrorMessage() { return lastErrorMessage; }
 
 	bool createWindow(std::string title, int x, int y, int width, int height);
+
+	TexturePtr createTextureFromFile(const std::string& path);
+	bool renderTexture( TexturePtr texture, int x, int y, const SDL_Rect* clip = nullptr);
+	bool renderTexture( TexturePtr texture, const SDL_Rect* src = nullptr, const SDL_Rect* dest = nullptr);
+
+    void clear() { SDL_RenderClear(renderer); }
+	void present() { SDL_RenderPresent(renderer); }
 };
+
+using SDLptr= std::shared_ptr<SDL>;
 
 #endif // __SDL_H

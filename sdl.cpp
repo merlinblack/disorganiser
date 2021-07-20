@@ -31,6 +31,8 @@ bool SDL::init()
 
 void SDL::shutdown()
 {
+	SDL_DestroyRenderer(renderer);
+	renderer = nullptr;
 	window = nullptr;
 	failed = false;
 	initFlags = 0;
@@ -62,4 +64,26 @@ bool SDL::createWindow(std::string title, int x, int y, int width, int height)
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
 	return true;
+}
+
+TexturePtr SDL::createTextureFromFile(const std::string& path)
+{
+	TexturePtr newTexture = std::make_shared<Texture>();
+
+	if (newTexture->createFromFile(renderer, path))
+	{
+		return newTexture;
+	}
+
+	return nullptr;
+}
+
+bool SDL::renderTexture(TexturePtr texture, int x, int y, const SDL_Rect* clip)
+{
+	return texture->render(renderer, x, y, clip);
+}
+
+bool SDL::renderTexture(TexturePtr texture, const SDL_Rect* src, const SDL_Rect* dest)
+{
+	return texture->render(renderer, src, dest);
 }
