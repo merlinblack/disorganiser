@@ -9,24 +9,24 @@ bool SDL::init()
 	if (failed)
 	{
 		lastErrorMessage = SDL_GetError();
-		return false;
+		return true;
 	}
 
 	failed = !(IMG_Init(imageFlags) & imageFlags);
 	if (failed)
 	{
 		lastErrorMessage = IMG_GetError();
-		return false;
+		return true;
 	}
 
 	failed = (bool)TTF_Init();
 	if (failed)
 	{
 		lastErrorMessage = TTF_GetError();
-		return false;
+		return true;
 	}
 
-	return true;
+	return false;
 }
 
 void SDL::shutdown()
@@ -50,7 +50,7 @@ bool SDL::createWindow(std::string title, int x, int y, int width, int height)
 	{
 		failed = true;
 		lastErrorMessage = SDL_GetError();
-		return false;
+		return failed;
 	}
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
@@ -58,24 +58,21 @@ bool SDL::createWindow(std::string title, int x, int y, int width, int height)
 	{
 		failed = true;
 		lastErrorMessage = SDL_GetError();
-		return false;
+		return failed;
 	}
 
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
-	return true;
+	return failed;
 }
 
 TexturePtr SDL::createTextureFromFile(const std::string& path)
 {
 	TexturePtr newTexture = std::make_shared<Texture>();
 
-	if (newTexture->createFromFile(renderer, path))
-	{
-		return newTexture;
-	}
+	newTexture->createFromFile(renderer, path);
 
-	return nullptr;
+	return newTexture;
 }
 
 bool SDL::renderTexture(TexturePtr texture, int x, int y, const SDL_Rect* clip)
@@ -86,4 +83,14 @@ bool SDL::renderTexture(TexturePtr texture, int x, int y, const SDL_Rect* clip)
 bool SDL::renderTexture(TexturePtr texture, const SDL_Rect* src, const SDL_Rect* dest)
 {
 	return texture->render(renderer, src, dest);
+}
+
+TexturePtr SDL::renderTextQuick(FontPtr font, const std::string &text, SDL_Color color)
+{
+	return font->renderTextQuick(renderer, text, color);
+}
+
+TexturePtr SDL::renderTextNice(FontPtr font, const std::string &text, SDL_Color color)
+{
+	return font->renderTextQuick(renderer, text, color);
 }
