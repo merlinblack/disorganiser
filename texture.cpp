@@ -10,12 +10,19 @@ bool Texture::createFromFile(SDL_Renderer* renderer, const std::string& path)
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 	if (loadedSurface)
 	{
-		width = loadedSurface->w;
-		height = loadedSurface->h;
-		texture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+		createFromSurface(renderer, loadedSurface);
+		SDL_FreeSurface(loadedSurface);
 	}
 
-	return texture != nullptr;
+	return texture == nullptr;
+}
+
+bool Texture::createFromSurface(SDL_Renderer* renderer, SDL_Surface* surface)
+{
+	width = surface->w;
+	height = surface->h;
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
+	return texture == nullptr;
 }
 
 void Texture::free()

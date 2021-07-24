@@ -4,7 +4,11 @@
 ifeq ($(shell uname -s),Darwin)
 	LUA=lua5.3
 else
-	LUA=lua
+	ifeq ($(shell arch), armv7l)
+		LUA=lua5.3
+	else
+		LUA=lua
+	endif
 endif
 CXX = g++
 SDL_LIBS = -lSDL2 -lSDL2_image -lSDL2_ttf
@@ -13,7 +17,7 @@ CXXFLAGS += $(shell pkg-config --cflags $(LUA))
 LDFLAGS  += $(shell pkg-config   --libs $(LUA)) $(SDL_LIBS)
 EXECUTABLE := hub_commander
 INSTALLABLE_SCRIPTS := 
-SOURCES := main.cpp sdl.cpp texture.cpp
+SOURCES := main.cpp application.cpp sdl.cpp texture.cpp font.cpp timer.cpp
 OBJDIR := obj
 DEPDIR := deps
 INSTALLDIR := $(HOME)/oyunum
