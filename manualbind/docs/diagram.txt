@@ -1,0 +1,47 @@
+Lua Tables and objects used in Bindings.
+─────────────────────────────────────────
+
+ A table stored globally as "ClassName" represents each class. This table
+ has a __call metametod C function that creates a class instance.
+ This table also provides a __pairs metamethod for class introspection
+ and the __index field is set to the metatable.
+
+
+ A class instance looks like the following:
+
+ ┌─USERDATA────────────────┐            ┌─TABLE────────────────────┐
+ │ Class userdata.         │            │ Class metatable.         │
+ ├─────────────────────────┤            ├──────────────────────────┤
+ │ Represents an instance  │            │                          │
+ │                         │            │                          │
+ │                         │            │ __gc                     ├──> C function to destroy
+ │                         │            │                          │    or clean up class
+ │                         │            │                          │
+ │ shared meta table       ├─Metatable─>│ __upcast                 ├──> Optional C function to
+ │                         │            │                          │    cast class up to a base
+ │                         │            │                          │    class
+ │                         │            │ __properties             ├──┐
+ │                         │            │                          │  │
+ └─────────────────────────┘            │ user def members...      │  │
+                                        │                          │  │
+                                        └──────────────────────────┘  │
+ ┌─TABLE───────────────────┐                                          │
+ │ Table of properties     │<─────────────────────────────────────────┘
+ ├─────────────────────────┤
+ │                         │     ┌─TABLE──────┐
+ │ Each entry is a table   ├────>│ get        ├──> C function to get the prop
+ └─────────────────────────┘     │ set        ├──> Optional C function to set the prop
+                                 └────────────┘
+
+ LUA_REGISTRY ───┐
+                 │  
+ ┌─TABLE───────────────────────┐       ┌─TABLE────────────────────────┐
+ │ Per instance extra elements │       │ extra elements               │
+ ├─────────────────────────────┤       ├──────────────────────────────┤
+ │ class userdata              ├──────>│ Created on first use.        │
+ │                             │       └──────────────────────────────┘
+ │ created on first use        │
+ └─────────────────────────────┘
+
+Depending on the binding type, the userdata memory will contain either a
+shared pointer to the C++ class instance, or the value itself (POD).
