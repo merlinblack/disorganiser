@@ -1,6 +1,7 @@
 #include "application.h"
 #include "sdl.h"
 #include "timer.h"
+#include "rectangle.h"
 #include <stdio.h>
 #include <memory>
 #include <sstream>
@@ -12,6 +13,7 @@ Application::Application() :
 {
 	sdl = std::make_shared<SDL>();
 	timer = std::make_shared<Timer>();
+	renderList = std::make_shared<RenderList>();
 }
 
 Application::~Application()
@@ -61,10 +63,18 @@ bool Application::init(bool onRaspberry_ = false)
 
 	timer->withInterval(1000)->start();
 
-    font = std::make_shared<Font>("media/font.ttf", 16);
-    background = sdl->createTextureFromFile("media/picture.jpg");
+    font = std::make_shared<Font>("media/font.ttf", 32);
+
+    TexturePtr background = sdl->createTextureFromFile("media/picture.jpg");
+	renderList->add(std::make_shared<Rectangle>(background, SDL_Rect({0,0,800,480})));
+
     SDL_Color yellow = {0xFF, 0xFF, 0x00, 0xFF};
-    title = sdl->renderTextNice(font, "Bu Türkçe karakterler için bir testtir.", yellow);
+    TexturePtr title = sdl->renderTextNice(font, "Bu Türkçe karakterler için bir testtir.", yellow);
+	renderList->add(std::make_shared<Rectangle>(title, 32, 400));
+
+    TexturePtr clockTexture = sdl->renderTextNice(font, "Clock", yellow);
+	clock = std::make_shared<Rectangle>(clockTexture, 32, 350);
+	renderList->add(clock);
 
 	return false;
 }
@@ -72,8 +82,6 @@ bool Application::init(bool onRaspberry_ = false)
 void Application::shutdown()
 {
 	timer->stop();
-	background = nullptr;
-	title = nullptr;
 	font = nullptr;
 	sdl->shutdown();
 }
@@ -106,21 +114,17 @@ void Application::handleTimer(const SDL_Event& event)
 void Application::render()
 {
     static Uint32 prevTicks = 0;
-    SDL_Color black = {0x00, 0x00, 0x00, 0xFF};
     SDL_Color slategray = {0x70, 0x80, 0x90, 0xFF};
 
     std::stringstream ss;
     Uint32 ticks = SDL_GetTicks();
     ss << "Ticks: " << ticks << " diff: " << ticks - prevTicks;
     prevTicks = ticks;
-    TexturePtr clock = sdl->renderTextNice(font, ss.str().c_str(), slategray);
+    TexturePtr clockTexture = sdl->renderTextNice(font, ss.str().c_str(), slategray);
+	clock->setTexture(clockTexture);
 
     sdl->clear();
-
-    sdl->renderTexture(background);
-    sdl->renderTexture(title, 32, 400);
-    sdl->renderTexture(clock, 50, 150);
-
+	renderList->render(sdl->getRenderer());
     sdl->present();
 
     shouldRender = false;

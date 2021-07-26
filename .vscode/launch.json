@@ -5,13 +5,13 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Launch",
+			"name": "(gdb) Launch",
 			"type": "cppdbg",
 			"request": "launch",
-			"program": "${workspaceFolder}/hub_commander",
+			"program": "${command:cmake.launchTargetPath}",
 			"args": [],
 			"stopAtEntry": false,
-			"cwd": "${fileDirname}",
+			"cwd": "${command:cmake.getLaunchTargetDirectory}",
 			"environment": [],
 			"externalConsole": false,
 			"MIMode": "gdb",
@@ -21,9 +21,7 @@
 					"text": "-enable-pretty-printing",
 					"ignoreFailures": true
 				}
-			],
-			"preLaunchTask": "Make project",
-			"miDebuggerPath": "/usr/bin/gdb"
+			]
 		}
 	]
 }

@@ -1,0 +1,68 @@
+#include "rectangle.h"
+
+Rectangle::Rectangle(SDL_Color color, bool fill, SDL_Rect dest) :
+	color(color),
+	fill(fill),
+	destination(dest),
+	source({0,0,0,0})
+{
+}
+
+Rectangle::Rectangle(TexturePtr texture, int x, int y) :
+	texture(texture),
+	source({0,0,0,0})
+{
+	destination = {x, y, 0, 0};
+}
+
+Rectangle::Rectangle(TexturePtr texture, SDL_Rect dest, SDL_Rect src) :
+	texture(texture),
+	destination(dest),
+	source(src)
+{
+	if (destination.w && !source.w)
+	{
+		source = {0, 0, texture->getWidth(), texture->getHeight()};
+	}
+}
+
+void Rectangle::render(SDL_Renderer* renderer)
+{
+	if (texture != nullptr)
+	{
+		renderTexture(renderer);
+	}
+	else
+	{
+		renderRect(renderer);
+	}
+}
+
+void Rectangle::renderTexture(SDL_Renderer* renderer)
+{
+	if (source.w)
+	{
+		texture->render(renderer, &source, &destination);
+	}
+	else if (destination.w)
+	{
+		texture->render(renderer, &destination, &source);
+	}
+	else
+	{
+		texture->render(renderer, destination.x, destination.y);
+	}
+}
+
+void Rectangle::renderRect(SDL_Renderer* renderer)
+{
+	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+	if (fill) 
+	{
+		SDL_RenderFillRect(renderer, &destination);
+	}
+	else
+	{
+		SDL_RenderDrawRect(renderer, &destination);
+	}
+}
