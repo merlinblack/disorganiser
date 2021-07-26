@@ -5,6 +5,9 @@
 #include "font.h"
 #include "texture.h"
 #include "timer.h"
+#include "renderlist.h"
+#include "rectangle.h"
+#include "script_manager.h"
 #include <memory>
 
 class Application
@@ -17,8 +20,8 @@ class Application
 	TimerPtr timer;
 
 	FontPtr font;
-	TexturePtr background;
-	TexturePtr title;
+	RenderListPtr renderList;
+	RectanglePtr clock;
 
 	public:
 	Application();

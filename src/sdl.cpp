@@ -62,6 +62,7 @@ bool SDL::createWindow(std::string title, int x, int y, int width, int height)
 	}
 
 	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
 	return failed;
 }

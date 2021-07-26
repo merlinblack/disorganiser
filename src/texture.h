@@ -19,6 +19,9 @@ class Texture
 	void free();
 	bool render(SDL_Renderer* renderer, int x, int y, const SDL_Rect* clip = nullptr);
 	bool render(SDL_Renderer* renderer, const SDL_Rect* src = nullptr, const SDL_Rect* dest = nullptr);
+
+	int getWidth() { return width; }
+	int getHeight() { return height; }
 };
 
 using TexturePtr = std::shared_ptr<Texture>;
