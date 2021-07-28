@@ -10,6 +10,10 @@
 #include "script_manager.h"
 #include <memory>
 
+class Application;
+
+using ApplicationPtr = std::shared_ptr<Application>;
+
 class Application
 {
 	SDLptr sdl;
@@ -41,8 +45,17 @@ class Application
 	void render();
 	void dispatchEvent(const SDL_Event& event);
 	void eventLoop();
-};
 
-using ApplicationPtr = std::shared_ptr<Application>;
+	/**
+	 * Allow Lua to get/set these
+	 */
+	bool getShouldStop() { return shouldStop; }
+	void setShouldStop(bool val) { shouldStop = val; }
+	bool getShouldRender() { return shouldRender; }
+	void setShouldRender(bool val) { shouldRender = val; }
+	int getTicks() { return SDL_GetTicks(); }
+
+	void initLuaApp(ApplicationPtr app);
+};
 
 #endif // __APPLICATION_H 

@@ -90,6 +90,8 @@ int main(int argc, char *argv[])
 
     ApplicationPtr app = std::make_shared<Application>();
 
+    app->initLuaApp(app);
+
     app->init(onRaspberry);
 
     app->eventLoop();
