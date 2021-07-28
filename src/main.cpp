@@ -90,25 +90,9 @@ int main(int argc, char *argv[])
 
     ApplicationPtr app = std::make_shared<Application>();
 
-    //app->init(onRaspberry);
+    app->init(onRaspberry);
 
-    //app->eventLoop();
+    app->eventLoop();
 
-    ScriptManagerPtr scriptManager = std::make_shared<ScriptManager>();
-
-    scriptManager->loadFromString("for i=1,10 do x=i coroutine.yield(i) end");
-    scriptManager->loadFromString("print('Hello')");
-    scriptManager->resume();
-    scriptManager->resume();
-    scriptManager->resume();
-    scriptManager->resume();
-    scriptManager->loadFromString("print('Hello', 'There', 2021-1977, x)");
-    scriptManager->resume();
-    scriptManager->resume();
-    scriptManager->resume();
-    scriptManager->resume();
-    scriptManager->resume();
-    scriptManager->resume();
-   
     return 0;
 }

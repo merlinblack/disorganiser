@@ -18,6 +18,7 @@ class Application
 	bool shouldRender;
 
 	TimerPtr timer;
+	ScriptManagerPtr scripts;
 
 	FontPtr font;
 	RenderListPtr renderList;

@@ -2,9 +2,12 @@
 #include "sdl.h"
 #include "timer.h"
 #include "rectangle.h"
+#include "LuaRef.h"
 #include <stdio.h>
 #include <memory>
 #include <sstream>
+
+using ManualBind::LuaRef;
 
 Application::Application() : 
 	onRaspberry(false),
@@ -13,6 +16,7 @@ Application::Application() :
 {
 	sdl = std::make_shared<SDL>();
 	timer = std::make_shared<Timer>();
+	scripts = std::make_shared<ScriptManager>();
 	renderList = std::make_shared<RenderList>();
 }
 
@@ -27,14 +31,14 @@ bool Application::init(bool onRaspberry_ = false)
 
 	bool failed;
 	if (onRaspberry)
-        sdl->withFullscreenDesktop();
+		sdl->withFullscreenDesktop();
 
-    failed = sdl
-    	->withVideo()
-    	->withTimer()
-    	->withJPG()
-    	->withPNG()
-    	->init();
+	failed = sdl
+		->withVideo()
+		->withTimer()
+		->withJPG()
+		->withPNG()
+		->init();
 
 	if (failed)
 	{
@@ -43,12 +47,12 @@ bool Application::init(bool onRaspberry_ = false)
 	}
 
 	failed = sdl->createWindow(
-        "Hub Commander", 
-        SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED,
-        800,
-        480
-        );
+		"Hub Commander",
+		SDL_WINDOWPOS_UNDEFINED,
+		SDL_WINDOWPOS_UNDEFINED,
+		800,
+		480
+		);
 
 	if (failed)
 	{
@@ -63,16 +67,22 @@ bool Application::init(bool onRaspberry_ = false)
 
 	timer->withInterval(1000)->start();
 
-    font = std::make_shared<Font>("media/font.ttf", 32);
+	if (scripts->loadFromFile("scripts/main.lua"))
+	{
+		shouldStop = true;
+		return true;
+	}
 
-    TexturePtr background = sdl->createTextureFromFile("media/picture.jpg");
+	font = std::make_shared<Font>("media/font.ttf", 32);
+
+	TexturePtr background = sdl->createTextureFromFile("media/picture.png");
 	renderList->add(std::make_shared<Rectangle>(background, SDL_Rect({0,0,800,480})));
 
-    SDL_Color yellow = {0xFF, 0xFF, 0x00, 0xFF};
-    TexturePtr title = sdl->renderTextNice(font, "Bu Türkçe karakterler için bir testtir.", yellow);
-	renderList->add(std::make_shared<Rectangle>(title, 32, 400));
+	SDL_Color yellow = {0xFF, 0xFF, 0x00, 0xFF};
+	TexturePtr title = sdl->renderTextNice(font, "Bu Türkçe karakterler için bir testtir.", yellow);
+	renderList->add(std::make_shared<Rectangle>(title, 32, 300));
 
-    TexturePtr clockTexture = sdl->renderTextNice(font, "Clock", yellow);
+	TexturePtr clockTexture = sdl->renderTextNice(font, "Clock", yellow);
 	clock = std::make_shared<Rectangle>(clockTexture, 32, 350);
 	renderList->add(clock);
 
@@ -81,6 +91,7 @@ bool Application::init(bool onRaspberry_ = false)
 
 void Application::shutdown()
 {
+	scripts->shutdown();
 	timer->stop();
 	font = nullptr;
 	sdl->shutdown();
@@ -88,46 +99,85 @@ void Application::shutdown()
 
 void Application::handleKeyUp(const SDL_Event& event)
 {
-    switch (event.key.keysym.sym)
-    {
-        case SDLK_ESCAPE:
-            shouldStop = true;
-            break;
-    }
+	switch (event.key.keysym.sym)
+	{
+		case SDLK_ESCAPE:
+			shouldStop = true;
+			break;
+		default:
+			LuaRef keyUp = scripts->getGlobal("handleKeyUp");
+			if (keyUp.isFunction())
+			{
+				keyUp(event.key.keysym.sym);
+			}
+			break;
+	}
 }
 
 void Application::handleMouse(const SDL_Event& event)
 {
-
+	LuaRef mouse = scripts->getGlobal("handleMouse");
+	if (mouse.isFunction())
+	{
+		// TODO: marshal mouse event structs into suitable data for Lua
+		switch (event.type) {
+			case SDL_MOUSEBUTTONDOWN:
+			case SDL_MOUSEBUTTONUP:
+				mouse(
+					event.type,
+					event.button.x,
+					event.button.y,
+					event.button.button,
+					event.button.state,
+					event.button.clicks
+				);
+				break;
+		}
+	}
 }
 
 void Application::handleTouch(const SDL_Event& event)
 {
-    shouldStop = true;
+	LuaRef touch = scripts->getGlobal("handleTouch");
+	if (touch.isFunction())
+	{
+		touch(
+			event.type,
+			event.tfinger.x,
+			event.tfinger.y,
+			event.tfinger.dx,
+			event.tfinger.dy
+		);
+	}
 }
 
 void Application::handleTimer(const SDL_Event& event)
 {
-    shouldRender = true;
+	/**
+	 * Run next task coroutine
+	 */
+	scripts->resume();
+
+	shouldRender = true;
 }
 
 void Application::render()
 {
-    static Uint32 prevTicks = 0;
-    SDL_Color slategray = {0x70, 0x80, 0x90, 0xFF};
+	static Uint32 prevTicks = 0;
+	SDL_Color slategray = {0x70, 0x80, 0x90, 0xFF};
 
-    std::stringstream ss;
-    Uint32 ticks = SDL_GetTicks();
-    ss << "Ticks: " << ticks << " diff: " << ticks - prevTicks;
-    prevTicks = ticks;
-    TexturePtr clockTexture = sdl->renderTextNice(font, ss.str().c_str(), slategray);
+	std::stringstream ss;
+	Uint32 ticks = SDL_GetTicks();
+	ss << "Ticks: " << ticks << " diff: " << ticks - prevTicks;
+	prevTicks = ticks;
+	TexturePtr clockTexture = sdl->renderTextNice(font, ss.str().c_str(), slategray);
 	clock->setTexture(clockTexture);
 
-    sdl->clear();
+	sdl->clear();
 	renderList->render(sdl->getRenderer());
-    sdl->present();
+	sdl->present();
 
-    shouldRender = false;
+	shouldRender = false;
 }
 
 void Application::dispatchEvent(const SDL_Event& event)
@@ -137,6 +187,12 @@ void Application::dispatchEvent(const SDL_Event& event)
 	case SDL_QUIT:
 		shouldStop = true;
 		break;
+	/*
+	TODO: figure out what window event we should trigger rendering on, after being minimized.
+	case SDL_WINDOWEVENT_SHOWN:
+		shouldRender = true;
+		break;
+	*/
 	case SDL_KEYUP:
 		handleKeyUp(event);
 		break;
@@ -169,8 +225,15 @@ void Application::eventLoop()
 		if (SDL_WaitEvent(&event))
 		{
 			do 
-			{			
-				dispatchEvent(event);
+			{
+				try 
+				{
+					dispatchEvent(event);
+				}
+				catch (ManualBind::LuaException& mooned)
+				{
+					SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, mooned.what());
+				}
 			} 
 			while (SDL_PollEvent(&event));
 

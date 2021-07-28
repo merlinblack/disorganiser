@@ -9,17 +9,43 @@ ScriptManager::ScriptManager()
 {
 	main = luaL_newstate();
 	luaL_openlibs(main);
-	coroutineIter = coroutines.begin();
 }
 
 ScriptManager::~ScriptManager()
 {
-	lua_close(main);
+	shutdown();
+}
+
+void ScriptManager::shutdown()
+{
+	if (main)
+	{
+		lua_close(main);
+		main = nullptr;
+	}
+}
+
+ManualBind::LuaRef ScriptManager::getGlobal(const std::string& name)
+{
+	return ManualBind::LuaRef::getGlobal(main, name.c_str());
 }
 
 bool ScriptManager::loadFromString(const std::string& code)
 {
 	if (luaL_loadstring(main, code.c_str()))
+	{
+		std::string error(lua_tostring(main, -1));
+
+		SDL_Log(error.c_str());
+		return true;
+	}
+
+	return threadFromStack();
+}
+
+bool ScriptManager::loadFromFile(const std::string& path)
+{
+	if (luaL_loadfile(main, path.c_str()))
 	{
 		std::string error(lua_tostring(main, -1));
 
