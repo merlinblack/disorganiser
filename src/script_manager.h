@@ -32,6 +32,7 @@ class ScriptManager
 
 	void reportStack(lua_State *thread, bool errorFlag);
 
+	lua_State* getMainLuaState() { return main; }
 	ManualBind::LuaRef getGlobal(const std::string &name);
 };
 

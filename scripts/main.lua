@@ -33,7 +33,7 @@ function handleTouch(type, x, y, dx, dy)
 		print(dx,dy)
 
 		if type == EVENT_TOUCH_UP and isInside(x*800,y*480,ExitBtn) then
-			print('Should exit')
+			app.shouldStop = true
 		end
 	end
 end
@@ -46,11 +46,12 @@ function handleMouse(type, x, y, button, state, clicks)
 	print(clicks)
 
 	if (type == EVENT_MOUSE_BUTTONUP and isInside(x,y,ExitBtn)) then
-		print('Should exit')
+		app.shouldStop = true
 	end
 end
 
 function handleKeyUp()
+	print(app.ticks)
     testExceptions()
 end
 

@@ -1,4 +1,5 @@
 #include "application.h"
+#include "lb_application.h"
 #include "sdl.h"
 #include "timer.h"
 #include "rectangle.h"
@@ -87,6 +88,13 @@ bool Application::init(bool onRaspberry_ = false)
 	renderList->add(clock);
 
 	return false;
+}
+
+void Application::initLuaApp(ApplicationPtr app)
+{
+	lua_State* L = scripts->getMainLuaState();
+	ApplicationBinding::push(L, app);
+	lua_setglobal(L, "app");
 }
 
 void Application::shutdown()

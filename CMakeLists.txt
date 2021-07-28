@@ -11,10 +11,12 @@ find_package( SDL2 REQUIRED )
 find_package( SDL2_image REQUIRED )
 find_package( SDL2_ttf REQUIRED )
 
-file(GLOB SRCS src/*.cpp manualbind/src/*.cpp)
-file(GLOB HDRS src/*.h manualbind/src/*.h)
+file(GLOB SRCS src/*.cpp src/bindings/*.cpp manualbind/src/*.cpp)
+file(GLOB HDRS src/*.h src/bindings/*.h manualbind/src/*.h)
 
 include_directories(
+    src
+    src/bindings
     manualbind/src
     ${Lua_INCLUDE_DIRS}
     )

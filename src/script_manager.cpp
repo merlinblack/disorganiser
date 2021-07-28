@@ -1,4 +1,5 @@
 #include "script_manager.h"
+#include "bindings.h"
 #include <lua.hpp>
 #include <SDL2/SDL.h>
 #include <sstream>
@@ -9,6 +10,7 @@ ScriptManager::ScriptManager()
 {
 	main = luaL_newstate();
 	luaL_openlibs(main);
+	registerAllBindings(main);
 }
 
 ScriptManager::~ScriptManager()
