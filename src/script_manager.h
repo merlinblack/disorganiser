@@ -23,6 +23,7 @@ class ScriptManager
 	public:
 	ScriptManager();
 	~ScriptManager();
+	void shutdown();
 	bool loadFromFile(const std::string& path);
 	bool loadFromString(const std::string& code);
 
@@ -31,7 +32,7 @@ class ScriptManager
 
 	void reportStack(lua_State *thread, bool errorFlag);
 
-	ManualBind::LuaRef &getGlobal(const std::string &name);
+	ManualBind::LuaRef getGlobal(const std::string &name);
 };
 
 using ScriptManagerPtr = std::shared_ptr<ScriptManager>;
