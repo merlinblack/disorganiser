@@ -54,6 +54,9 @@ class Application
 	bool getShouldRender() { return shouldRender; }
 	void setShouldRender(bool val) { shouldRender = val; }
 	int getTicks() { return SDL_GetTicks(); }
+	RenderListPtr getRenderList() { return renderList; }
+	void setRenderList(RenderListPtr newList) { renderList = newList; }
+	const SDL_Renderer* getRenderer() { return sdl->getRenderer(); }
 
 	void initLuaApp(ApplicationPtr app);
 };

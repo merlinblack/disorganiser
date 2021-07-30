@@ -25,8 +25,8 @@ class Font
 	int lineHeight() { return TTF_FontLineSkip(font); }
 
 	bool sizeText(const std::string& text, int* width, int *height);
-	TexturePtr renderTextQuick(SDL_Renderer* renderer, const std::string& text, SDL_Color color);
-	TexturePtr renderTextNice(SDL_Renderer* renderer, const std::string& text, SDL_Color color);
+	TexturePtr renderTextQuick(const SDL_Renderer* renderer, const std::string& text, SDL_Color color);
+	TexturePtr renderTextNice(const SDL_Renderer* renderer, const std::string& text, SDL_Color color);
 };
 
 using FontPtr = std::shared_ptr<Font>;

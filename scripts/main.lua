@@ -15,7 +15,7 @@ EventNames[EVENT_MOUSE_BUTTONUP] = 'mouse button up'
 EventNames[EVENT_MOUSE_MOTION] = 'mouse button motion'
 EventNames[EVENT_MOUSE_WHEEL] = 'mouse button wheel'
 
-ExitBtn = { x1 = 580, y1 = 370, x2 = 740, y2 = 470 }
+ExitBtn = { x1 = 593, y1 = 387, x2 = 734, y2 = 454 }
 
 function isInside( x, y, rect)
 	if x < rect.x1 then return false end
@@ -55,4 +55,12 @@ function handleKeyUp()
     testExceptions()
 end
 
+c = Color(1,2,3,4)
+
+c.a = 5
+
+print(c)
+
 print( 'main.lua loaded.')
+print( app.renderer)
+print( app.renderList)

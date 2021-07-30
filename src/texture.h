@@ -5,6 +5,10 @@
 #include <string>
 #include <memory>
 
+class Texture;
+
+using TexturePtr = std::shared_ptr<Texture>;
+
 class Texture
 {
 	SDL_Texture* texture;
@@ -14,16 +18,14 @@ class Texture
 	public:
 	~Texture() { free(); }
 
-	bool createFromFile(SDL_Renderer* renderer, const std::string& path);
-	bool createFromSurface(SDL_Renderer* renderer, SDL_Surface* surface);
+	static TexturePtr createFromFile(const SDL_Renderer* renderer, const std::string& path);
+	bool createFromSurface(const SDL_Renderer* renderer, SDL_Surface* surface);
 	void free();
-	bool render(SDL_Renderer* renderer, int x, int y, const SDL_Rect* clip = nullptr);
-	bool render(SDL_Renderer* renderer, const SDL_Rect* src = nullptr, const SDL_Rect* dest = nullptr);
+	bool render(const SDL_Renderer* renderer, int x, int y, const SDL_Rect* clip = nullptr);
+	bool render(const SDL_Renderer* renderer, const SDL_Rect* src = nullptr, const SDL_Rect* dest = nullptr);
 
 	int getWidth() { return width; }
 	int getHeight() { return height; }
 };
-
-using TexturePtr = std::shared_ptr<Texture>;
 
 #endif // __TEXTURE_H
