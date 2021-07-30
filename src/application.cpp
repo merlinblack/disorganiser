@@ -61,6 +61,9 @@ bool Application::init(bool onRaspberry_ = false)
 		return true;
 	}
 
+	sdl->clear();
+	sdl->present();
+
 	if (onRaspberry)
 	{
 		SDL_ShowCursor(SDL_DISABLE);
@@ -74,17 +77,19 @@ bool Application::init(bool onRaspberry_ = false)
 		return true;
 	}
 
-	font = std::make_shared<Font>("media/font.ttf", 32);
+	font = std::make_shared<Font>("media/font.ttf", 26);
 
-	TexturePtr background = sdl->createTextureFromFile("media/picture.png");
+	const SDL_Renderer* renderer = sdl->getRenderer();
+
+	TexturePtr background = Texture::createFromFile(renderer, "media/test.png");
 	renderList->add(std::make_shared<Rectangle>(background, SDL_Rect({0,0,800,480})));
 
-	SDL_Color yellow = {0xFF, 0xFF, 0x00, 0xFF};
-	TexturePtr title = sdl->renderTextNice(font, "Bu Türkçe karakterler için bir testtir.", yellow);
-	renderList->add(std::make_shared<Rectangle>(title, 32, 300));
+	SDL_Color red = {0xFF, 0x00, 0x00, 0xFF};
+	TexturePtr title = font->renderTextNice(renderer, "Bu Türkçe karakterler için bir testtir.", red);
+	renderList->add(std::make_shared<Rectangle>(title, 164, 164));
 
-	TexturePtr clockTexture = sdl->renderTextNice(font, "Clock", yellow);
-	clock = std::make_shared<Rectangle>(clockTexture, 32, 350);
+	TexturePtr clockTexture = font->renderTextNice(renderer, "Clock", red);
+	clock = std::make_shared<Rectangle>(clockTexture, 260, 8);
 	renderList->add(clock);
 
 	return false;
@@ -127,7 +132,6 @@ void Application::handleMouse(const SDL_Event& event)
 	LuaRef mouse = scripts->getGlobal("handleMouse");
 	if (mouse.isFunction())
 	{
-		// TODO: marshal mouse event structs into suitable data for Lua
 		switch (event.type) {
 			case SDL_MOUSEBUTTONDOWN:
 			case SDL_MOUSEBUTTONUP:
@@ -176,9 +180,9 @@ void Application::render()
 
 	std::stringstream ss;
 	Uint32 ticks = SDL_GetTicks();
-	ss << "Ticks: " << ticks << " diff: " << ticks - prevTicks;
+	ss << ticks << " diff: " << ticks - prevTicks;
 	prevTicks = ticks;
-	TexturePtr clockTexture = sdl->renderTextNice(font, ss.str().c_str(), slategray);
+	TexturePtr clockTexture = font->renderTextNice(sdl->getRenderer(), ss.str().c_str(), slategray);
 	clock->setTexture(clockTexture);
 
 	sdl->clear();

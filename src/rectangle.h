@@ -14,8 +14,8 @@ class Rectangle : public Renderable
 	SDL_Color color;
 	bool fill;
 
-	void renderTexture(SDL_Renderer* renderer);
-	void renderRect(SDL_Renderer* renderer);
+	void renderTexture(const SDL_Renderer* renderer);
+	void renderRect(const SDL_Renderer* renderer);
 
 	public:
 	Rectangle(SDL_Color color, bool fill, SDL_Rect dest);
@@ -24,7 +24,7 @@ class Rectangle : public Renderable
 
 	void setTexture(TexturePtr newTexture) { texture = newTexture; }
 
-	void render(SDL_Renderer* renderer);
+	void render(const SDL_Renderer* renderer);
 };
 
 using RectanglePtr = std::shared_ptr<Rectangle>;

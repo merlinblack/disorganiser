@@ -26,7 +26,7 @@ Rectangle::Rectangle(TexturePtr texture, SDL_Rect dest, SDL_Rect src) :
 	}
 }
 
-void Rectangle::render(SDL_Renderer* renderer)
+void Rectangle::render(const SDL_Renderer* renderer)
 {
 	if (texture != nullptr)
 	{
@@ -38,7 +38,7 @@ void Rectangle::render(SDL_Renderer* renderer)
 	}
 }
 
-void Rectangle::renderTexture(SDL_Renderer* renderer)
+void Rectangle::renderTexture(const SDL_Renderer* renderer)
 {
 	if (source.w)
 	{
@@ -54,15 +54,15 @@ void Rectangle::renderTexture(SDL_Renderer* renderer)
 	}
 }
 
-void Rectangle::renderRect(SDL_Renderer* renderer)
+void Rectangle::renderRect(const SDL_Renderer* renderer)
 {
-	SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+	SDL_SetRenderDrawColor(const_cast<SDL_Renderer*>(renderer), color.r, color.g, color.b, color.a);
 	if (fill) 
 	{
-		SDL_RenderFillRect(renderer, &destination);
+		SDL_RenderFillRect(const_cast<SDL_Renderer *>(renderer), &destination);
 	}
 	else
 	{
-		SDL_RenderDrawRect(renderer, &destination);
+		SDL_RenderDrawRect(const_cast<SDL_Renderer*>(renderer), &destination);
 	}
 }

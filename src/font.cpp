@@ -22,7 +22,7 @@ bool Font::sizeText(const std::string &text, int *width, int *height)
 	return true;
 }
 
-TexturePtr Font::renderTextQuick(SDL_Renderer* renderer, const std::string& text, SDL_Color color)
+TexturePtr Font::renderTextQuick(const SDL_Renderer* renderer, const std::string& text, SDL_Color color)
 {
 	SDL_assert(font != nullptr);
 	SDL_Surface* renderedSurface = TTF_RenderUTF8_Solid(font, text.c_str(), color);
@@ -36,7 +36,7 @@ TexturePtr Font::renderTextQuick(SDL_Renderer* renderer, const std::string& text
 	return nullptr;
 }
 
-TexturePtr Font::renderTextNice(SDL_Renderer* renderer, const std::string& text, SDL_Color color)
+TexturePtr Font::renderTextNice(const SDL_Renderer* renderer, const std::string& text, SDL_Color color)
 {
 	SDL_assert(font != nullptr);
 	SDL_Surface* renderedSurface = TTF_RenderUTF8_Blended(font, text.c_str(), color);

@@ -45,13 +45,7 @@ class SDL
 
 	bool createWindow(std::string title, int x, int y, int width, int height);
 
-	SDL_Renderer* getRenderer() { return renderer; }
-
-	TexturePtr createTextureFromFile(const std::string& path);
-	TexturePtr renderTextQuick(FontPtr font, const std::string& text, SDL_Color color);
-	TexturePtr renderTextNice(FontPtr font, const std::string& text, SDL_Color color);
-	bool renderTexture( TexturePtr texture, int x, int y, const SDL_Rect* clip = nullptr);
-	bool renderTexture( TexturePtr texture, const SDL_Rect* src = nullptr, const SDL_Rect* dest = nullptr);
+	const SDL_Renderer* getRenderer() { return renderer; }
 
     void clear() { SDL_RenderClear(renderer); }
 	void present() { SDL_RenderPresent(renderer); }

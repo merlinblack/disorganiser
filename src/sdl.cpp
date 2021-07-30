@@ -61,37 +61,8 @@ bool SDL::createWindow(std::string title, int x, int y, int width, int height)
 		return failed;
 	}
 
-	SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+	SDL_SetRenderDrawColor(renderer, 0x13, 0x45, 0x8a, 0xff);
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
 	return failed;
-}
-
-TexturePtr SDL::createTextureFromFile(const std::string& path)
-{
-	TexturePtr newTexture = std::make_shared<Texture>();
-
-	newTexture->createFromFile(renderer, path);
-
-	return newTexture;
-}
-
-bool SDL::renderTexture(TexturePtr texture, int x, int y, const SDL_Rect* clip)
-{
-	return texture->render(renderer, x, y, clip);
-}
-
-bool SDL::renderTexture(TexturePtr texture, const SDL_Rect* src, const SDL_Rect* dest)
-{
-	return texture->render(renderer, src, dest);
-}
-
-TexturePtr SDL::renderTextQuick(FontPtr font, const std::string &text, SDL_Color color)
-{
-	return font->renderTextQuick(renderer, text, color);
-}
-
-TexturePtr SDL::renderTextNice(FontPtr font, const std::string &text, SDL_Color color)
-{
-	return font->renderTextQuick(renderer, text, color);
 }
