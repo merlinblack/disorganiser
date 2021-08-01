@@ -11,14 +11,15 @@ struct RectangleBinding : public ManualBind::Binding<RectangleBinding,Rectangle>
 {
 	static constexpr const char* class_name = "Rectangle";
 
-    static luaL_Reg* members()
-    {
-        static luaL_Reg members[] = {
-            { "__upcast", upcast },
-            { nullptr, nullptr }
-        };
-        return members;
-    }
+	static luaL_Reg* members()
+	{
+		static luaL_Reg members[] = {
+			{ "__upcast", upcast },
+			{ "setTexture", setTexture },
+			{ nullptr, nullptr }
+		};
+		return members;
+	}
 
 	static ManualBind::bind_properties* properties()
 	{
@@ -124,16 +125,25 @@ struct RectangleBinding : public ManualBind::Binding<RectangleBinding,Rectangle>
 		return rect;
 	}
 
-    static int upcast( lua_State *L )
-    {
-        RectanglePtr p = fromStack( L, 1 );
+	static int upcast( lua_State *L )
+	{
+		RectanglePtr p = fromStack( L, 1 );
 
-        RenderablePtr rp = std::dynamic_pointer_cast<Renderable>( p );
+		RenderablePtr rp = std::dynamic_pointer_cast<Renderable>( p );
 
-        RenderableBinding::push( L, rp );
+		RenderableBinding::push( L, rp );
 
-        return 1;
-    }
+		return 1;
+	}
+
+	static int setTexture( lua_State* L )
+	{
+		RectanglePtr p = fromStack( L, 1 );
+		TexturePtr t = TextureBinding::fromStack( L, 2);
+
+		p->setTexture(t);
+		return 0;
+	}
 };
 
 #endif //__LB_RECTANGLE_H
