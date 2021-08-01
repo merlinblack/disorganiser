@@ -70,6 +70,11 @@ rectangle = Rectangle(texture, d, s);
 print(rectangle)
 app.renderList:add(rectangle)
 
+font = Font('media/mono.ttf',64)
+testtext = app.renderer:textureFromText(font, 'Bu bir testtir!', c);
+rectangle = Rectangle(testtext, 210, 50);
+app.renderList:add(rectangle)
+
 print( app.renderer)
 print( app.renderList)
 print( 'main.lua loaded.')
