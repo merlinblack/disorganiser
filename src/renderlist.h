@@ -18,8 +18,7 @@ class Renderable
 	Renderable() : order(0)
 	{}
 
-	~Renderable()
-	{}
+	virtual ~Renderable() = default;
 
 	virtual void render(const SDL_Renderer* renderer) = 0;
 

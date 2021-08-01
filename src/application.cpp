@@ -69,28 +69,13 @@ bool Application::init(bool onRaspberry_ = false)
 		SDL_ShowCursor(SDL_DISABLE);
 	}
 
-	timer->withInterval(1000)->start();
+	timer->withInterval(100)->start();
 
 	if (scripts->loadFromFile("scripts/main.lua"))
 	{
 		shouldStop = true;
 		return true;
 	}
-
-	font = std::make_shared<Font>("media/font.ttf", 26);
-
-	const SDL_Renderer* renderer = sdl->getRenderer();
-
-	TexturePtr background = Texture::createFromFile(renderer, "media/test.png");
-	renderList->add(std::make_shared<Rectangle>(background, SDL_Rect({0,0,800,480})));
-
-	SDL_Color red = {0xFF, 0x00, 0x00, 0xFF};
-	TexturePtr title = font->renderTextNice(renderer, "Bu Türkçe karakterler için bir testtir.", red);
-	renderList->add(std::make_shared<Rectangle>(title, 164, 164));
-
-	TexturePtr clockTexture = font->renderTextNice(renderer, "Clock", red);
-	clock = std::make_shared<Rectangle>(clockTexture, 260, 8);
-	renderList->add(clock);
 
 	return false;
 }
@@ -106,7 +91,6 @@ void Application::shutdown()
 {
 	scripts->shutdown();
 	timer->stop();
-	font = nullptr;
 	sdl->shutdown();
 }
 
@@ -175,16 +159,6 @@ void Application::handleTimer(const SDL_Event& event)
 
 void Application::render()
 {
-	static Uint32 prevTicks = 0;
-	SDL_Color slategray = {0x70, 0x80, 0x90, 0xFF};
-
-	std::stringstream ss;
-	Uint32 ticks = SDL_GetTicks();
-	ss << ticks << " diff: " << ticks - prevTicks;
-	prevTicks = ticks;
-	TexturePtr clockTexture = font->renderTextNice(sdl->getRenderer(), ss.str().c_str(), slategray);
-	clock->setTexture(clockTexture);
-
 	sdl->clear();
 	renderList->render(sdl->getRenderer());
 	sdl->present();

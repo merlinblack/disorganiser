@@ -47,7 +47,7 @@ class SDL
 
 	const SDL_Renderer* getRenderer() { return renderer; }
 
-    void clear() { SDL_RenderClear(renderer); }
+    void clear() { SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0 ); SDL_RenderClear(renderer); }
 	void present() { SDL_RenderPresent(renderer); }
 };
 

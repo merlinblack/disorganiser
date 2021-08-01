@@ -55,20 +55,71 @@ function handleKeyUp()
     testExceptions()
 end
 
-function task()
-	for n=1,100 do
-		print(n)
-		coroutine.yield()
+yield = coroutine.yield
+
+function wait(ms)
+	local finish = app.ticks + ms
+	while app.ticks < finish do
+		yield()
 	end
 end
 
+function task()
+	for n=1,50 do
+		print(n)
+		wait(1000)
+	end
+	local rl = RenderList()
+	local texture = app.renderer:textureFromFile('media/picture.jpg')
+	local src = { 0, 0, texture.width, texture.height}
+	local dest = { 0, 0, 800, 480}
+	local rectangle = Rectangle(texture, dest, src);
+	rl:add(rectangle)
+	local btn = { ExitBtn.x1, ExitBtn.y1, ExitBtn.x2-ExitBtn.x1, ExitBtn.y2-ExitBtn.y1}
+	local color = Color(0,0,0,0xa0)
+	rectangle = Rectangle(color, true, btn)
+	rl:add(rectangle)
+	local font = Font('media/mono.ttf',32)
+	local textcolor = Color(0xff,0x45,0x8a,0xff)
+	print('render text')
+	local text = app.renderer:textureFromText(font, "EXIT", textcolor)
+	print(text)
+	rectangle = Rectangle(
+		text,
+		math.floor(btn[1]+((btn[3]/2)-(text.width/2))),
+		math.floor(btn[2]+((btn[4]/2)-(text.height/2)))
+	)
+	print(rectangle)
+	rl:add(rectangle)
+	app.renderList = rl
+	for n=1,5 do
+		print(n)
+		yield()
+	end
+end
+
+function collectorTask()
+	wait(10000)
+	collectgarbage()
+end
+
 addTask(task)
+addTask(collectorTask)
+
+-- these can get garbage collected when we are done with main.lua
+local rectange
+local texture
+local testtext
 
 c = Color(0xff,0x45,0x8a,0xa0)
 print(c)
 r = { 50, 50, 150, 100 }
 rectangle = Rectangle(c, true, r);
 print(rectangle)
+app.renderList:add(rectangle)
+
+texture = app.renderer:textureFromFile('media/test.png')
+rectangle = Rectangle(texture, 0, 0)
 app.renderList:add(rectangle)
 
 texture = app.renderer:textureFromFile('media/picture.jpg')
@@ -83,6 +134,22 @@ font = Font('media/mono.ttf',64)
 testtext = app.renderer:textureFromText(font, 'Bu bir testtir!', c);
 rectangle = Rectangle(testtext, 210, 50);
 app.renderList:add(rectangle)
+
+font = Font('media/font.ttf', 26)
+
+function updateClock()
+	local color = Color(0x13,0x45,0x8a,0xff)
+	local clockTexture = app.renderer:textureFromText(font, os.date(), color)
+	local clockRect = Rectangle(clockTexture, 260, 8)
+	app.renderList:add(clockRect)
+	while true do
+		clockTexture = app.renderer:textureFromText(font, os.date(), color)
+		clockRect:setTexture(clockTexture)
+		wait(1000)
+	end
+end
+
+addTask(updateClock)
 
 print( app.renderer)
 print( app.renderList)

@@ -24,9 +24,7 @@ class Application
 	TimerPtr timer;
 	ScriptManagerPtr scripts;
 
-	FontPtr font;
 	RenderListPtr renderList;
-	RectanglePtr clock;
 
 	public:
 	Application();
