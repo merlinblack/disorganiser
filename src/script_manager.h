@@ -18,7 +18,7 @@ class ScriptManager
 	CoroutineList coroutines;
 	CoroutineList::iterator coroutineIter;
 
-	bool threadFromStack();
+	bool threadFromStack(lua_State* L);
 
 	public:
 	ScriptManager();
@@ -34,6 +34,8 @@ class ScriptManager
 
 	lua_State* getMainLuaState() { return main; }
 	ManualBind::LuaRef getGlobal(const std::string &name);
+
+	static int taskFromFunction(lua_State* L);
 };
 
 using ScriptManagerPtr = std::shared_ptr<ScriptManager>;
