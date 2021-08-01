@@ -55,12 +55,21 @@ function handleKeyUp()
     testExceptions()
 end
 
-c = Color(1,2,3,4)
-
-c.a = 5
-
+c = Color(0xff,0x45,0x8a,0xa0)
 print(c)
+r = { 50, 50, 150, 100 }
+rectangle = Rectangle(c, true, r);
+print(rectangle)
+app.renderList:add(rectangle)
 
-print( 'main.lua loaded.')
+texture = app.renderer:textureFromFile('media/picture.jpg')
+print(texture)
+d = { 50, 250, 170, 150 }
+s = { 290, 100, 170, 150 }
+rectangle = Rectangle(texture, d, s);
+print(rectangle)
+app.renderList:add(rectangle)
+
 print( app.renderer)
 print( app.renderList)
+print( 'main.lua loaded.')
