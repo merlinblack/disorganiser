@@ -6,11 +6,19 @@
 
 const std::string dumpstack_str(lua_State* L );
 
+static const char LuaRegisteryGUID = 0;
+
 ScriptManager::ScriptManager()
 {
 	main = luaL_newstate();
 	luaL_openlibs(main);
 	registerAllBindings(main);
+	lua_pushlightuserdata(main,(void*)&LuaRegisteryGUID);
+	lua_pushlightuserdata(main,this);
+	lua_settable(main, LUA_REGISTRYINDEX);
+
+	lua_pushcfunction(main, taskFromFunction);
+	lua_setglobal(main,"addTask");
 }
 
 ScriptManager::~ScriptManager()
@@ -32,6 +40,24 @@ ManualBind::LuaRef ScriptManager::getGlobal(const std::string& name)
 	return ManualBind::LuaRef::getGlobal(main, name.c_str());
 }
 
+/** \note static member **/
+int ScriptManager::taskFromFunction(lua_State* L)
+{
+	lua_pushlightuserdata(L, (void*)&LuaRegisteryGUID);
+	lua_gettable(L, LUA_REGISTRYINDEX);
+	ScriptManager* self = static_cast<ScriptManager *>(lua_touserdata(L, -1));
+	lua_pop(L,1);
+
+	if (lua_type(L,1) != LUA_TFUNCTION)
+	{
+		luaL_error(L, "Parameter must be a function");
+	}
+
+	self->threadFromStack(L);
+
+	return 0;
+}
+
 bool ScriptManager::loadFromString(const std::string& code)
 {
 	if (luaL_loadstring(main, code.c_str()))
@@ -42,7 +68,7 @@ bool ScriptManager::loadFromString(const std::string& code)
 		return true;
 	}
 
-	return threadFromStack();
+	return threadFromStack(main);
 }
 
 bool ScriptManager::loadFromFile(const std::string& path)
@@ -55,16 +81,16 @@ bool ScriptManager::loadFromFile(const std::string& path)
 		return true;
 	}
 
-	return threadFromStack();
+	return threadFromStack(main);
 }
 
-bool ScriptManager::threadFromStack()
+bool ScriptManager::threadFromStack(lua_State* L)
 {
-	lua_State* thread = lua_newthread(main);
+	lua_State* thread = lua_newthread(L);
 
-	int coroutine = luaL_ref(main, LUA_REGISTRYINDEX);
+	int coroutine = luaL_ref(L, LUA_REGISTRYINDEX);
 
-	lua_xmove(main, thread, 1);
+	lua_xmove(L, thread, 1);
 
 	coroutines.push_back(coroutine);
 	coroutineIter = coroutines.begin();

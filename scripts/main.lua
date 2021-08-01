@@ -55,6 +55,15 @@ function handleKeyUp()
     testExceptions()
 end
 
+function task()
+	for n=1,100 do
+		print(n)
+		coroutine.yield()
+	end
+end
+
+addTask(task)
+
 c = Color(0xff,0x45,0x8a,0xa0)
 print(c)
 r = { 50, 50, 150, 100 }

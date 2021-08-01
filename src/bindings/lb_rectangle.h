@@ -103,7 +103,6 @@ struct RectangleBinding : public ManualBind::Binding<RectangleBinding,Rectangle>
 		if (!rectTable.isTable())
 		{
 			luaL_error(L, "Parameter %d must be a table.", index);
-			return rect;
 		}
 
 		/** Lua tables start at 1 :-) **/
@@ -112,7 +111,6 @@ struct RectangleBinding : public ManualBind::Binding<RectangleBinding,Rectangle>
 			if (!rectTable[i].isNumber())
 			{
 				luaL_error(L, "Parameter %d table must have four numbers (x,y,w,h).", index);
-				return rect;
 			}
 		}
 
