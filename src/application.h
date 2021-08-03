@@ -28,7 +28,7 @@ class Application
 
 	public:
 	Application();
-	~Application();
+	virtual ~Application();
 
 	/**
 	 * \param onRaspbberry_ configure for my Raspberry Pi with touchscreen

@@ -19,6 +19,9 @@ ScriptManager::ScriptManager()
 
 	lua_pushcfunction(main, taskFromFunction);
 	lua_setglobal(main,"addTask");
+
+	luaL_dostring( main, "package.path = './scripts/?.lua;' .. package.path" );
+	luaL_dostring( main, "package.cpath = './scripts/?.so;' .. package.path" );
 }
 
 ScriptManager::~ScriptManager()
@@ -143,56 +146,56 @@ bool ScriptManager::resume()
 
 void ScriptManager::reportStack( lua_State* thread, bool wasError )
 {
-    // Report stack contents
-    // In the case of a yielded chunk these are the parameters to yield.
-    if( wasError ) {
-      lua_getglobal( thread, "print" );
-      lua_pushliteral( thread, "Error" );
-      lua_pushvalue( thread, -3 );
-      lua_pcall(thread, 2, 0, 0);
-      lua_settop( thread, 0 );
-    }
-    else if ( lua_gettop(thread) > 0)
-    {
-      std::string stack = dumpstack_str( thread );
-      lua_settop( thread, 0 );
-      lua_getglobal( thread, "print" );
-      lua_pushstring( thread, stack.c_str() );
-      lua_pcall(thread, 1, 0, 0);
-    }
+	// Report stack contents
+	// In the case of a yielded chunk these are the parameters to yield.
+	if( wasError ) {
+	  lua_getglobal( thread, "print" );
+	  lua_pushliteral( thread, "Error" );
+	  lua_pushvalue( thread, -3 );
+	  lua_pcall(thread, 2, 0, 0);
+	  lua_settop( thread, 0 );
+	}
+	else if ( lua_gettop(thread) > 0)
+	{
+	  std::string stack = dumpstack_str( thread );
+	  lua_settop( thread, 0 );
+	  lua_getglobal( thread, "print" );
+	  lua_pushstring( thread, stack.c_str() );
+	  lua_pcall(thread, 1, 0, 0);
+	}
 }
 
 const std::string dumpstack_str(lua_State* L )
 {
-    static std::stringstream ss;
-    int i;
-    int top = lua_gettop(L);
+	static std::stringstream ss;
+	int i;
+	int top = lua_gettop(L);
 
-    ss.str("\n");
+	ss.str("\n");
 
-    for (i = 1; i <= top; i++)
-    {
-        ss << i << "> " << luaL_typename(L,i) << " - ";
-        switch (lua_type(L, i))
-        {
-            case LUA_TNUMBER:
-                ss << lua_tonumber(L,i) << "\n";
-            break;
-            case LUA_TUSERDATA:
-            case LUA_TSTRING:
-                ss << luaL_tolstring(L, i, nullptr) << "\n";
-                lua_pop(L,1);
-                break;
-            case LUA_TBOOLEAN:
-                ss << (lua_toboolean(L, i) ? "true" : "false") << "\n";
-                break;
-            case LUA_TNIL:
-                ss << "nil\n";
-                break;
-            default:
-                ss << std::hex << "0x" << lua_topointer(L,i) << "\n";
-                break;
-        }
-    }
-    return ss.str();
+	for (i = 1; i <= top; i++)
+	{
+		ss << i << "> " << luaL_typename(L,i) << " - ";
+		switch (lua_type(L, i))
+		{
+			case LUA_TNUMBER:
+				ss << lua_tonumber(L,i) << "\n";
+			break;
+			case LUA_TUSERDATA:
+			case LUA_TSTRING:
+				ss << luaL_tolstring(L, i, nullptr) << "\n";
+				lua_pop(L,1);
+				break;
+			case LUA_TBOOLEAN:
+				ss << (lua_toboolean(L, i) ? "true" : "false") << "\n";
+				break;
+			case LUA_TNIL:
+				ss << "nil\n";
+				break;
+			default:
+				ss << std::hex << "0x" << lua_topointer(L,i) << "\n";
+				break;
+		}
+	}
+	return ss.str();
 }

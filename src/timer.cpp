@@ -15,7 +15,10 @@ bool Timer::stop()
 		{
 			id = 0;
 		}
-		success =  false;
+		else
+		{
+			success = false;
+		}
 	}
 	return success;
 }
