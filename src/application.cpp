@@ -23,7 +23,6 @@ Application::Application() :
 
 Application::~Application()
 {
-	shutdown();
 }
 
 bool Application::init(bool onRaspberry_ = false)

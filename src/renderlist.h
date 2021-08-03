@@ -54,6 +54,7 @@ class RenderList : public Renderable
 	std::list<RenderablePtr> list;
 
 	public:
+	virtual ~RenderList() { SDL_Log("~RenderList %x\n", this); }
 
 	inline void sort()
 	{
