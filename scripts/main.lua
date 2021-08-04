@@ -95,13 +95,18 @@ function task()
 		print(n)
 		yield()
 	end
+	runClock = false
 end
 
 function collectorTask()
-	wait(10000)
-	collectgarbage()
+	while true do
+		wait(30000)
+	    print('taking out the rubbish')
+		print(math.floor(collectgarbage('count')) .. ' kb')
+		collectgarbage()
+	end
 end
-
+collectgarbage('generational')
 addTask(collectorTask)
 
 -- these can get garbage collected when we are done with main.lua
@@ -127,14 +132,15 @@ app.renderList:add(rectangle)
 
 font = Font('media/font.ttf', 26)
 
+runClock = true
 function updateClock()
 	local color = Color(0x13,0x45,0x8a,0xff)
-	local clockTexture = app.renderer:textureFromText(font, os.date(), color)
-	local clockRect = Rectangle(clockTexture, 260, 8)
+	local startTexture <close> = app.renderer:textureFromText(font, '', color)
+	local clockRect = Rectangle(startTexture, 260, 8)
 	app.renderList:add(clockRect)
-	while true do
+	while runClock do
 		local text = os.date()
-		clockTexture = app.renderer:textureFromText(font, text, color)
+		local clockTexture <close> = app.renderer:textureFromText(font, text, color)
 		clockRect:setTexture(clockTexture)
 		wait(1000)
 	end
