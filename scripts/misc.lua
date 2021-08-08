@@ -9,8 +9,26 @@ function os.capture(cmd, raw)
   return s
 end
 
+function splitByNewline(str)
+  lines = {}
+  for s in str:gmatch("[^\r\n]+") do
+    table.insert(lines, s)
+  end
+  return lines
+end
+
 function pt(t)
     for k,v in pairs(t) do
         print(k,v)
     end
 end
+
+yield = coroutine.yield
+
+function wait(ms)
+	local finish = app.ticks + ms
+	while app.ticks < finish do
+		yield()
+	end
+end
+

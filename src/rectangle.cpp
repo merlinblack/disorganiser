@@ -4,13 +4,15 @@ Rectangle::Rectangle(SDL_Color color, bool fill, SDL_Rect dest) :
 	color(color),
 	fill(fill),
 	destination(dest),
-	source({0,0,0,0})
+	source({0,0,0,0}),
+	clip({0,0,0,0})
 {
 }
 
 Rectangle::Rectangle(TexturePtr texture, int x, int y) :
 	texture(texture),
-	source({0,0,0,0})
+	source({0,0,0,0}),
+	clip({0,0,0,0})
 {
 	destination = {x, y, 0, 0};
 }
@@ -18,7 +20,8 @@ Rectangle::Rectangle(TexturePtr texture, int x, int y) :
 Rectangle::Rectangle(TexturePtr texture, SDL_Rect dest, SDL_Rect src) :
 	texture(texture),
 	destination(dest),
-	source(src)
+	source(src),
+	clip({0,0,0,0})
 {
 	if (destination.w && !source.w)
 	{
@@ -46,7 +49,11 @@ void Rectangle::renderTexture(const SDL_Renderer* renderer)
 	}
 	else if (destination.w)
 	{
-		texture->render(renderer, &destination, &source);
+		texture->render(renderer, nullptr, &destination);
+	}
+	else if (clip.w)
+	{
+		texture->render(renderer, destination.x, destination.y, &clip);
 	}
 	else
 	{

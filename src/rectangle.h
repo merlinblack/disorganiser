@@ -10,6 +10,7 @@ class Rectangle : public Renderable
 {
 	SDL_Rect destination;
 	SDL_Rect source;
+	SDL_Rect clip;
 	TexturePtr texture;
 	SDL_Color color;
 	bool fill;
@@ -24,6 +25,15 @@ class Rectangle : public Renderable
 	Rectangle(TexturePtr texture, SDL_Rect dest, SDL_Rect src = {0,0,0,0});
 
 	void setTexture(TexturePtr newTexture) { texture = newTexture; }
+	TexturePtr getTexture() { return texture; }
+
+	void setDest(SDL_Rect dest) { destination = dest; }
+	const SDL_Rect&  getDest() { return destination; }
+	void setSource(SDL_Rect src) { source = src; }
+	const SDL_Rect&  getSource() { return source; }
+	void setClip(SDL_Rect _clip) { clip = _clip; }
+	void setColor(SDL_Color _color) { color = _color; }
+	void setFill(bool _fill) { fill = _fill; }
 
 	void render(const SDL_Renderer* renderer);
 };

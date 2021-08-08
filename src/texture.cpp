@@ -41,8 +41,8 @@ bool Texture::render(const SDL_Renderer *renderer, int x, int y, const SDL_Rect 
 
 	if (clip)
 	{
-		dest.w = clip->w;
-		dest.h = clip->h;
+		dest.w = clip->w < width ? clip->w : width;
+		dest.h = clip->h < height ? clip->h : height;
 	}
 
 	return SDL_RenderCopy(const_cast<SDL_Renderer*>(renderer), texture, clip, &dest) == 0;

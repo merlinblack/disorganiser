@@ -8,6 +8,16 @@ struct FontBinding : public ManualBind::Binding<FontBinding,Font>
 {
 	static constexpr const char* class_name = "Font";
 
+	static ManualBind::bind_properties* properties()
+	{
+		static ManualBind::bind_properties properties[] = {
+			{ "lineHeight", getLineHeight, nullptr },
+			{ nullptr, nullptr, nullptr}
+		};
+
+		return properties;
+	}
+
 	static int create(lua_State* L)
 	{
 		std::string path = lua_tostring(L, 1);
@@ -17,6 +27,13 @@ struct FontBinding : public ManualBind::Binding<FontBinding,Font>
 
 		push(L, font);
 
+		return 1;
+	}
+
+	static int getLineHeight( lua_State* L )
+	{
+		FontPtr font = fromStack( L, 1);
+		lua_pushinteger( L, font->lineHeight() );
 		return 1;
 	}
 };
