@@ -22,6 +22,8 @@ class Renderable
 
 	virtual void render(const SDL_Renderer* renderer) = 0;
 
+	virtual bool shouldRender() { return false; }
+
 	inline void setOrder( int newOrder )
 	{
 		order = newOrder;
@@ -52,8 +54,10 @@ using RenderablePtr = std::shared_ptr<Renderable>;
 class RenderList : public Renderable
 {
 	std::list<RenderablePtr> list;
+	bool flagShouldRender;
 
 	public:
+	RenderList() : flagShouldRender(false) {}
 	virtual ~RenderList() { SDL_Log("~RenderList %x\n", this); }
 
 	inline void sort()
@@ -78,7 +82,7 @@ class RenderList : public Renderable
 	// Adds item at the end and adjusts it's sort order
 	inline void add( RenderablePtr&& item )
 	{
-		if( list.empty() ) {
+		if ( list.empty() ) {
 			insert( std::forward<RenderablePtr>(item) );
 			return;
 		}
@@ -94,10 +98,33 @@ class RenderList : public Renderable
 
 	inline void render(const SDL_Renderer* renderer)
 	{
-		for( auto& item : list ) 
+		for ( auto& item : list )
 		{
 			item->render(renderer);
 		}
+		flagShouldRender = false;
+	}
+
+	inline bool shouldRender()
+	{
+		if (flagShouldRender)
+		{
+			return true;
+		}
+
+		for ( auto& item: list)
+		{
+			if (item->shouldRender())
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	inline void setShouldRender(bool flag)
+	{
+		flagShouldRender = flag;
 	}
 };
 

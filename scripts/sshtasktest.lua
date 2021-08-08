@@ -33,10 +33,10 @@ function startAuth()
 		end
 		yield()
 	end
+	wait(2000)
 	tl:destroy()
-	app.shouldRender = true
 	print( 'Finished startAuth')
 end
 
-addTask(startAuth)
+--addTask(startAuth)
 

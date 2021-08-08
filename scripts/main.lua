@@ -38,7 +38,7 @@ testtext = app.renderer:textureFromText(font, 'Bu bir testtir!', c);
 rectangle = Rectangle(testtext, 210, 50);
 app.renderList:add(rectangle)
 
-app.shouldRender = true
+app.renderList:shouldRender()
 
 print( app.renderer)
 print( app.renderList)
