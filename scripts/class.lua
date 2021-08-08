@@ -46,8 +46,8 @@ function class( name )
                 end
             } )
 
-            if obj.__init ~= nil then
-                obj:__init( select(2, ...) )
+            if obj.init ~= nil then
+                obj:init( select(2, ...) )
             end
 
             return obj

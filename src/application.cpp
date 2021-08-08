@@ -152,8 +152,6 @@ void Application::handleTimer(const SDL_Event& event)
 	 * Run next task coroutine
 	 */
 	scripts->resume();
-
-	shouldRender = true;
 }
 
 void Application::render()

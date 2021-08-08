@@ -6,6 +6,7 @@
 #include "rectangle.h"
 #include "lb_color.h"
 #include "lb_texture.h"
+#include <sstream>
 
 struct RectangleBinding : public ManualBind::Binding<RectangleBinding,Rectangle>
 {
@@ -15,7 +16,12 @@ struct RectangleBinding : public ManualBind::Binding<RectangleBinding,Rectangle>
 	{
 		static luaL_Reg members[] = {
 			{ "__upcast", upcast },
-			{ "setTexture", setTexture },
+			{ "__tostring", tostring },
+			{ "setDest", setDest },
+			{ "setSource", setSource },
+			{ "setClip", setClip },
+			{ "setColor", setColor },
+			{ "setFill", setFill },
 			{ nullptr, nullptr }
 		};
 		return members;
@@ -24,6 +30,7 @@ struct RectangleBinding : public ManualBind::Binding<RectangleBinding,Rectangle>
 	static ManualBind::bind_properties* properties()
 	{
 		static ManualBind::bind_properties properties[] = {
+			{ "texture", getTexture, setTexture },
 			{ nullptr, nullptr, nullptr }
 		};
 		return properties;
@@ -40,7 +47,7 @@ struct RectangleBinding : public ManualBind::Binding<RectangleBinding,Rectangle>
 
 		if(!luaL_testudata(L, 1, TextureBinding::class_name))
 		{
-			return luaL_error(L, "Parameter #1 should be either a Color or Texure.");
+			return luaL_error(L, "Parameter #1 should be either a Color or Texture.");
 		}
 
 		TexturePtr texture = TextureBinding::fromStack(L,1);
@@ -136,12 +143,85 @@ struct RectangleBinding : public ManualBind::Binding<RectangleBinding,Rectangle>
 		return 1;
 	}
 
+	static int tostring( lua_State* L )
+	{
+		RectanglePtr r = fromStack( L, 1 );
+		std::stringstream ss;
+
+		ss << "Rectangle: " << std::hex << r.get() << std::dec;
+		ss << " dest: { ";
+		SDL_Rect rect = r->getDest();
+		ss << rect.x << ", " << rect.y << ", " << rect.w << ", " << rect.h;
+		ss << " }, src: { ";
+		rect = r->getSource();
+		ss << rect.x << ", " << rect.y << ", " << rect.w << ", " << rect.h;
+		ss << "}, tex: " << std::hex << r->getTexture().get();
+
+		lua_pushstring( L, ss.str().c_str() );
+
+		return 1;
+	}
+
 	static int setTexture( lua_State* L )
 	{
 		RectanglePtr p = fromStack( L, 1 );
-		TexturePtr t = TextureBinding::fromStack( L, 2);
+		TexturePtr t = TextureBinding::fromStack( L, 3);
 
 		p->setTexture(t);
+		return 0;
+	}
+
+	static int getTexture( lua_State* L )
+	{
+		RectanglePtr p = fromStack( L, 1 );
+
+		TextureBinding::push( L, p->getTexture() );
+
+		return 1;
+	}
+
+	static int setDest( lua_State* L )
+	{
+		RectanglePtr p = fromStack( L, 1 );
+		SDL_Rect r = getRectFromTable( L, 2 );
+
+		p->setDest(r);
+		return 0;
+	}
+
+	static int setSource( lua_State* L )
+	{
+		RectanglePtr p = fromStack( L, 1 );
+		SDL_Rect r = getRectFromTable( L, 2 );
+
+		p->setSource(r);
+		return 0;
+	}
+	
+	static int setClip( lua_State* L )
+	{
+		RectanglePtr p = fromStack( L, 1 );
+		SDL_Rect r = getRectFromTable( L, 2 );
+
+		p->setClip(r);
+		return 0;
+	}	
+
+	static int setColor( lua_State* L )
+	{
+		RectanglePtr p = fromStack( L, 1 );
+		SDL_Color& c = ColorBinding::fromStack( L, 2 );
+
+		p->setColor(c);
+		return 0;
+	}
+
+	static int setFill( lua_State* L )
+	{
+		RectanglePtr p = fromStack( L, 1 );
+		bool fill = lua_toboolean( L, 2 );
+
+		p->setFill(fill);
 		return 0;
 	}
 };

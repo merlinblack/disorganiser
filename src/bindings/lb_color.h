@@ -25,6 +25,7 @@ struct ColorBinding: public ManualBind::PODBinding<ColorBinding,SDL_Color>
     {
         static luaL_Reg members[] = {
             { "__tostring", toString },
+            { "clone", clone },
             { nullptr, nullptr }
         };
         return members;
@@ -113,6 +114,14 @@ struct ColorBinding: public ManualBind::PODBinding<ColorBinding,SDL_Color>
 
         lua_pushstring(L, ss.str().c_str());
 
+        return 1;
+    }
+
+    static int clone(lua_State *L)
+    {
+        SDL_Color& orgiinal = fromStack( L, 1);
+        SDL_Color clone = orgiinal;
+        push(L, clone);
         return 1;
     }
 };
