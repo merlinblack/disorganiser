@@ -27,6 +27,8 @@ function TextLog:init(renderList, x, y, backgroundColor, color, font, width, nli
         renderList:add(r)
     end
 
+    renderList:shouldRender()
+
     print( 'TextLog init finished')
 end
 
@@ -40,7 +42,7 @@ function TextLog:add(text)
         local newTexture <close> = app.renderer:textureFromText(self.font, text, self.color)
         self.lineRectangles[self.nlines].texture = newTexture
     end
-    app.shouldRender = true
+    self.renderList:shouldRender()
 end
 
 function TextLog:shutdown()
@@ -48,8 +50,9 @@ function TextLog:shutdown()
     for i = 1, self.nlines do
         self.renderList:remove(self.lineRectangles[i])
     end
-    print('TextLog shutdown')
+    self.renderList:shouldRender()
     self.hasShutdown = true
+    print('TextLog shutdown')
 end
 
 function TextLog:destroy()

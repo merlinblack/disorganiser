@@ -12,8 +12,7 @@ using ManualBind::LuaRef;
 
 Application::Application() : 
 	onRaspberry(false),
-	shouldStop(false),
-	shouldRender(true)
+	shouldStop(false)
 {
 	sdl = std::make_shared<SDL>();
 	timer = std::make_shared<Timer>();
@@ -156,11 +155,12 @@ void Application::handleTimer(const SDL_Event& event)
 
 void Application::render()
 {
-	sdl->clear();
-	renderList->render(sdl->getRenderer());
-	sdl->present();
-
-	shouldRender = false;
+	if (renderList->shouldRender())
+	{
+		sdl->clear();
+		renderList->render(sdl->getRenderer());
+		sdl->present();
+	}
 }
 
 void Application::dispatchEvent(const SDL_Event& event)
@@ -220,10 +220,7 @@ void Application::eventLoop()
 			} 
 			while (SDL_PollEvent(&event));
 
-			if (shouldRender)
-			{
-				render();
-			}
+			render();
 		}
 		else
 		{

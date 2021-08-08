@@ -10,6 +10,7 @@ function task()
 	local btn = { ExitBtn.x1, ExitBtn.y1, ExitBtn.x2-ExitBtn.x1, ExitBtn.y2-ExitBtn.y1}
 	local textcolor = Color(0xff,0x45,0x8a,0xff)
 	makeButton(rl, textcolor, btn, 'Exit')
+	rl:shouldRender()
 
 	app.renderList = rl
 
@@ -19,5 +20,4 @@ function task()
 	end
 
 	runClock = false
-  	app.shouldRender = true
 end
