@@ -60,7 +60,8 @@ bool NonBlockingProcessRead::open()
 			execvp(cargs[0], cargs.data());
 			// If we got here, something went wrong
 			perror(cargs[0]);
-			return true;
+			// child process should not continue
+			exit(EXIT_FAILURE);
 		default:
 			// Parent - close the write end of the  pipe
 			::close(p[1]);

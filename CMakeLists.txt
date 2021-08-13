@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(hub_commander)
+project(disorganiser)
 
 set( CMAKE_EXPORT_COMPILE_COMMANDS ON )
 
@@ -30,26 +30,27 @@ if (NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_CURRENT_BINARY_DIR)
         message(STATUS "Configure directory: " ${item})
         add_custom_command(
             OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${item}"
-            COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${item}" "${CMAKE_CURRENT_BINARY_DIR}/${item}"
+            #COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/${item}" "${CMAKE_CURRENT_BINARY_DIR}/${item}"
+            COMMAND ${CMAKE_COMMAND} -E create_symlink "${CMAKE_CURRENT_SOURCE_DIR}/${item}" "${CMAKE_CURRENT_BINARY_DIR}/${item}"
             DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/${item}"
         )
     endforeach()
 endif()
 
-add_executable (hub_commander
+add_executable (disorganiser
     ${SRCS}
     ${HDRS}
     )
 
-target_link_libraries(hub_commander
+target_link_libraries(disorganiser
     ${Lua_LIBRARIES}
     SDL2::Main SDL2::Image SDL2::TTF
     )
 
-set_property(TARGET hub_commander PROPERTY CXX_STANDARD 17)
-set_property(TARGET hub_commander PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET disorganiser PROPERTY CXX_STANDARD 17)
+set_property(TARGET disorganiser PROPERTY CXX_STANDARD_REQUIRED ON)
 
 add_custom_target(data-target ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/media" "${CMAKE_CURRENT_BINARY_DIR}/scripts")
 
 include(GitVersioning)
-enable_git_versioning(hub_commander)
+enable_git_versioning(disorganiser)

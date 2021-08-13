@@ -4,24 +4,24 @@ require 'misc'
 class 'TextLog'
 
 function TextLog:init(renderList, x, y, backgroundColor, color, font, width, nlines)
-    bounds = { x, y, width, nlines * font.lineHeight }
-    pt(bounds)
+    local lineHeight = math.floor(font.lineHeight * 1.2)
+    self.bounds = { x, y, width, (nlines+2) * lineHeight }
     self.renderList = renderList
     self.font = font
     self.color = color
     self.nlines = nlines
-    self.background = Rectangle(backgroundColor, true, bounds )
+    self.background = Rectangle(backgroundColor, true, self.bounds )
     self.emptyline = app.renderer:textureFromText(font, ' ', color)
-    print(self.emptyline)
     self.lineRectangles = {}
 
+    -- using lineHeight as left and right margins also
     renderList:add(self.background)
     for i = 1, nlines do
         r = Rectangle(
             self.emptyline, 
-            x, y + (i-1) * font.lineHeight
+            x + lineHeight, y + (i) * lineHeight
         )
-        r:setClip({0,0,width,font.lineHeight})
+        r:setClip({0,0,width-(2*lineHeight),lineHeight})
         self.lineRectangles[i]  = r
         print(i, r)
         renderList:add(r)

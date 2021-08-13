@@ -23,6 +23,16 @@ function pt(t)
     end
 end
 
+function growRect(rect, amount)
+  amount = amount or 1
+  return { rect[1] - amount, rect[2] - amount, rect[3] + amount, rect[4] + amount}
+end
+
+function shrinkRect(rect, amount)
+  amount = amount or 1
+  return growRect(rect, -amount)
+end
+
 yield = coroutine.yield
 
 function wait(ms)
