@@ -8,6 +8,7 @@ require 'testtask'
 require 'garbage'
 require 'clock'
 require 'sshtasktest'
+require 'tailtest'
 
 -- these can get garbage collected when we are done with main.lua
 local rectange

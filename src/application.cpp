@@ -46,7 +46,7 @@ bool Application::init(bool onRaspberry_ = false)
 	}
 
 	failed = sdl->createWindow(
-		"Hub Commander",
+		"Disorganiser",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
 		800,
