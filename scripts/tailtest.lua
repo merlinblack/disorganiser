@@ -2,7 +2,8 @@ require 'misc'
 
 function tailtest()
 	wait(1000)
-	local font <close> = Font('media/mono.ttf',12)
+	local font <close> = Font('media/mono.ttf',14)
+
 	local tl = TextLog(
 		app.renderList, 
 		51, 51, 

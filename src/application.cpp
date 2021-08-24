@@ -41,7 +41,7 @@ bool Application::init(bool onRaspberry_ = false)
 
 	if (failed)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not init SDL: %s", sdl->getLastErrorMessage());
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not init SDL: %s", sdl->getLastErrorMessage().c_str());
 		return true;
 	}
 
@@ -55,7 +55,7 @@ bool Application::init(bool onRaspberry_ = false)
 
 	if (failed)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not create window: %s", sdl->getLastErrorMessage());
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not create window: %s", sdl->getLastErrorMessage().c_str());
 		return true;
 	}
 
@@ -215,7 +215,7 @@ void Application::eventLoop()
 				}
 				catch (ManualBind::LuaException& mooned)
 				{
-					SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, mooned.what());
+					SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", mooned.what());
 				}
 			} 
 			while (SDL_PollEvent(&event));

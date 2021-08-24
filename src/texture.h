@@ -16,7 +16,7 @@ class Texture
 	int height;
 
 	public:
-	~Texture() { free(); SDL_Log("~Texture %x\n", this); }
+	~Texture() { free(); SDL_Log("~Texture %lx\n", (unsigned long)this); }
 
 	static TexturePtr createFromFile(const SDL_Renderer* renderer, const std::string& path);
 	bool createFromSurface(const SDL_Renderer* renderer, SDL_Surface* surface);

@@ -58,7 +58,7 @@ class RenderList : public Renderable
 
 	public:
 	RenderList() : flagShouldRender(false) {}
-	virtual ~RenderList() { SDL_Log("~RenderList %x\n", this); }
+	virtual ~RenderList() { SDL_Log("~RenderList %lx\n", (unsigned long)this); }
 
 	inline void sort()
 	{

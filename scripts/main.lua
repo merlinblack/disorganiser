@@ -30,6 +30,8 @@ rectangle = Rectangle(texture, dest, src)
 app.renderList:add(rectangle)
 
 local btn = { ExitBtn.x1, ExitBtn.y1, ExitBtn.x2-ExitBtn.x1, ExitBtn.y2-ExitBtn.y1}
+print('btn:')
+pt(btn)
 textcolor = c:clone()
 textcolor.a = 0xff
 makeButton(app.renderList, textcolor, btn, 'Çikiş')

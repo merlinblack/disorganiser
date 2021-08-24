@@ -23,6 +23,10 @@ class NonBlockingProcessRead
 	/** \return true if there is more to be read, false for error or finished */
 	bool read(std::string& buffer);
 	void close();
+#ifdef __APPLE__
+    int pipe2( int fds[2], int flags);
+#endif
+
 };
 
 bool NonBlockingProcessRead::open()
@@ -109,3 +113,33 @@ void NonBlockingProcessRead::close()
 		fd = -1;
 	}
 }
+
+#ifdef __APPLE__
+int NonBlockingProcessRead::pipe2(int fds[2], int flags)
+{
+    int ret;
+	int prev_flags;
+
+    ret = pipe(fds);
+    if (ret < 0)
+    {
+        return ret;
+    }
+
+	prev_flags = fcntl(fds[0], F_GETFL, 0);
+    ret = fcntl(fds[0], F_SETFL, prev_flags | flags);
+    if (ret < 0)
+    {
+        return ret;
+    }
+
+	prev_flags = fcntl(fds[0], F_GETFL, 0);
+    ret = fcntl(fds[1], F_SETFL, prev_flags | flags);
+    if (ret < 0)
+    {
+        return ret;
+    }
+
+    return 0;
+}
+#endif
