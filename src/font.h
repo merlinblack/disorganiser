@@ -17,7 +17,7 @@ class Font
 	public:
 	Font(const std::string& path, int size);
 
-	~Font() { TTF_CloseFont(font); SDL_Log("~Font %x\n", this); }
+	~Font() { TTF_CloseFont(font); SDL_Log("~Font %lx\n", (unsigned long)this); }
 
 	bool hasFailed() { return failed; }
 	const std::string& getLastErrorMessage() { return lastErrorMessage; }

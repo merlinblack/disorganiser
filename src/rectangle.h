@@ -19,7 +19,7 @@ class Rectangle : public Renderable
 	void renderRect(const SDL_Renderer* renderer);
 
 	public:
-	virtual ~Rectangle() { SDL_Log("~Rectangle %x\n", this); }
+	virtual ~Rectangle() { SDL_Log("~Rectangle %lx\n", (unsigned long)this); }
 	Rectangle(SDL_Color color, bool fill, SDL_Rect dest);
 	Rectangle(TexturePtr texture, int x, int y);
 	Rectangle(TexturePtr texture, SDL_Rect dest, SDL_Rect src = {0,0,0,0});

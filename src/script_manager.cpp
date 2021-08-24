@@ -67,7 +67,7 @@ bool ScriptManager::loadFromString(const std::string& code)
 	{
 		std::string error(lua_tostring(main, -1));
 
-		SDL_Log(error.c_str());
+		SDL_Log("%s", error.c_str());
 		return true;
 	}
 
@@ -80,7 +80,7 @@ bool ScriptManager::loadFromFile(const std::string& path)
 	{
 		std::string error(lua_tostring(main, -1));
 
-		SDL_Log(error.c_str());
+		SDL_Log("%s", error.c_str());
 		return true;
 	}
 
