@@ -2,12 +2,12 @@ require 'class'
 
 class 'Widget'
 
-function Widget:__init( x, y, w, h )
+function Widget:init( rect )
     self.children = {}
-    self.left   = x
-    self.top    = y
-    self.width  = w
-    self.height = h
+    self.left   = rect[1]
+    self.top    = rect[2]
+    self.width  = rect[3]
+    self.height = rect[4]
 end
 
 -- Can be called, directly or by garbage collection
@@ -21,6 +21,7 @@ function Widget:destroy()
 end
 
 function Widget:intersects( x, y )
+    --print('intersects', x, y, self.left, self.top, self.width, self.height)
     if x < self.left then
         return false
     end

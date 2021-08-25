@@ -1,3 +1,8 @@
-#! /usr/bin/sh
+#!/usr/bin/env sh
+if [ -z "${DISPLAY}" ]; then
+  export DISPLAY=:0
+fi
+
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
-./hub_commander rpi
+
+./disorganiser rpi

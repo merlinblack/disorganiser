@@ -1,23 +1,36 @@
-function task()
-	wait(1000)
+require 'gui/screen'
+require 'clock'
 
-	local rl = RenderList()
+class 'ScreenSaver' (Screen)
+
+function ScreenSaver:build()
+	Screen.build(self)
+
 	local texture <close> = app.renderer:textureFromFile('media/picture.jpg')
 	local src = { 0, 0, texture.width, texture.height}
 	local dest = { 0, 0, 800, 480}
 	local rectangle <close> = Rectangle(texture, dest, src);
-	rl:add(rectangle)
-	local btn = { ExitBtn.x1, ExitBtn.y1, ExitBtn.x2-ExitBtn.x1, ExitBtn.y2-ExitBtn.y1}
-	local textcolor = Color(0xff,0x45,0x8a,0xff)
-	makeButton(rl, textcolor, btn, 'Exit')
-	rl:shouldRender()
+	self.renderList:add(rectangle)
 
-	app.renderList = rl
+	local btn = { 590, 390, 140, 70}
+	local textcolor = Color(0xff,0x45,0x8a,0xff)
+	local backcolor = Color(0xff,0x45,0x8a,0x30)
+	self:addButton(btn, 'Exit', function() app.shouldStop = true end, textcolor, nil, backcolor)
+
+	self.renderList:add(clockRenderList)
+end
+
+screenSaver = ScreenSaver()
+
+function task()
+
+	wait(1000)
+
+	screenSaver:activate()
 
 	for n=1,5 do
 		print(n)
 		yield()
 	end
 
-	runClock = false
 end
