@@ -49,8 +49,8 @@ bool Application::init(bool onRaspberry_ = false)
 		"Disorganiser",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		800,
-		480
+		WINDOW_WIDTH,
+		WINDOW_HEIGHT
 		);
 
 	if (failed)

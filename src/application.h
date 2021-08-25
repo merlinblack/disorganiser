@@ -12,6 +12,9 @@
 
 class Application;
 
+#define WINDOW_WIDTH 800
+#define WINDOW_HEIGHT 480
+
 using ApplicationPtr = std::shared_ptr<Application>;
 
 class Application

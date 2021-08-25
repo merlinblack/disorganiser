@@ -5,6 +5,7 @@
 #include "application.h"
 #include "lb_renderlist.h"
 #include "lb_renderer.h"
+#include "git_versioning.h"
 
 struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Application>
 {
@@ -16,6 +17,9 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 			{ "shouldStop", get, setStopFlag },
 			{ "ticks", get, nullptr },
 			{ "renderer", get, nullptr },
+			{ "width", get, nullptr },
+			{ "height", get, nullptr },
+			{ "version", get, nullptr },
 			{ "renderList", getRenderList, setRenderList },
 			{ nullptr, nullptr, nullptr }
 		};
@@ -42,6 +46,24 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 		if (field == "renderer")
 		{
 			RendererBinding::push(L, app->getRenderer());
+			return 1;
+		}
+
+		if (field == "width")
+		{
+			lua_pushinteger(L, WINDOW_WIDTH);
+			return 1;
+		}
+
+		if (field == "height")
+		{
+			lua_pushinteger(L, WINDOW_HEIGHT);
+			return 1;
+		}
+
+		if (field == "version")
+		{
+			lua_pushstring(L, GIT_REPO_VERSION_STR);
 			return 1;
 		}
 

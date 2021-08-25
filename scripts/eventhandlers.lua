@@ -1,11 +1,9 @@
-ExitBtn = { x1 = 593, y1 = 387, x2 = 734, y2 = 454 }
+require 'events'
+require 'eventnames'
+currentScreen = nil
 
-function isInside( x, y, rect)
-	if x < rect.x1 then return false end
-	if x > rect.x2 then return false end
-	if y < rect.y1 then return false end
-	if y > rect.y2 then return false end
-	return true
+function setCurrentScreen(newScreen)
+	currentScreen = newScreen
 end
 
 function handleTouch(type, x, y, dx, dy)
@@ -14,22 +12,27 @@ function handleTouch(type, x, y, dx, dy)
 		print(x,y)
 		print(x*800,y*480)
 		print(dx,dy)
-
-		if type == EVENT_TOUCH_UP and isInside(x*800,y*480,ExitBtn) then
-			app.shouldStop = true
+	end
+	if currentScreen then
+		if type == EVENT_TOUCH_UP then
+			currentScreen:mouseClick(app.ticks, x*app.width, y*app.height, 1)
 		end
 	end
 end
 
 function handleMouse(type, x, y, button, state, clicks)
-	print('Mousey:')
-	print(x,y)
-	print(button)
-	print(state)
-	print(clicks)
+	print('Mouse: ' .. EventNames[type])
+	print('x,y:', x, y)
+	print('button', button)
+	print('state', state)
+	print('clicks', clicks)
 
-	if (type == EVENT_MOUSE_BUTTONUP and isInside(x,y,ExitBtn)) then
-		app.shouldStop = true
+	if currentScreen then
+		if type == EVENT_MOUSE_BUTTONDOWN then
+			if clicks == 1 then
+				currentScreen:mouseClick(app.ticks, x, y, button)
+			end
+		end
 	end
 end
 

@@ -1,3 +1,4 @@
+require 'events'
 EventNames = {}
 EventNames[EVENT_TOUCH_DOWN] = 'touch down'
 EventNames[EVENT_TOUCH_UP] = 'touch up'
