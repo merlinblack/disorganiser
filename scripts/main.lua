@@ -4,9 +4,8 @@ require 'misc'
 require 'testtask'
 require 'garbage'
 require 'clock'
-require 'sshtasktest'
-require 'tailtest'
 require 'class'
+require 'docker'
 
 require 'gui/screen'
 
@@ -31,6 +30,9 @@ function MainScreen:build()
 	local textcolor = c:clone()
 	textcolor.a = 0xff
 	self:addButton(btn, 'Çikiş', function() app.shouldStop = true end, textcolor)
+
+	btn[2] = btn[2] - 100
+	self:addButton(btn, 'Docker', function() docker:activate() end, textcolor)
 
 	self.renderList:add(clockRenderList)
 end
