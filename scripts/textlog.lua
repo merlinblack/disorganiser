@@ -11,7 +11,7 @@ function TextLog:init(renderList, x, y, backgroundColor, color, font, width, nli
     self.color = color
     self.nlines = nlines
     self.background = Rectangle(backgroundColor, true, self.bounds )
-    self.emptyline = app.renderer:textureFromText(font, ' ', color)
+    self.emptyline = app.emptyTexture
     self.lineRectangles = {}
 
     -- using lineHeight as left and right margins also

@@ -69,7 +69,7 @@ bool Application::init(bool onRaspberry_ = false)
 
 	timer->withInterval(100)->start();
 
-	if (scripts->loadFromFile("scripts/main.lua"))
+	if (scripts->loadFromFile("scripts/init.lua"))
 	{
 		shouldStop = true;
 		return true;
@@ -227,4 +227,16 @@ void Application::eventLoop()
 			SDL_Log( "There was a problem waiting for events: %s", SDL_GetError());
 		}
 	}
+}
+
+// Get a placeholder texture that will soon be replaced.
+TexturePtr Application::getEmptyTexture()
+{
+	if (!emptyTexture)
+	{
+		emptyTexture = std::make_shared<Texture>();
+		emptyTexture->createEmpty(sdl->getRenderer());
+	}
+
+	return emptyTexture;
 }

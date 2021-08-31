@@ -20,6 +20,7 @@ class Texture
 
 	static TexturePtr createFromFile(const SDL_Renderer* renderer, const std::string& path);
 	bool createFromSurface(const SDL_Renderer* renderer, SDL_Surface* surface);
+	bool createEmpty(const SDL_Renderer* renderer);
 	void free();
 	bool render(const SDL_Renderer* renderer, int x, int y, const SDL_Rect* clip = nullptr);
 	bool render(const SDL_Renderer* renderer, const SDL_Rect* src = nullptr, const SDL_Rect* dest = nullptr);

@@ -27,6 +27,7 @@ class Application
 	ScriptManagerPtr scripts;
 
 	RenderListPtr renderList;
+	TexturePtr emptyTexture;
 
 	public:
 	Application();
@@ -55,6 +56,8 @@ class Application
 	RenderListPtr getRenderList() { return renderList; }
 	void setRenderList(RenderListPtr newList) { renderList = newList; }
 	const SDL_Renderer* getRenderer() { return sdl->getRenderer(); }
+
+	TexturePtr getEmptyTexture();
 
 	void initLuaApp(ApplicationPtr app);
 };

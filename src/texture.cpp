@@ -29,9 +29,40 @@ bool Texture::createFromSurface(const SDL_Renderer* renderer, SDL_Surface* surfa
 	return texture == nullptr;
 }
 
+bool Texture::createEmpty(const SDL_Renderer* const_renderer)
+{
+	free();
+	width = 1;
+	height = 1;
+
+	SDL_Renderer *renderer = const_cast<SDL_Renderer *>(const_renderer);
+
+	texture = SDL_CreateTexture(
+		renderer,
+		SDL_PIXELFORMAT_RGBA8888,
+		SDL_RENDERER_TARGETTEXTURE,
+		1, 1);
+
+	if (!texture)
+	{
+		return true;
+	}
+
+	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+	SDL_SetRenderTarget(renderer, texture);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
+	SDL_RenderClear(renderer);
+	SDL_SetRenderTarget(renderer, nullptr);
+
+	return false;
+}
+
 void Texture::free()
 {
-	SDL_DestroyTexture(texture);
+	if (texture)
+	{
+		SDL_DestroyTexture(texture);
+	}
 	texture = nullptr;
 }
 
