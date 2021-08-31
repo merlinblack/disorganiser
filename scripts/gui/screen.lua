@@ -1,6 +1,7 @@
 require 'class'
 require 'gui/widget'
 require 'gui/button'
+require 'eventhandlers'
 
 --[[
 -- A screen is a whole screen filling UI, containing other elements

@@ -1,3 +1,5 @@
+require 'misc'
+
 runClock = true
 clockRenderList = RenderList()
 function updateClock()
@@ -7,7 +9,6 @@ function updateClock()
 	local clockRect <close> = Rectangle(color, false, {0, 480 - font.lineHeight, 0, 0})
 	clockRenderList:add(clockRect)
 	while runClock do
-		print('clock tick')
 		local text = os.date('  %A %I:%M %p - %B %d %Y')
 		local clockTexture <close> = app.renderer:textureFromText(font, text, color)
 		clockRect.texture = clockTexture

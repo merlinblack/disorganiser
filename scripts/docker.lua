@@ -1,4 +1,5 @@
 require 'gui/screen'
+require 'textlog'
 
 class 'Docker' (Screen)
 
@@ -58,11 +59,11 @@ function Docker:runOnVader(prog)
 		local font <close> = Font('media/mono.ttf',14)
 		local tl = TextLog(
 			renderList, 
-			21, 51,
+			11, 51,
 			Color(0xff, 0, 0xff, 0x40),
 			Color(0xff, 0xff, 0xff, 0xff),
 			font, 
-			380, 15)
+			420, 20)
 
 		local frame <close> = Rectangle(Color(0xff,0,0xff,0xff), false, growRect(tl.bounds))
 

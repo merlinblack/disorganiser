@@ -5,6 +5,7 @@
 #include "application.h"
 #include "lb_renderlist.h"
 #include "lb_renderer.h"
+#include "lb_texture.h"
 #include "git_versioning.h"
 
 struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Application>
@@ -21,6 +22,7 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 			{ "height", get, nullptr },
 			{ "version", get, nullptr },
 			{ "renderList", getRenderList, setRenderList },
+			{ "emptyTexture", get, nullptr },
 			{ nullptr, nullptr, nullptr }
 		};
 		return properties;
@@ -64,6 +66,12 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 		if (field == "version")
 		{
 			lua_pushstring(L, GIT_REPO_VERSION_STR);
+			return 1;
+		}
+
+		if (field == "emptyTexture")
+		{
+			TextureBinding::push(L, app->getEmptyTexture());
 			return 1;
 		}
 
