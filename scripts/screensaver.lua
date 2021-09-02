@@ -22,7 +22,7 @@ end
 
 screenSaver = ScreenSaver()
 
-function task()
+function screenSaveTask()
 
 	wait(1000)
 
@@ -32,5 +32,7 @@ function task()
 		print(n)
 		yield()
 	end
+
+	collectgarbage()
 
 end

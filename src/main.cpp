@@ -1,6 +1,7 @@
 #include "application.h"
 #include "sdl.h"
 #include <memory>
+#include <iostream>
 #include "script_manager.h"
 
 
@@ -75,6 +76,15 @@ void PrintEvent(const SDL_Event * event)
     }
 }
 
+//#define LOGLEVEL SDL_LOG_PRIORITY_VERBOSE
+#define LOGLEVEL SDL_LOG_PRIORITY_INFO
+void Logging(void *userdata, int category, SDL_LogPriority priority, const char* message)
+{
+    if (priority > LOGLEVEL)
+    {
+        std::cerr << message << std::endl;
+    }
+}
 
 int main(int argc, char *argv[])
 {
@@ -89,6 +99,8 @@ int main(int argc, char *argv[])
     }
 
     {
+        SDL_LogSetOutputFunction(Logging, nullptr);
+
         ApplicationPtr app = std::make_shared<Application>();
 
         app->initLuaApp(app);

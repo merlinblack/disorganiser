@@ -9,27 +9,22 @@ class 'MainScreen' (Screen)
 function MainScreen:build()
 	Screen.build(self)
 
-	local c = Color(0x92,0xee,0xee,0x20)
-	local r = { 0, 0, app.width, app.height }
-	local rectangle <close> = Rectangle(c, true, r);
-	self.renderList:add(rectangle)
-
-	local texture <close> = app.renderer:textureFromFile('media/falcon.png')
+	local texture <close> = app.renderer:textureFromFile('media/vader.jpg')
 	local src = { 0, 0, texture.width, texture.height}
-	local scale = 0.65 
-	local dest = { 32, 40, math.floor(texture.width*scale), math.floor(texture.height*scale)}
+	local dest = {0, 0, app.width, app.height}
 	local rectangle <close> = Rectangle(texture, dest, src)
 	self.renderList:add(rectangle)
 
-	local btn = { 620, 390, 140, 70}
-	local textcolor = c:clone()
-	textcolor.a = 0xff
-	self:addButton(btn, 'Çikiş', function() app.shouldStop = true end, textcolor)
+	local btn = { 30, 300, 140, 70}
+	local textcolor = Color(0xfe,0x0a,0x4a,0xff)
+	local backcolor = textcolor:clone()
+	backcolor.a = 0x20
+	self:addButton(btn, 'Çikiş', function() app.shouldStop = true end, textcolor, nil, backcolor)
 
 	btn[2] = btn[2] - 100
-	self:addButton(btn, 'Docker', function() docker:activate() end, textcolor)
+	self:addButton(btn, 'Docker', function() docker:activate() end, textcolor, nil,backcolor)
 
-	local weatherbox <close> = Rectangle(Color(0,0,0,0x50), true, {20,5,260,130})
+	local weatherbox <close> = Rectangle(backcolor, true, {20,5,260,130})
 	self.renderList:add(weatherbox)
 	local temperature = Rectangle(app.emptyTexture, {30, 15, 0, 0})
 	self.renderList:add(temperature)
@@ -38,10 +33,12 @@ function MainScreen:build()
 	local humidity = Rectangle(app.emptyTexture, {30, 95, 0, 0})
 	self.renderList:add(humidity)
 
+	self.stopWeatherUpdate = false
+
 	function updateWeather()
-		local font <close> = Font('media/mono.ttf',34)
+		local font <close> = Font('media/mono.ttf',24)
 		local color = Color(0xfe,0x0a,0x4a,0xc0)
-		while true do
+		while not self.stopWeatherUpdate do
 			readLocalWeatherFile()
 			temperature.texture = app.renderer:textureFromText(font, weather.temperature .. ' °C',color)
 			pressure.texture = app.renderer:textureFromText(font, weather.pressure .. ' mbar',color)
@@ -49,6 +46,7 @@ function MainScreen:build()
 			self.renderList:shouldRender()
 			wait(60*1000)
 		end
+		print 'Weather update stopped.'
 	end
 
 	addTask(updateWeather)

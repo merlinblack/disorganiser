@@ -91,7 +91,9 @@ function Docker:runOnVader(prog)
 			end
 			yield()
 		end
-		wait(2000)
+		tl:add('')
+		tl:add('FINISHED')
+		wait(5000)
 		tl:destroy()
 		self.renderList:remove(renderList)
 		self.renderList:shouldRender()
