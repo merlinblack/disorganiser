@@ -23,7 +23,6 @@ function TextLog:init(renderList, x, y, backgroundColor, color, font, width, nli
         )
         r:setClip({0,0,width-(2*lineHeight),lineHeight})
         self.lineRectangles[i]  = r
-        print(i, r)
         renderList:add(r)
     end
 

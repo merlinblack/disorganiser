@@ -3,6 +3,9 @@ require 'eventnames'
 currentScreen = nil
 
 function setCurrentScreen(newScreen)
+	if currentScreen then
+		currentScreen:deactivate()
+	end
 	currentScreen = newScreen
 end
 
@@ -21,11 +24,13 @@ function handleTouch(type, x, y, dx, dy)
 end
 
 function handleMouse(type, x, y, button, state, clicks)
-	print('Mouse: ' .. EventNames[type])
-	print('x,y:', x, y)
-	print('button', button)
-	print('state', state)
-	print('clicks', clicks)
+	if 0 then
+		print('Mouse: ' .. EventNames[type])
+		print('x,y:', x, y)
+		print('button', button)
+		print('state', state)
+		print('clicks', clicks)
+	end
 
 	if currentScreen then
 		if type == EVENT_MOUSE_BUTTONDOWN then
@@ -43,7 +48,7 @@ function handleKeyUp(symbol)
 	if code[codepos] == symbol then
 		codepos = codepos + 1
 		if codepos == 5 then
-			addTask(task)
+			addTask(screenSaveTask)
 			codepos = 1
 		end
 	else

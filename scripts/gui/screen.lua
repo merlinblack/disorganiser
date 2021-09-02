@@ -30,6 +30,9 @@ function Screen:activate()
 	self.renderList:shouldRender()
 end
 
+function Screen:deactivate()
+end
+
 function Screen:addButton(rect, captionText, func, textColor, frameColor, backgroundColor)
 	textColor = textColor or Color(0xff, 0xff, 0xff, 0xff)
 	frameColor = frameColor or textColor
