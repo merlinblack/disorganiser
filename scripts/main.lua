@@ -49,7 +49,7 @@ function MainScreen:build()
 		print 'Weather update stopped.'
 	end
 
-	addTask(updateWeather)
+	addTask(updateWeather,'weather')
 	
 	self.renderList:add(clockRenderList)
 end

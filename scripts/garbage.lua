@@ -6,4 +6,4 @@ function collectorTask()
 	end
 end
 collectgarbage('generational')
-addTask(collectorTask)
+addTask(collectorTask,'garbage')

@@ -18,4 +18,4 @@ function updateClock()
 	print( 'clock stopped')
 end
 
-addTask(updateClock)
+addTask(updateClock,'clock')
