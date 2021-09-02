@@ -3,6 +3,9 @@
 #include <lua.hpp>
 #include <SDL2/SDL.h>
 #include <sstream>
+#include <algorithm>
+
+using ManualBind::LuaRef;
 
 const std::string dumpstack_str(lua_State* L );
 
@@ -10,6 +13,7 @@ static const char LuaRegisteryGUID = 0;
 
 ScriptManager::ScriptManager()
 {
+	tasks.reserve(10);
 	main = luaL_newstate();
 	luaL_openlibs(main);
 	registerAllBindings(main);
@@ -19,6 +23,10 @@ ScriptManager::ScriptManager()
 
 	lua_pushcfunction(main, taskFromFunction);
 	lua_setglobal(main,"addTask");
+	lua_pushcfunction(main, getTaskList);
+	lua_setglobal(main,"getTasks");
+	lua_pushcfunction(main, wakeupTask);
+	lua_setglobal(main,"wakeTask");
 
 	luaL_dostring( main, "package.path = './scripts/?.lua;' .. package.path" );
 	luaL_dostring( main, "package.cpath = './scripts/?.so;' .. package.path" );
@@ -33,6 +41,7 @@ void ScriptManager::shutdown()
 {
 	if (main)
 	{
+		tasks.clear();
 		lua_close(main);
 		main = nullptr;
 	}
@@ -43,20 +52,65 @@ ManualBind::LuaRef ScriptManager::getGlobal(const std::string& name)
 	return ManualBind::LuaRef::getGlobal(main, name.c_str());
 }
 
-/** \note static member **/
-int ScriptManager::taskFromFunction(lua_State* L)
+ScriptManager* getInstance(lua_State* L)
 {
 	lua_pushlightuserdata(L, (void*)&LuaRegisteryGUID);
 	lua_gettable(L, LUA_REGISTRYINDEX);
 	ScriptManager* self = static_cast<ScriptManager *>(lua_touserdata(L, -1));
 	lua_pop(L,1);
 
+	return self;
+}
+
+/** \note static member **/
+int ScriptManager::taskFromFunction(lua_State* L)
+{
+	ScriptManager* self = getInstance(L);
+
 	if (lua_type(L,1) != LUA_TFUNCTION)
 	{
 		luaL_error(L, "Parameter must be a function");
 	}
 
-	self->threadFromStack(L);
+	std::string name = luaL_optstring(L, 2, "<unknown>");
+
+	self->threadFromStack(L, name);
+
+	return 0;
+}
+
+/** \note static member **/
+int ScriptManager::getTaskList(lua_State* L)
+{
+	ScriptManager* self = getInstance(L);
+
+	LuaRef table = LuaRef::newTable(L);
+
+	for(auto task = self->tasks.begin(); task < self->tasks.end(); task++)
+	{
+		table.append(task->getName());
+	}
+
+	table.push();
+
+	return 1;
+}
+
+/** \note static member **/
+int ScriptManager::wakeupTask(lua_State* L)
+{
+	ScriptManager* self = getInstance(L);
+
+	std::string name = luaL_checkstring(L, 1);
+
+	auto match = [name](Task& t){ return t.getName() == name; };
+
+	auto i = std::find_if(self->tasks.begin(), self->tasks.end(), match);
+
+	if (i != self->tasks.end())
+	{
+		i->wakeUp();
+	}
 
 	return 0;
 }
@@ -67,11 +121,13 @@ bool ScriptManager::loadFromString(const std::string& code)
 	{
 		std::string error(lua_tostring(main, -1));
 
-		SDL_Log("%s", error.c_str());
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", error.c_str());
 		return true;
 	}
 
-	return threadFromStack(main);
+	threadFromStack(main, code);
+
+	return false;
 }
 
 bool ScriptManager::loadFromFile(const std::string& path)
@@ -80,41 +136,56 @@ bool ScriptManager::loadFromFile(const std::string& path)
 	{
 		std::string error(lua_tostring(main, -1));
 
-		SDL_Log("%s", error.c_str());
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", error.c_str());
 		return true;
 	}
 
-	return threadFromStack(main);
-}
-
-bool ScriptManager::threadFromStack(lua_State* L)
-{
-	lua_State* thread = lua_newthread(L);
-
-	int coroutine = luaL_ref(L, LUA_REGISTRYINDEX);
-
-	lua_xmove(L, thread, 1);
-
-	coroutines.push_back(coroutine);
-	coroutineIter = coroutines.begin();
+	threadFromStack(main, path);
 
 	return false;
 }
 
+void ScriptManager::threadFromStack(lua_State* L, const std::string& name)
+{
+	lua_State* thread = lua_newthread(main);
+
+	LuaRef coroutine = LuaRef::fromStack(main);
+
+	lua_pop(main, 1);
+
+	lua_xmove(L, thread, lua_gettop(L));
+
+	tasks.emplace_back(coroutine, name);
+	taskIter = tasks.begin();
+}
+
 bool ScriptManager::resume()
 {
-	if (coroutines.empty() == true)
+	if (tasks.empty() == true)
 	{
 		return true;
 	}
 
-	lua_rawgeti(main, LUA_REGISTRYINDEX, *coroutineIter);
-
+	taskIter->getRef().push();
 	lua_State* thread = lua_tothread(main, -1);
 	lua_pop(main, 1);
 
+	if (taskIter->shouldWake())
+	{
+		lua_pushliteral(thread, "wakeup");
+		taskIter->wakeUp(false);
+	}
+
+	int nargs = lua_gettop(thread);
+	if (lua_type(thread, 1) == LUA_TFUNCTION)
+	{
+		// Starting task for first time. Function is the task function.
+		--nargs;
+	}
+
 	int nResults;
-	int ret = lua_resume(thread, main, 0, &nResults);
+	int ret = lua_resume(thread, main, nargs, &nResults);
+
 	bool errorFlag = false;
 
 	switch (ret)
@@ -124,17 +195,16 @@ bool ScriptManager::resume()
 			// Fall through.
 		case 0:
 			// Ran to completion or had an error.
-			luaL_unref(main, LUA_REGISTRYINDEX, *coroutineIter);
-			coroutineIter = coroutines.erase(coroutineIter);
+			taskIter = tasks.erase(taskIter);
 			break;
 		case LUA_YIELD:
-			coroutineIter++;
+			taskIter++;
 			break;
 	}
 
-	if (coroutineIter == coroutines.end())
+	if (taskIter == tasks.end())
 	{
-		coroutineIter = coroutines.begin();
+		taskIter = tasks.begin();
 	}
 
 	reportStack(thread, errorFlag);

@@ -7,7 +7,22 @@
 #include <string>
 #include <memory>
 
-using CoroutineList = std::vector<int>;
+class Task
+{
+	ManualBind::LuaRef ref;
+	std::string name;
+	bool wake;
+
+	public:
+	Task(ManualBind::LuaRef& ref, const std::string& name) : ref(ref), name(name), wake(false) {}
+	void wakeUp(bool flag = true) { wake = flag; }
+
+	const ManualBind::LuaRef& getRef() { return ref; }
+	const std::string& getName() { return name; }
+	int shouldWake() { return wake; }
+};
+
+using TaskList = std::vector<Task>;
 
 /**
  * \brief Managages loading and running scripts
@@ -15,10 +30,10 @@ using CoroutineList = std::vector<int>;
 class ScriptManager
 {
 	lua_State* main;
-	CoroutineList coroutines;
-	CoroutineList::iterator coroutineIter;
+	TaskList tasks;
+	TaskList::iterator taskIter;
 
-	bool threadFromStack(lua_State* L);
+	void threadFromStack(lua_State* L, const std::string& name);
 
 	public:
 	ScriptManager();
@@ -36,6 +51,8 @@ class ScriptManager
 	ManualBind::LuaRef getGlobal(const std::string &name);
 
 	static int taskFromFunction(lua_State* L);
+	static int getTaskList(lua_State* L);
+	static int wakeupTask(lua_State* L);
 };
 
 using ScriptManagerPtr = std::shared_ptr<ScriptManager>;
