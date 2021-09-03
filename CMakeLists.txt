@@ -42,6 +42,8 @@ add_executable (disorganiser
     ${HDRS}
     )
 
+target_include_directories(disorganiser PRIVATE "${SDL2_INCLUDE_DIRS}/..")
+
 target_link_libraries(disorganiser
     ${Lua_LIBRARIES}
     SDL2::Main SDL2::Image SDL2::TTF

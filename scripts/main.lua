@@ -40,9 +40,15 @@ function MainScreen:build()
 		local color = Color(0xfe,0x0a,0x4a,0xc0)
 		while not self.stopWeatherUpdate do
 			readLocalWeatherFile()
-			temperature.texture = app.renderer:textureFromText(font, weather.temperature .. ' °C',color)
-			pressure.texture = app.renderer:textureFromText(font, weather.pressure .. ' mbar',color)
-			humidity.texture = app.renderer:textureFromText(font, weather.humidity .. '% RH',color)
+			if weather.temperature ~= '' then
+				temperature.texture = app.renderer:textureFromText(font, weather.temperature .. ' °C',color)
+				pressure.texture = app.renderer:textureFromText(font, weather.pressure .. ' mbar',color)
+				humidity.texture = app.renderer:textureFromText(font, weather.humidity .. '% RH',color)
+			else
+				temperature.texture = app.emptyTexture
+				pressure.texture = app.emptyTexture
+				humidity.texture = app.emptyTexture
+			end
 			self.renderList:shouldRender()
 			wait(60*1000)
 		end

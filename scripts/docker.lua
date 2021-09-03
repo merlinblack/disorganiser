@@ -72,7 +72,7 @@ function Docker:runOnVader(prog)
 		self.renderList:add(renderList)
 
 		local proc <close> = ProcessReader()
-		proc:add('ssh')
+		proc:set('ssh')
 		proc:add('vader')
 		proc:add(prog)
 		proc:open()

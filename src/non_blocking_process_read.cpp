@@ -1,3 +1,4 @@
+#include <non_blocking_process_read.h>
 #include <vector>
 #include <string>
 #include <sstream>
@@ -7,33 +8,13 @@
 
 using StringVector = std::vector<std::string>;
 
-class NonBlockingProcessRead
-{
-	StringVector args;
-	int fd;
-
-	public:
-	NonBlockingProcessRead() : fd(-1) {}
-	~NonBlockingProcessRead() { close(); }
-
-	inline void addArgument(const std::string& newArg) { args.push_back(newArg); };
-	inline void clearArgs() { args.clear(); }
-	/** \return true on error */
-	bool open();
-	/** \return true if there is more to be read, false for error or finished */
-	bool read(std::string& buffer);
-	void close();
-#ifdef __APPLE__
-    int pipe2( int fds[2], int flags);
-#endif
-
-};
-
 bool NonBlockingProcessRead::open()
 {
 	std::vector<char *> cargs;
 
 	cargs.reserve(args.size()+1);
+
+	cargs.push_back(program.data());
 
 	for( std::string& sp: args)
 	{

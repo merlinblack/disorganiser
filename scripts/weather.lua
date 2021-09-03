@@ -7,9 +7,9 @@ function readLocalWeatherFile()
 		dofile(localWeatherFile)
 	else
 		weather = {
-			temperature = '??.??',
-			pressure = '????.??',
-			humidity = '??.??'
+			temperature = '',
+			pressure = '',
+			humidity = ''
 		}
 	end
 end

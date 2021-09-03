@@ -47,9 +47,9 @@ void ScriptManager::shutdown()
 	}
 }
 
-ManualBind::LuaRef ScriptManager::getGlobal(const std::string& name)
+LuaRef ScriptManager::getGlobal(const std::string& name)
 {
-	return ManualBind::LuaRef::getGlobal(main, name.c_str());
+	return LuaRef::getGlobal(main, name.c_str());
 }
 
 ScriptManager* getInstance(lua_State* L)
@@ -103,9 +103,9 @@ int ScriptManager::wakeupTask(lua_State* L)
 
 	std::string name = luaL_checkstring(L, 1);
 
-	auto match = [name](Task& t){ return t.getName() == name; };
+	auto matchName = [&name](Task& t){ return t.getName() == name; };
 
-	auto i = std::find_if(self->tasks.begin(), self->tasks.end(), match);
+	auto i = std::find_if(self->tasks.begin(), self->tasks.end(), matchName);
 
 	if (i != self->tasks.end())
 	{
