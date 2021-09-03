@@ -15,6 +15,7 @@ class Task
 
 	public:
 	Task(ManualBind::LuaRef& ref, const std::string& name) : ref(ref), name(name), wake(false) {}
+	/** \brief if the task is waiting, signal to stop waiting */
 	void wakeUp(bool flag = true) { wake = flag; }
 
 	const ManualBind::LuaRef& getRef() { return ref; }
@@ -25,12 +26,13 @@ class Task
 using TaskList = std::vector<Task>;
 
 /**
- * \brief Managages loading and running scripts
+ * \brief Managages loading and running scripts as well as tasks.
  */
 class ScriptManager
 {
 	lua_State* main;
 	TaskList tasks;
+	/** current task. Normally increments each call to resume. */
 	TaskList::iterator taskIter;
 
 	void threadFromStack(lua_State* L, const std::string& name);
@@ -50,6 +52,7 @@ class ScriptManager
 	lua_State* getMainLuaState() { return main; }
 	ManualBind::LuaRef getGlobal(const std::string &name);
 
+	/** Methods for calling from Lua */
 	static int taskFromFunction(lua_State* L);
 	static int getTaskList(lua_State* L);
 	static int wakeupTask(lua_State* L);

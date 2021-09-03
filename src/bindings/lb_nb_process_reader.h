@@ -14,6 +14,7 @@ struct ProcessReaderBinding : ManualBind::Binding<ProcessReaderBinding, NonBlock
 			{ "open", open },
 			{ "close", close },
 			{ "add", add },
+			{ "set", set },
 			{ "clear", clear },
 			{ "read", read },
 			{ nullptr, nullptr }
@@ -47,6 +48,14 @@ struct ProcessReaderBinding : ManualBind::Binding<ProcessReaderBinding, NonBlock
 		NonBlockingProcessReadPtr nbpr = fromStack(L,1);
 		std::string arg( luaL_checkstring(L, 2));
 		nbpr->addArgument(arg);
+		return 0;
+	}
+
+	static int set(lua_State* L)
+	{
+		NonBlockingProcessReadPtr nbpr = fromStack(L,1);
+		std::string program( luaL_checkstring(L, 2));
+		nbpr->setProgram(program);
 		return 0;
 	}
 

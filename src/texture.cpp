@@ -48,9 +48,9 @@ bool Texture::createEmpty(const SDL_Renderer* const_renderer)
 		return true;
 	}
 
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderTarget(renderer, texture);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
 	SDL_RenderClear(renderer);
 	SDL_SetRenderTarget(renderer, nullptr);
 
