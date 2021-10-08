@@ -26,6 +26,7 @@ struct RenderListBinding : public ManualBind::Binding<RenderListBinding,RenderLi
 			{ "sort", sort },
 			{ "insert", insert },
 			{ "remove", remove },
+			{ "clear", clear },
 			{ "add", add },
 			{ "shouldRender", shouldRender },
 			{ nullptr, nullptr }
@@ -67,6 +68,15 @@ struct RenderListBinding : public ManualBind::Binding<RenderListBinding,RenderLi
 		RenderablePtr r = RenderableBinding::fromStack( L, 2 );
 
 		rl->remove( r );
+
+		return 0;
+	}
+
+	static int clear( lua_State* L )
+	{
+		RenderListPtr rl = fromStack( L, 1 );
+
+		rl->clear();
 
 		return 0;
 	}

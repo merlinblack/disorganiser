@@ -166,14 +166,16 @@ bool ScriptManager::resume()
 		return true;
 	}
 
-	taskIter->getRef().push();
+	TaskList::iterator currentTask = taskIter;
+
+	currentTask->getRef().push();
 	lua_State* thread = lua_tothread(main, -1);
 	lua_pop(main, 1);
 
-	if (taskIter->shouldWake())
+	if (currentTask->shouldWake())
 	{
 		lua_pushliteral(thread, "wakeup");
-		taskIter->wakeUp(false);
+		currentTask->wakeUp(false);
 	}
 
 	int nargs = lua_gettop(thread);
@@ -195,7 +197,7 @@ bool ScriptManager::resume()
 			// Fall through.
 		case 0:
 			// Ran to completion or had an error.
-			taskIter = tasks.erase(taskIter);
+			taskIter = tasks.erase(currentTask);
 			break;
 		case LUA_YIELD:
 			taskIter++;

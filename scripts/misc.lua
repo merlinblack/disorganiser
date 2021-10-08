@@ -31,6 +31,7 @@ function wait(ms)
 	while app.ticks < finish and status ~= 'wakeup' do
 		status = yield()
 	end
+	return status == 'wakeup'
 end
 
 function waitForTask(taskName)
