@@ -1,5 +1,7 @@
 require 'events'
 require 'eventnames'
+
+-- Perhaps this should be part of screen class?
 currentScreen = nil
 
 function setCurrentScreen(newScreen)
@@ -7,6 +9,10 @@ function setCurrentScreen(newScreen)
 		currentScreen:deactivate()
 	end
 	currentScreen = newScreen
+end
+
+function getCurrentScreen()
+	return currentScreen
 end
 
 function handleTouch(type, x, y, dx, dy)
@@ -48,7 +54,7 @@ function handleKeyUp(symbol)
 	if code[codepos] == symbol then
 		codepos = codepos + 1
 		if codepos == 5 then
-			addTask(screenSaveTask)
+			addTask(screenSaveTask, 'screensaver')
 			codepos = 1
 		end
 	else

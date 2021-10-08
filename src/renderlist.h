@@ -79,6 +79,11 @@ class RenderList : public Renderable
 		list.remove( item );
 	}
 
+	inline void clear()
+	{
+		list.clear();
+	}
+
 	// Adds item at the end and adjusts it's sort order
 	inline void add( RenderablePtr&& item )
 	{

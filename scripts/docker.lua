@@ -4,7 +4,8 @@ require 'textlog'
 class 'Docker' (Screen)
 
 function Docker:build()
-	Screen.build(self)
+	--Screen.build(self)
+	self.font = Font('media/pirulen.otf',16)
 	local rectangle <close> = Rectangle(Color(0,0,0,0), true, {0, 0, app.width, app.height})
 	self.renderList:add(rectangle)
 	local background <close> = app.renderer:textureFromFile('media/docker.png')
@@ -13,27 +14,27 @@ function Docker:build()
 	local rectangle <close> = Rectangle(background, dest, src)
 	self.renderList:add(rectangle)
 
-	local btn = { 620, 390, 140, 70}
+	local btn = {620, 350, 140, 100}
 	local textcolor = Color(0xff,0x45,0x8a,0xff)
 	local backcolor = Color(0xff,0x45,0x8a,0x30)
 
 	self:addButton(btn, 'geri', function() mainScreen:activate() end, textcolor, nil, backcolor)
-	btn[2] = btn[2] - 160
+	btn[2] = btn[2] - 120
 
 	self:addButton(btn, 'durdur', function() self:durdur() end, textcolor, nil, backcolor)
-	btn[2] = btn[2] - 90
+	btn[2] = btn[2] - 104
 
 	self:addButton(btn, 'products', function() self:start('products') end, textcolor, nil, backcolor)
-	btn[2] = btn[2] - 90
+	btn[2] = btn[2] - 104
 	
 	self:addButton(btn, 'orders', function() self:start('orders') end, textcolor, nil, backcolor)
-	btn[1] = btn[1] - 160
+	btn[1] = btn[1] - 144
 	
 	self:addButton(btn, 'auth', function() self:start('auth') end, textcolor, nil, backcolor)
-	btn[2] = btn[2] + 90
+	btn[2] = btn[2] + 104
 
 	self:addButton(btn, 'dynamo', function() self:start('dynamo') end, textcolor, nil, backcolor)
-	btn[2] = btn[2] + 90
+	btn[2] = btn[2] + 104
 
 	self:addButton(btn, 'hq', function() self:start('hq') end, textcolor, nil, backcolor)
 	
@@ -59,11 +60,11 @@ function Docker:runOnVader(prog)
 		local font <close> = Font('media/mono.ttf',14)
 		local tl = TextLog(
 			renderList, 
-			11, 51,
+			11, 24,
 			Color(0xff, 0, 0xff, 0x40),
 			Color(0xff, 0xff, 0xff, 0xff),
 			font, 
-			420, 20)
+			430, 20)
 
 		local frame <close> = Rectangle(Color(0xff,0,0xff,0xff), false, growRect(tl.bounds))
 

@@ -21,7 +21,6 @@ function Screen:init()
 end
 
 function Screen:build()
-	self.font = Font('media/mono.ttf',24)
 end
 
 function Screen:activate()
@@ -33,7 +32,14 @@ end
 function Screen:deactivate()
 end
 
+function Screen:isActive()
+	return getCurrentScreen() == self
+end
+
 function Screen:addButton(rect, captionText, func, textColor, frameColor, backgroundColor)
+	if not self.font then
+		self.font = Font('media/pirulen.otf',22)
+	end
 	textColor = textColor or Color(0xff, 0xff, 0xff, 0xff)
 	frameColor = frameColor or textColor
 	backgroundColor = backgroundColor or Color(0, 0, 0, 0xa0)
