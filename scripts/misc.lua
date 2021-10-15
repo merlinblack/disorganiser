@@ -23,6 +23,10 @@ function shrinkRect(rect, amount)
 	return growRect(rect, -amount)
 end
 
+function dirlist(path)
+	return io.popen('ls ' .. path):lines()
+end
+
 yield = coroutine.yield
 
 function wait(ms)
