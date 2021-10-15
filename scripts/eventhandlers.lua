@@ -54,11 +54,16 @@ function handleKeyUp(symbol)
 	if code[codepos] == symbol then
 		codepos = codepos + 1
 		if codepos == 5 then
+			screenSaver:setDirectory('media/special/')
 			addTask(screenSaveTask, 'screensaver')
 			codepos = 1
 		end
 	else
 		codepos = 1
+		if symbol == 115 then
+			screenSaver:setDirectory('media/alara/')
+			addTask(screenSaveTask, 'screensaver')
+		end
 	end
 	print(codepos)
 end
