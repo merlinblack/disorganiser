@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <sys/wait.h>
 
 using StringVector = std::vector<std::string>;
 
@@ -11,6 +12,7 @@ class NonBlockingProcessRead
 	std::string program;
 	StringVector args;
 	int fd;
+	pid_t child_pid;
 
 	public:
 	NonBlockingProcessRead() : fd(-1) {}
