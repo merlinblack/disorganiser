@@ -9,7 +9,10 @@ function ScreenSaver:build()
 end
 
 function ScreenSaver:setDirectory(directory)
-	self.directory = directory
+	if self.directory ~= directory then
+		self.pictureIter = function() end
+		self.directory = directory
+	end
 end
 
 function ScreenSaver:setTime(secs)
@@ -57,14 +60,13 @@ screenSaver = ScreenSaver()
 function screenSaveTask()
 	screenSaver:activate()
 
-	local pictureIter = function() end
 	screenSaver.stop = false
 	clockJitter = true
 	while not screenSaver.stop do
-		picture = pictureIter()
+		picture = screenSaver.pictureIter()
 		if not picture then
-			pictureIter = dirlist(screenSaver.directory .. '*.jpg')
-			picture = pictureIter()
+			screenSaver.pictureIter = dirlist(screenSaver.directory .. '*.jpg')
+			picture = screenSaver.pictureIter()
 		end
 
 		screenSaver:setPicture(picture)
