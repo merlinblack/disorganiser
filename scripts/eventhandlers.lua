@@ -3,6 +3,7 @@ require 'eventnames'
 
 -- Perhaps this should be part of screen class?
 currentScreen = nil
+lastEvent = 0
 
 function setCurrentScreen(newScreen)
 	if currentScreen then
@@ -16,6 +17,7 @@ function getCurrentScreen()
 end
 
 function handleTouch(type, x, y, dx, dy)
+	lastEvent = app.ticks
 	if type == EVENT_TOUCH_UP or type == EVENT_TOUCH_DOWN then
 		print('Touched: ' .. EventNames[type])
 		print(x,y)
@@ -30,6 +32,7 @@ function handleTouch(type, x, y, dx, dy)
 end
 
 function handleMouse(type, x, y, button, state, clicks)
+	lastEvent = app.ticks
 	if 0 then
 		print('Mouse: ' .. EventNames[type])
 		print('x,y:', x, y)
@@ -49,6 +52,7 @@ end
 
 codepos = 1
 function handleKeyUp(symbol)
+	lastEvent = app.ticks
 	code = {110,117,100,101}
 	print(symbol)
 	if code[codepos] == symbol then

@@ -30,7 +30,7 @@ bool NonBlockingProcessRead::open()
 		return true;
 	}
 
-	switch(fork())
+	switch(child_pid = fork())
 	{
 		case -1:
 			::close(p[0]);
@@ -91,6 +91,7 @@ void NonBlockingProcessRead::close()
 	if (fd >= 0)
 	{
 		::close(fd);
+		waitpid(child_pid, nullptr, 0);
 		fd = -1;
 	}
 }

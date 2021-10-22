@@ -29,7 +29,7 @@ function checkVaderTask()
 		if not vaderAlive then
 			suspend:activate()
 		end
-		wait(30000)
+		wait(5*60000)
 	end
 end
 

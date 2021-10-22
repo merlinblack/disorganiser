@@ -1,5 +1,6 @@
 require 'gui/screen'
 require 'clock'
+require 'suspend'
 
 class 'ScreenSaver' (Screen)
 
@@ -71,3 +72,17 @@ function screenSaveTask()
 	end
 	clockJitter = false
 end
+
+function checkForScreenSaveNeeded()
+	while true do
+		if getCurrentScreen() ~= screenSaver and getCurrentScreen() ~= suspend then
+			if lastEvent + 2*60000 < app.ticks then
+				screenSaver:setDirectory('media/alara/')
+				addTask(screenSaveTask, 'screensaver')
+			end
+		end
+		wait(1000)
+	end
+end
+
+addTask(checkForScreenSaveNeeded, 'screen saver check')
