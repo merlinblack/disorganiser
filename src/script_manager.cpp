@@ -29,7 +29,9 @@ ScriptManager::ScriptManager()
 	lua_setglobal(main,"wakeTask");
 
 	luaL_dostring( main, "package.path = './scripts/?.lua;' .. package.path" );
-	luaL_dostring( main, "package.cpath = './scripts/?.so;' .. package.path" );
+	luaL_dostring( main, "package.cpath = './scripts/?.so;' .. package.cpath" );
+	luaL_dostring( main, "package.path = '/usr/share/lua/5.4/?.lua;' .. package.path" );
+	luaL_dostring( main, "package.cpath = '/usr/lib64/lua/5.4/?.so;' .. package.cpath" );
 }
 
 ScriptManager::~ScriptManager()

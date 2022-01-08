@@ -45,7 +45,7 @@ function MainScreen:build()
 		local font <close> = Font('media/mono.ttf',24)
 		local color = Color(0xfe,0x0a,0x4a,0xc0)
 		while not self.stopWeatherUpdate do
-			readLocalWeatherFile()
+			readLocalWeather()
 			if weather.temperature ~= '' then
 				temperature.texture = app.renderer:textureFromText(font, weather.temperature .. ' °C',color)
 				pressure.texture = app.renderer:textureFromText(font, weather.pressure .. ' mbar',color)
