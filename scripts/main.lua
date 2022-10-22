@@ -1,6 +1,7 @@
 require 'clock'
 require 'docker'
 require 'weather'
+require 'unlock'
 
 require 'gui/screen'
 
@@ -25,6 +26,9 @@ function MainScreen:build()
 
 	btn[2] = btn[2] - 140
 	self:addButton(btn, 'Docker', function() docker:activate() end, textcolor, nil,backcolor)
+
+	btn[1] = btn[1] + 180
+	self:addButton(btn, 'Unlock', function() unlock:activate() end, textcolor, nil,backcolor)
 
 	local weatherbox <close> = Rectangle(backcolor, true, {20,5,260,130})
 	self.renderList:add(weatherbox)
@@ -78,7 +82,7 @@ function MainScreen:build()
 			wait(200)
 		end
 	end
-	addTask(animate,'animate')
+	--addTask(animate,'animate')
 	
 	self.renderList:add(clockRenderList)
 end

@@ -14,7 +14,7 @@ function Docker:build()
 	local rectangle <close> = Rectangle(background, dest, src)
 	self.renderList:add(rectangle)
 
-	local btn = {620, 350, 140, 100}
+	local btn = {620, 350, 160, 100}
 	local textcolor = Color(0xff,0x45,0x8a,0xff)
 	local backcolor = Color(0xff,0x45,0x8a,0x30)
 
@@ -24,16 +24,16 @@ function Docker:build()
 	self:addButton(btn, 'durdur', function() self:durdur() end, textcolor, nil, backcolor)
 	btn[2] = btn[2] - 104
 
-	self:addButton(btn, 'products', function() self:start('products') end, textcolor, nil, backcolor)
+	self:addButton(btn, 'products2', function() self:start('products2') end, textcolor, nil, backcolor)
 	btn[2] = btn[2] - 104
 	
 	self:addButton(btn, 'orders', function() self:start('orders') end, textcolor, nil, backcolor)
-	btn[1] = btn[1] - 144
+	btn[1] = btn[1] - 164
 	
 	self:addButton(btn, 'auth', function() self:start('auth') end, textcolor, nil, backcolor)
 	btn[2] = btn[2] + 104
 
-	self:addButton(btn, 'dynamo', function() self:start('dynamo') end, textcolor, nil, backcolor)
+	self:addButton(btn, 'scrapbook', function() self:start('scrapbook') end, textcolor, nil, backcolor)
 	btn[2] = btn[2] + 104
 
 	self:addButton(btn, 'hq', function() self:start('hq') end, textcolor, nil, backcolor)

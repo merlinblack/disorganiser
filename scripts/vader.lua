@@ -1,5 +1,5 @@
 require 'suspend'
--- Test is Vader is running every 30 secs
+-- Periodically test if Vader is running
 
 vaderAlive = true
 

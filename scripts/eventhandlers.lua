@@ -53,21 +53,8 @@ end
 codepos = 1
 function handleKeyUp(symbol)
 	lastEvent = app.ticks
-	code = {110,117,100,101}
-	print(symbol)
-	if code[codepos] == symbol then
-		codepos = codepos + 1
-		if codepos == 5 then
-			screenSaver:setDirectory('media/special/')
-			addTask(screenSaveTask, 'screensaver')
-			codepos = 1
-		end
-	else
-		codepos = 1
-		if symbol == 115 then
-			screenSaver:setDirectory('media/alara/')
-			addTask(screenSaveTask, 'screensaver')
-		end
+	if symbol == 's' then
+		screenSaver:setDirectory('media/alara/')
+		addTask(screenSaveTask, 'screensaver')
 	end
-	print(codepos)
 end
