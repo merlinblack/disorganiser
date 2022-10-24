@@ -1,6 +1,7 @@
 require 'clock'
 require 'docker'
 require 'weather'
+require 'weatherTrends'
 require 'unlock'
 
 require 'gui/screen'
@@ -30,7 +31,11 @@ function MainScreen:build()
 	btn[1] = btn[1] + 180
 	self:addButton(btn, 'Unlock', function() unlock:activate() end, textcolor, nil,backcolor)
 
-	local weatherbox <close> = Rectangle(backcolor, true, {20,5,260,130})
+	local weatherRect = {20,5,260,130}
+	local weatherbox <close> = Rectangle(backcolor, true, weatherRect)
+	local weatherBtn = Button(weatherRect)
+	weatherBtn:setAction( function() print(weatherTrends) weatherTrends:activate() end)
+	self:addChild(weatherBtn)
 	self.renderList:add(weatherbox)
 	local temperature = Rectangle(app.emptyTexture, {30, 15, 0, 0})
 	self.renderList:add(temperature)

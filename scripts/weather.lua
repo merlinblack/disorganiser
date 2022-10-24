@@ -18,3 +18,12 @@ function readLocalWeather()
 		}
 	end
 end
+
+function readLocalWeatherTrends()
+	data, status = http.request('http://192.168.1.105/api/weathertrends')
+	if status == 200 then
+		weatherTrendsData = json.decode(data)
+	else
+		weatherTrendsData = nil
+	end
+end
