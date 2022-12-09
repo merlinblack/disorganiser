@@ -1,5 +1,6 @@
 require 'gui/screen'
 require 'weather'
+require 'clock'
 
 class 'WeatherTrends' (Screen)
 
@@ -39,7 +40,7 @@ function WeatherTrends:build()
 		stable     = app.renderer:textureFromText(self.font, '-', textcolor)
 	}
 
-	btn = { app.width-100, app.height - 50, 100, 50}
+	btn = { app.width-100, app.height-70, 100, 50}
 	self:addButton(btn, 'Geri', function() mainScreen:activate() end, textcolor, nil, backcolor)
 
 	function updateTask()
@@ -54,6 +55,8 @@ function WeatherTrends:build()
 	end
 
 	addTask(updateTask,'weatherTrends')
+	
+	self.renderList:add(clockRenderList)
 
 end
 

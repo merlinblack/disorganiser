@@ -25,7 +25,7 @@ function Unlock:build()
 			buttonIndex = buttonIndex + 1
 		end
 	end
-	btn = { app.width-100, app.height - 50, 100, 50}
+	btn = { app.width-100, app.height - 70, 100, 50}
 	self:addButton(btn, 'Geri', function() mainScreen:activate() end, textcolor, nil, backcolor)
 
 	self.animation = Rectangle(app.emptyTexture, {app.width/8,5,0,0})
