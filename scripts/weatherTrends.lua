@@ -68,16 +68,18 @@ function WeatherTrends:buildDataTable()
 	readLocalWeather()
 	readLocalWeatherTrends()
 
-	local label <close> = Rectangle(app.renderer:textureFromText(self.font, weather.temperature, textcolor), {col2, 100, 0, 0})
+	local bigger <close> = Font('media/mono.ttf',32)
+
+	local label <close> = Rectangle(app.renderer:textureFromText(bigger, weather.temperature, textcolor), {col2, 100, 0, 0})
 	self.dataRenderList:add(label)
 
-	local label <close> = Rectangle(app.renderer:textureFromText(self.font, weather.pressure, textcolor), {col3, 100, 0, 0})
+	local label <close> = Rectangle(app.renderer:textureFromText(bigger, weather.pressure, textcolor), {col3, 100, 0, 0})
 	self.dataRenderList:add(label)
 
-	local label <close> = Rectangle(app.renderer:textureFromText(self.font, weather.humidity, textcolor), {col4, 100, 0, 0})
+	local label <close> = Rectangle(app.renderer:textureFromText(bigger, weather.humidity, textcolor), {col4, 100, 0, 0})
 	self.dataRenderList:add(label)
 
-	local row = 140
+	local row = 150
 
 	function showInterval(interval)
 		local label <close> = Rectangle(app.renderer:textureFromText(self.font, interval, textcolor), {col1, row, 0, 0})
