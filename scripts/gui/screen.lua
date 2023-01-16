@@ -38,26 +38,11 @@ end
 
 function Screen:addButton(rect, captionText, func, textColor, frameColor, backgroundColor)
 	if not self.font then
-		self.font = Font('media/pirulen.otf',22)
+	    self.font = Font('media/pirulen.otf', 22)
 	end
-	textColor = textColor or Color(0xff, 0xff, 0xff, 0xff)
-	frameColor = frameColor or textColor
-	backgroundColor = backgroundColor or Color(0, 0, 0, 0xa0)
 
-	local rectangle <close> = Rectangle(backgroundColor, true, rect)
-	self.renderList:add(rectangle)
+	local button = Button.create(rect, captionText, self.font, func, textColor, frameColor, backColor)
 
-	local text <close> = app.renderer:textureFromText(self.font, captionText, textColor)
-	local rectangle <close> = Rectangle(
-		text,
-		rect[1]+((rect[3]//2)-(text.width//2)),
-		rect[2]+((rect[4]//2)-(text.height//2))
-	)
-	self.renderList:add(rectangle)
-	local rectangle <close> = Rectangle( frameColor, false, rect )
-	self.renderList:add(rectangle)
-
-	btnWidget = Button(rect)
-	btnWidget:setAction(func)
-	self:addChild(btnWidget)
+	button:addToRender(self.renderList)
+	self:addChild(button)
 end
