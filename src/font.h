@@ -5,6 +5,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <string>
 #include <memory>
+#include <tuple>
 
 #include "texture.h"
 
@@ -24,7 +25,7 @@ class Font
 	
 	int lineHeight() { return TTF_FontLineSkip(font); }
 
-	bool sizeText(const std::string& text, int* width, int *height);
+	std::pair<int,int> sizeText(const std::string& text);
 	TexturePtr renderTextQuick(const SDL_Renderer* renderer, const std::string& text, SDL_Color color);
 	TexturePtr renderTextNice(const SDL_Renderer* renderer, const std::string& text, SDL_Color color);
 };

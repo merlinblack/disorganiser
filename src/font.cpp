@@ -12,14 +12,15 @@ Font::Font(const std::string &path, int size) : font(nullptr), failed(false)
 	}
 }
 
-bool Font::sizeText(const std::string &text, int *width, int *height)
+std::pair<int,int> Font::sizeText(const std::string &text)
 {
-	if (TTF_SizeUTF8(font, text.c_str(), width, height))
+	int width, height;
+	if (TTF_SizeUTF8(font, text.c_str(), &width, &height))
 	{
 		lastErrorMessage = TTF_GetError();
-		return false;
+		return {0,0};
 	}
-	return true;
+	return {width, height};
 }
 
 TexturePtr Font::renderTextQuick(const SDL_Renderer* renderer, const std::string& text, SDL_Color color)

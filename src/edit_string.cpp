@@ -44,8 +44,6 @@ void EditString::backWord()
 
 	while(*cursor != 32 && cursor != codepoints.begin())
 		back();
-
-	forward();
 }
 
 void EditString::forwardWord()
@@ -54,8 +52,6 @@ void EditString::forwardWord()
 
 	while(*cursor != 32 && cursor != codepoints.end())
 		forward();
-
-	back();
 }
 
 int EditString::getCharacaterIndex()

@@ -47,9 +47,8 @@ struct FontBinding : public ManualBind::Binding<FontBinding,Font>
 
 	static int sizeText(lua_State* L)
 	{
-		int w, h;
 		FontPtr font = fromStack(L, 1);
-		font->sizeText(luaL_checkstring(L,2), &w, &h);
+		auto [w, h] = font->sizeText(luaL_checkstring(L,2));
 		lua_pushinteger(L, w);
 		lua_pushinteger(L, h);
 		return 2;
