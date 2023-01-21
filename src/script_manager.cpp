@@ -88,9 +88,9 @@ int ScriptManager::getTaskList(lua_State* L)
 
 	LuaRef table = LuaRef::newTable(L);
 
-	for(auto task = self->tasks.begin(); task < self->tasks.end(); task++)
+	for(auto& task : self->tasks)
 	{
-		table.append(task->getName());
+		table.append(task.getName());
 	}
 
 	table.push();

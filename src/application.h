@@ -39,6 +39,7 @@ class Application
 	bool init(bool onRaspberry_);
 	void shutdown();
 
+	void handleTextInput(const SDL_Event &event);
 	void handleKeyUp(const SDL_Event &event);
 	void handleMouse(const SDL_Event &event);
 	void handleTouch(const SDL_Event &event);
@@ -56,6 +57,7 @@ class Application
 	RenderListPtr getRenderList() { return renderList; }
 	void setRenderList(RenderListPtr newList) { renderList = newList; }
 	const SDL_Renderer* getRenderer() { return sdl->getRenderer(); }
+	void setTextInputMode(bool enable);
 
 	TexturePtr getEmptyTexture();
 

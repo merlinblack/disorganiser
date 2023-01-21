@@ -115,3 +115,7 @@ function Widget:lostMouse()
         if child.lostMouse then child:lostMouse() end
     end
 end
+
+function Widget:getRect()
+    return {self.left, self.top, self.width, self.height}
+end

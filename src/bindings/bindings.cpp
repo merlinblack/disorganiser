@@ -7,6 +7,7 @@
 #include "lb_renderlist.h"
 #include "lb_texture.h"
 #include "lb_nb_process_reader.h"
+#include "lb_edit_string.h"
 
 const char* ColorBinding::prop_keys[] = {"r", "g", "b", "a"};
 
@@ -21,4 +22,5 @@ void registerAllBindings(lua_State* L)
 	RendererBinding::register_class(L);
 	TextureBinding::register_class(L);
 	ProcessReaderBinding::register_class(L);
+	EditStringBinding::register_class(L);
 }

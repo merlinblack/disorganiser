@@ -92,20 +92,33 @@ void Application::shutdown()
 	sdl->shutdown();
 }
 
+void Application::setTextInputMode(bool enable)
+{
+	if (enable)
+	{
+		SDL_StartTextInput();
+	}
+	else
+	{
+		SDL_StopTextInput();
+	}
+}
+
+void Application::handleTextInput(const SDL_Event& event)
+{
+	LuaRef textInput = scripts->getGlobal("handleTextInput");
+	if (textInput.isFunction())
+	{
+		textInput(event.text.text);
+	}
+}
+
 void Application::handleKeyUp(const SDL_Event& event)
 {
-	switch (event.key.keysym.sym)
+	LuaRef keyUp = scripts->getGlobal("handleKeyUp");
+	if (keyUp.isFunction())
 	{
-		case SDLK_ESCAPE:
-			shouldStop = true;
-			break;
-		default:
-			LuaRef keyUp = scripts->getGlobal("handleKeyUp");
-			if (keyUp.isFunction())
-			{
-				keyUp(event.key.keysym.sym);
-			}
-			break;
+		keyUp((int)event.key.keysym.scancode, (char)event.key.keysym.sym);
 	}
 }
 
@@ -177,6 +190,9 @@ void Application::dispatchEvent(const SDL_Event& event)
 		shouldRender = true;
 		break;
 	*/
+	case SDL_TEXTINPUT:
+		handleTextInput(event);
+		break;
 	case SDL_KEYUP:
 		handleKeyUp(event);
 		break;

@@ -1,9 +1,11 @@
 require 'events'
 require 'eventnames'
+require 'console'
 
 -- Perhaps this should be part of screen class?
 currentScreen = nil
 lastEvent = 0
+consoleActive = false
 
 function setCurrentScreen(newScreen)
 	if currentScreen then
@@ -64,10 +66,25 @@ function handleMouse(type, x, y, button, state, clicks)
 	end
 end
 
-function handleKeyUp(symbol)
+function handleKeyUp(code, sym)
+	--print('handleKeyUp()', code, sym)
 	lastEvent = app.ticks
-	if symbol == 's' then
-		screenSaver:setDirectory('media/alara/')
-		addTask(screenSaveTask, 'screensaver')
+	if not console:isEnabled() then
+		if code == 41 then -- Escape
+			app.shouldStop = true
+		end
+		if sym == 's' then
+			screenSaver:setDirectory('media/alara/')
+			addTask(screenSaveTask, 'screensaver')
+		end
+		if sym == '`' then
+			console:toggleEnabled()
+		end
+	else
+		console:keyUp(code, sym)
 	end
+end
+
+function handleTextInput(text)
+	console:textInput(text)
 end

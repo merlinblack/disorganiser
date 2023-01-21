@@ -23,6 +23,7 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 			{ "version", get, nullptr },
 			{ "renderList", getRenderList, setRenderList },
 			{ "emptyTexture", get, nullptr },
+			{ "textInputMode", getTextInputMode, setTextInputMode },
 			{ nullptr, nullptr, nullptr }
 		};
 		return properties;
@@ -97,6 +98,20 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 		ApplicationPtr app = fromStack(L,1);
 		RenderListPtr newList = RenderListBinding::fromStack(L,3);
 		app->setRenderList(std::move(newList));
+		return 0;
+	}
+
+	static int getTextInputMode(lua_State* L)
+	{
+		lua_pushboolean(L, SDL_IsTextInputActive());
+		return 1;
+	}
+
+	static int setTextInputMode(lua_State* L)
+	{
+		ApplicationPtr app = fromStack(L,1);
+		bool enable = luaL_opt(L, lua_toboolean, 2, true);
+		app->setTextInputMode(enable);
 		return 0;
 	}
 };
