@@ -213,7 +213,7 @@ bool ScriptManager::resume()
 
 	reportStack(thread, errorFlag);
 
-	lua_pop(thread, nResults);
+	lua_settop(thread, 0);
 
 	return errorFlag;
 }
@@ -223,7 +223,7 @@ void ScriptManager::reportStack( lua_State* thread, bool wasError )
 	// Report stack contents
 	// In the case of a yielded chunk these are the parameters to yield.
 	if( wasError ) {
-	  lua_getglobal( thread, "print" );
+	  lua_getglobal( thread, "write" );
 	  lua_pushliteral( thread, "Error" );
 	  lua_pushvalue( thread, -3 );
 	  lua_pcall(thread, 2, 0, 0);
@@ -233,7 +233,7 @@ void ScriptManager::reportStack( lua_State* thread, bool wasError )
 	{
 	  std::string stack = dumpstack_str( thread );
 	  lua_settop( thread, 0 );
-	  lua_getglobal( thread, "print" );
+	  lua_getglobal( thread, "write" );
 	  lua_pushstring( thread, stack.c_str() );
 	  lua_pcall(thread, 1, 0, 0);
 	}

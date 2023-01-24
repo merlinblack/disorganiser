@@ -1,5 +1,6 @@
 require 'gui/widget'
 require 'misc'
+require 'run'
 
 class 'Console' (Widget)
 
@@ -18,7 +19,7 @@ function Console:build()
 	local frameColor = Color(64,127,64,255)
 	local cursorColor = Color(0,255,0,255)
 
-	self.textColor = Color(0,255,0,255)
+	self.textColor = Color(128,255,0,255)
 	self.topMargin = 5
 	self.bottomMargin = 20
 	self.leftMargin = 10
@@ -63,11 +64,11 @@ function Console:setEnabled(enabled)
 		self.enabled = enabled
 		app.textInputMode = enabled
 		if enabled then
-			app.renderList:add(console.renderList)
+			app.overlay:add(console.renderList)
 		else
-			app.renderList:remove(console.renderList)
+			app.overlay:remove(console.renderList)
 		end
-		app.renderList:shouldRender()
+		app.overlay:shouldRender()
 		print( 'Console: ', self.enabled)
 end
 
@@ -84,8 +85,10 @@ end
 function Console:keyUp(code, sym)
 	print('Console - key up: ', code, sym)
 	if code == 40 then -- enter
-		self:addLine(self.edit:getString())
+		line = self.edit:getString()
 		self.edit:clear()
+		self:addLine(line)
+		runlua:insertLine(line)
 		self:updateInputDisplay()
 	end
 	if code == 41 then -- Escape
@@ -128,16 +131,24 @@ function Console:keyUp(code, sym)
 	end
 end
 
-function Console:write(text)
+function Console:write(text, addLastNewLine)
+	print('Console:write:',text, addLastNewLine)
+	if addLastNewLine == nil then
+		addLastNewLine = true
+	end
+
 	lines = splitByNewline(text)
 	for _,line in pairs(lines) do
 		self:addLine(line)
 	end
-	self:addLine("")
+	if addLastNewLine then
+		self:addLine("")
+	end
 end
 
 function Console:addLine(text)
 
+	print('Addline:',text)
 	if self.currentLine == self.nlines then
 		for i = 1, self.nlines-1 do
 			self.lineRectangles[i].texture = self.lineRectangles[i+1].texture
@@ -153,12 +164,13 @@ function Console:addLine(text)
 		local newTexture <close> = app.renderer:textureFromText(self.font, text, self.textColor)
 		self.lineRectangles[self.currentLine].texture = newTexture
 	end
+
 	self.renderList:shouldRender()
 end
 
 function Console:updateInputDisplay()
-	text = self.edit:getString()
-	print( 'InputLine:', text)
+	text = runlua:getPrompt() .. self.edit:getString()
+	print( 'InputLine: ['.. text ..']')
 
 	line = self.currentLine
 
@@ -170,7 +182,8 @@ function Console:updateInputDisplay()
 		self.lineRectangles[line].texture = newTexture
 	end
 
-	self.cursorRectangle:setDest({self.leftMargin + self.edit:index() * self.charWidth, self.topMargin + line*self.lineHeight, self.charWidth, self.lineHeight})
+	local pos = self.edit:index() + #runlua:getPrompt()
+	self.cursorRectangle:setDest({self.leftMargin + pos * self.charWidth, self.topMargin + line*self.lineHeight, self.charWidth, self.lineHeight})
 
 	self.renderList:shouldRender()
 end
@@ -180,7 +193,8 @@ function Console:blinkCursor()
 		self.cursorShown = not self.cursorShown
 
 		if self.cursorShown then
-			self.cursorRectangle:setDest({self.leftMargin + self.edit:index() * self.charWidth, self.topMargin + (self.currentLine)*self.lineHeight, self.charWidth, self.lineHeight})
+			local pos = self.edit:index() + #runlua:getPrompt()
+			self.cursorRectangle:setDest({self.leftMargin + pos * self.charWidth, self.topMargin + (self.currentLine)*self.lineHeight, self.charWidth, self.lineHeight})
 		else
 			self.cursorRectangle:setDest({0, 0, 0, 0})
 		end
@@ -192,8 +206,14 @@ end
 
 console = Console()
 
-function write(text)
-	console:write(text)
+function write(...)
+	print(...)
+	local args = table.pack(...)
+	for i = 1, args.n do
+		console:write(args[i], false)
+	end
+	console:addLine ""
+	console:updateInputDisplay()
 end
 
 addTask(function() console:blinkCursor() end, "console cursor blink")

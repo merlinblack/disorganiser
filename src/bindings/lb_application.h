@@ -22,6 +22,7 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 			{ "height", get, nullptr },
 			{ "version", get, nullptr },
 			{ "renderList", getRenderList, setRenderList },
+			{ "overlay", getOverlay, setOverlay },
 			{ "emptyTexture", get, nullptr },
 			{ "textInputMode", getTextInputMode, setTextInputMode },
 			{ nullptr, nullptr, nullptr }
@@ -98,6 +99,21 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 		ApplicationPtr app = fromStack(L,1);
 		RenderListPtr newList = RenderListBinding::fromStack(L,3);
 		app->setRenderList(std::move(newList));
+		return 0;
+	}
+
+	static int getOverlay(lua_State* L)
+	{
+		ApplicationPtr app = fromStack(L,1);
+		RenderListBinding::push(L, app->getOverlay());
+		return 1;
+	}
+
+	static int setOverlay(lua_State* L)
+	{
+		ApplicationPtr app = fromStack(L,1);
+		RenderListPtr newList = RenderListBinding::fromStack(L,3);
+		app->setOverlay(std::move(newList));
 		return 0;
 	}
 

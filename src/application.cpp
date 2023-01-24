@@ -18,6 +18,7 @@ Application::Application() :
 	timer = std::make_shared<Timer>();
 	scripts = std::make_shared<ScriptManager>();
 	renderList = std::make_shared<RenderList>();
+	overlayRenderList = std::make_shared<RenderList>();
 }
 
 Application::~Application()
@@ -169,10 +170,11 @@ void Application::handleTimer(const SDL_Event& event)
 
 void Application::render()
 {
-	if (renderList->shouldRender())
+	if (renderList->shouldRender()||overlayRenderList->shouldRender())
 	{
 		sdl->clear();
 		renderList->render(sdl->getRenderer());
+		overlayRenderList->render(sdl->getRenderer());
 		sdl->present();
 	}
 }

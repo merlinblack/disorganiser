@@ -27,6 +27,7 @@ class Application
 	ScriptManagerPtr scripts;
 
 	RenderListPtr renderList;
+	RenderListPtr overlayRenderList;
 	TexturePtr emptyTexture;
 
 	public:
@@ -55,7 +56,9 @@ class Application
 	void setShouldStop(bool val) { shouldStop = val; }
 	int getTicks() { return SDL_GetTicks(); }
 	RenderListPtr getRenderList() { return renderList; }
+	RenderListPtr getOverlay() { return overlayRenderList; }
 	void setRenderList(RenderListPtr newList) { renderList = newList; }
+	void setOverlay(RenderListPtr newList) { overlayRenderList = newList; }
 	const SDL_Renderer* getRenderer() { return sdl->getRenderer(); }
 	void setTextInputMode(bool enable);
 
