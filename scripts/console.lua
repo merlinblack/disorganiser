@@ -1,6 +1,7 @@
 require 'gui/widget'
 require 'misc'
 require 'run'
+require 'history'
 
 class 'Console' (Widget)
 
@@ -11,6 +12,8 @@ function Console:init()
 	self.enabled = false
 	self.edit = EditString()
 	self.currentLine = 0
+	self.run = Run()
+	self.history = History()
 	self:build()
 end
 
@@ -69,13 +72,10 @@ function Console:setEnabled(enabled)
 			app.overlay:remove(console.renderList)
 		end
 		app.overlay:shouldRender()
-		print( 'Console: ', self.enabled)
 end
 
 function Console:textInput(input)
 	if not self.enabled then return end
-
-	print('Console - text input: ', input)
 
 	self.edit:insert(input)
 
@@ -83,12 +83,13 @@ function Console:textInput(input)
 end
 
 function Console:keyUp(code, sym)
-	print('Console - key up: ', code, sym)
+	--print('Console - key up: ', code, sym)
 	if code == 40 then -- enter
 		line = self.edit:getString()
+		self.history:insert(line)
 		self.edit:clear()
 		self:addLine(line)
-		runlua:insertLine(line)
+		self.run:insertLine(line)
 		self:updateInputDisplay()
 	end
 	if code == 41 then -- Escape
@@ -129,10 +130,17 @@ function Console:keyUp(code, sym)
 		self.edit:back()
 		self:updateInputDisplay()
 	end
+	if code == 81 then -- down arrow
+		self.edit:setString(self.history:getNext())
+		self:updateInputDisplay()
+	end
+	if code == 82 then -- up arrow
+		self.edit:setString(self.history:getPrevious())
+		self:updateInputDisplay()
+	end
 end
 
 function Console:write(text, addLastNewLine)
-	print('Console:write:',text, addLastNewLine)
 	if addLastNewLine == nil then
 		addLastNewLine = true
 	end
@@ -148,7 +156,6 @@ end
 
 function Console:addLine(text)
 
-	print('Addline:',text)
 	if self.currentLine == self.nlines then
 		for i = 1, self.nlines-1 do
 			self.lineRectangles[i].texture = self.lineRectangles[i+1].texture
@@ -161,16 +168,35 @@ function Console:addLine(text)
 	if text == '' then
 		self.lineRectangles[self.currentLine].texture = self.emptyline
 	else
+		local max = 60
+		local min = 50
+		local splitPosition = max
+
+		while true do
+			local splitChar = text:sub(splitPosition,splitPosition)
+			if splitChar == '' or splitChar == ' ' or splitPosition == min then
+				break
+			end
+			splitPosition = splitPosition - 1
+		end
+
+		local remainder = text:sub(splitPosition+1)
+		text = text:sub(1,splitPosition)
+
 		local newTexture <close> = app.renderer:textureFromText(self.font, text, self.textColor)
 		self.lineRectangles[self.currentLine].texture = newTexture
+
+		if remainder ~= '' then
+			self:addLine(remainder)
+		end
 	end
 
 	self.renderList:shouldRender()
 end
 
 function Console:updateInputDisplay()
-	text = runlua:getPrompt() .. self.edit:getString()
-	print( 'InputLine: ['.. text ..']')
+	text = self.run:getPrompt() .. self.edit:getString()
+	--print( 'InputLine: ['.. text ..']')
 
 	line = self.currentLine
 
@@ -182,18 +208,27 @@ function Console:updateInputDisplay()
 		self.lineRectangles[line].texture = newTexture
 	end
 
-	local pos = self.edit:index() + #runlua:getPrompt()
+	local pos = self.edit:index() + #self.run:getPrompt()
 	self.cursorRectangle:setDest({self.leftMargin + pos * self.charWidth, self.topMargin + line*self.lineHeight, self.charWidth, self.lineHeight})
 
 	self.renderList:shouldRender()
 end
+
+function Console:clear()
+	for i = 1, self.nlines-1 do
+		self.lineRectangles[i].texture = self.emptyline
+	end
+	self.currentLine = 1
+	self:updateInputDisplay()
+end
+
 
 function Console:blinkCursor()
 	while true do
 		self.cursorShown = not self.cursorShown
 
 		if self.cursorShown then
-			local pos = self.edit:index() + #runlua:getPrompt()
+			local pos = self.edit:index() + #self.run:getPrompt()
 			self.cursorRectangle:setDest({self.leftMargin + pos * self.charWidth, self.topMargin + (self.currentLine)*self.lineHeight, self.charWidth, self.lineHeight})
 		else
 			self.cursorRectangle:setDest({0, 0, 0, 0})
@@ -209,11 +244,18 @@ console = Console()
 function write(...)
 	print(...)
 	local args = table.pack(...)
+	local str = ''
 	for i = 1, args.n do
-		console:write(args[i], false)
+		str = str .. ' ' .. args[i]
 	end
+	str = str:sub(2)
+	console:write(str, false)
 	console:addLine ""
 	console:updateInputDisplay()
+end
+
+function clear()
+	console:clear()
 end
 
 addTask(function() console:blinkCursor() end, "console cursor blink")

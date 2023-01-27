@@ -52,9 +52,11 @@ function pt(t)
 end
 
 function wt(t)
+	local str = ''
 	for k,v in pairs(t) do
-		write(k,v)
+		str = str .. k .. ' ' .. v .. '\n'
 	end
+	write(str)
 end
 
 function growRect(rect, amount)

@@ -53,5 +53,3 @@ end
 function Run:getPrompt()
 	return self.prompt
 end
-
-runlua = Run()

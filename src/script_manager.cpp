@@ -224,6 +224,8 @@ void ScriptManager::reportStack( lua_State* thread, bool wasError )
 	// In the case of a yielded chunk these are the parameters to yield.
 	if( wasError ) {
 	  lua_getglobal( thread, "write" );
+	  if (!lua_isfunction( thread, -1))
+		lua_getglobal( thread, "print" );
 	  lua_pushliteral( thread, "Error" );
 	  lua_pushvalue( thread, -3 );
 	  lua_pcall(thread, 2, 0, 0);
