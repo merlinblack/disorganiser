@@ -134,9 +134,9 @@ function WeatherGraphs:buildGraphs()
 	local x = self.graphLeft
 
 	for _,record in pairs(weatherSummaryData) do
-		temperature:addPoint(x, math.floor((record.temperature-tempBottom) * tempScaleY) + self.graphTop)
-		humidity:addPoint(x, math.floor((record.humidity-humBottom) * humScaleY) + self.graphTop)
-		pressure:addPoint(x, math.floor((record.pressure-presBottom) * presScaleY) + self.graphTop)
+		temperature:addPoint(x, math.floor(self.graphBot - (record.temperature-tempBottom) * tempScaleY))
+		humidity:addPoint(x, math.floor(self.graphBot - (record.humidity-humBottom) * humScaleY))
+		pressure:addPoint(x, math.floor(self.graphBot - (record.pressure-presBottom) * presScaleY))
 		x = x + scaleX
 	end
 

@@ -215,7 +215,7 @@ function Console:updateInputDisplay()
 end
 
 function Console:clear()
-	for i = 1, self.nlines-1 do
+	for i = 1, self.nlines do
 		self.lineRectangles[i].texture = self.emptyline
 	end
 	self.currentLine = 1

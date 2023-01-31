@@ -13,7 +13,7 @@ static const char LuaRegisteryGUID = 0;
 
 ScriptManager::ScriptManager()
 {
-	tasks.reserve(11);
+	tasks.reserve(15);
 	taskIter = tasks.begin();
 	main = luaL_newstate();
 	luaL_openlibs(main);
@@ -169,6 +169,13 @@ bool ScriptManager::resume()
 	if (tasks.empty() == true)
 	{
 		return true;
+	}
+
+	if (tasks.size() < tasks.capacity() / 2)
+	{
+		int index = taskIter - tasks.begin();
+		tasks.shrink_to_fit();
+		taskIter = tasks.begin() + index;
 	}
 
 	taskIter->getRef().push();
