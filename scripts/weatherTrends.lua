@@ -8,6 +8,7 @@ function WeatherTrends:build()
 	self.titleFont = Font('media/pirulen.otf',22)
 	self.font = Font('media/mono.ttf',24)
 	textcolor = Color(0xff, 0xff, 0xff, 0xff)
+	backcolor = Color(0x00, 0x20, 0x7f, 0xff)
 	
 	local titleTexture <close> = app.renderer:textureFromText(self.titleFont, 'Weather Trends', textcolor)
 	local title <close> = Rectangle(titleTexture, {(app.width//2 - titleTexture.width//2), 5, 0, 0})
@@ -40,8 +41,11 @@ function WeatherTrends:build()
 		stable     = app.renderer:textureFromText(self.font, '-', textcolor)
 	}
 
-	btn = { app.width-100, app.height-70, 100, 50}
+	local btn = { app.width-120, app.height-70, 100, 50}
 	self:addButton(btn, 'Geri', function() mainScreen:activate() end, textcolor, nil, backcolor)
+
+	local btn = { app.width-250, app.height-70, 100, 50}
+	self:addButton(btn, 'Graphs', function() weatherGraphs:activate() end, textcolor, nil, backcolor)
 
 	function updateTask()
 	
@@ -115,8 +119,7 @@ end
 
 function WeatherTrends:activate()
 	Screen.activate(self)
-	self:buildDataTable()
 end
-	
 
 weatherTrends = WeatherTrends()
+addTask(function() weatherTrends:buildDataTable() end, 'initial weather data table build')

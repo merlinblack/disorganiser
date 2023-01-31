@@ -6,6 +6,7 @@
 #include "LuaRef.h"
 #include "line_list.h"
 #include "lb_color.h"
+#include "lb_renderlist.h"
 
 struct LineListBinding : public ManualBind::Binding<LineListBinding,LineList>
 {

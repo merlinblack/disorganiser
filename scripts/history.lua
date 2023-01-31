@@ -24,7 +24,7 @@ function History:insert(line)
 		table.remove(self.lines, 1)
 	end
 
-	self.current = #self.lines
+	self.current = 0
 
 end
 
@@ -47,7 +47,7 @@ function History:getNext()
 		return ''
 	end
 
-	if self.current == #self.lines then
+	if self.current == #self.lines or self.current == 0 then
 		self.current = 1
 	else
 		self.current = self.current + 1

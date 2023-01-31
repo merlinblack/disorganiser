@@ -100,7 +100,7 @@ function Docker:runOnVader(prog)
 		self.renderList:shouldRender()
 		self.alreadyRunning = false
 	end
-	addTask(task)
+	addTask(task, 'docker')
 end
 
 docker = Docker()

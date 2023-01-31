@@ -13,7 +13,8 @@ static const char LuaRegisteryGUID = 0;
 
 ScriptManager::ScriptManager()
 {
-	tasks.reserve(10);
+	tasks.reserve(11);
+	taskIter = tasks.begin();
 	main = luaL_newstate();
 	luaL_openlibs(main);
 	registerAllBindings(main);
@@ -157,8 +158,10 @@ void ScriptManager::threadFromStack(lua_State* L, const std::string& name)
 
 	lua_xmove(L, thread, lua_gettop(L));
 
+	// Adding to tasks might re-allocate the vector somewhere else and invalidate taskIter.
+	int index = taskIter - tasks.begin();
 	tasks.emplace_back(coroutine, name);
-	taskIter = tasks.begin();
+	taskIter = tasks.begin() + index;
 }
 
 bool ScriptManager::resume()
@@ -168,16 +171,14 @@ bool ScriptManager::resume()
 		return true;
 	}
 
-	TaskList::iterator currentTask = taskIter;
-
-	currentTask->getRef().push();
+	taskIter->getRef().push();
 	lua_State* thread = lua_tothread(main, -1);
 	lua_pop(main, 1);
 
-	if (currentTask->shouldWake())
+	if (taskIter->shouldWake())
 	{
 		lua_pushliteral(thread, "wakeup");
-		currentTask->wakeUp(false);
+		taskIter->wakeUp(false);
 	}
 
 	int nargs = lua_gettop(thread);
@@ -199,7 +200,7 @@ bool ScriptManager::resume()
 			// Fall through.
 		case 0:
 			// Ran to completion or had an error.
-			taskIter = tasks.erase(currentTask);
+			taskIter = tasks.erase(taskIter);
 			break;
 		case LUA_YIELD:
 			taskIter++;
@@ -228,7 +229,8 @@ void ScriptManager::reportStack( lua_State* thread, bool wasError )
 		lua_getglobal( thread, "print" );
 	  lua_pushliteral( thread, "Error" );
 	  lua_pushvalue( thread, -3 );
-	  lua_pcall(thread, 2, 0, 0);
+	  luaL_traceback( thread, thread, nullptr, 0);
+	  lua_pcall(thread, 3, 0, 0);
 	  lua_settop( thread, 0 );
 	}
 	else if ( lua_gettop(thread) > 0)

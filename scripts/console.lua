@@ -222,6 +222,10 @@ function Console:clear()
 	self:updateInputDisplay()
 end
 
+function Console:showHistory()
+	wt(self.history.lines)
+	write('Current: ' .. self.history.current)
+end
 
 function Console:blinkCursor()
 	while true do

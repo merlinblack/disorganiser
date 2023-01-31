@@ -47,7 +47,7 @@ function Run:insertLine(line)
 
 	self:reset()
 
-	addTask(func)
+	addTask(func,'run')
 end
 
 function Run:getPrompt()

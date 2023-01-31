@@ -41,7 +41,7 @@ function Screen:addButton(rect, captionText, func, textColor, frameColor, backgr
 	    self.font = Font('media/pirulen.otf', 22)
 	end
 
-	local button = Button.create(rect, captionText, self.font, func, textColor, frameColor, backColor)
+	local button = Button.create(rect, captionText, self.font, func, textColor, frameColor, backgroundColor)
 
 	button:addToRender(self.renderList)
 	self:addChild(button)

@@ -1,7 +1,6 @@
 require 'clock'
 require 'docker'
 require 'weather'
-require 'weatherTrends'
 require 'unlock'
 
 require 'gui/screen'
@@ -34,7 +33,9 @@ function MainScreen:build()
 	local weatherRect = {20,5,260,130}
 	local weatherbox <close> = Rectangle(backcolor, true, weatherRect)
 	local weatherBtn = Button(weatherRect)
-	weatherBtn:setAction( function() print(weatherTrends) weatherTrends:activate() end)
+	weatherBtn.renderList = RenderList()
+	weatherBtn.pressedRenderList = weatherBtn.renderList
+	weatherBtn:setAction( function() weatherTrends:activate() end)
 	self:addChild(weatherBtn)
 	self.renderList:add(weatherbox)
 	local temperature = Rectangle(app.emptyTexture, {30, 15, 0, 0})
@@ -45,9 +46,7 @@ function MainScreen:build()
 	self.renderList:add(humidity)
 
 	local static = Rectangle(app.renderer:textureFromText(self.fontCode, '<3 Alara', textcolor ), { 300,5,0,0})
-	local animation = Rectangle(app.emptyTexture, {500,5,0,0})
 	self.renderList:add(static)
-	self.renderList:add(animation)
 
 	self.stopWeatherUpdate = false
 	function updateWeather()
@@ -70,26 +69,9 @@ function MainScreen:build()
 		print 'Weather update stopped.'
 	end
 	addTask(updateWeather,'weather')
-
-	self.stopAnimation = false
-	function animate()
-		local color = Color(0xfe,0x0a,0x4a,0xc0)
-		local count = 100
-		while not self.stopAnimation do
-			if self:isActive() then
-				animation.texture = app.renderer:textureFromText(self.fontCode, count .. '', color )
-				count = count + 1
-				if count > 999 then
-					count = 100
-				end
-				self.renderList:shouldRender()
-			end
-			wait(200)
-		end
-	end
-	--addTask(animate,'animate')
 	
 	self.renderList:add(clockRenderList)
+	self.renderList:shouldRender()
 end
 
 mainScreen = MainScreen()
