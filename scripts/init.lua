@@ -1,4 +1,5 @@
 dofile (os.getenv('HOME')..'/.config/disorganiser/config.lua')
+lanes = require('lanes').configure()
 
 require 'weatherGraphs'
 require 'weatherTrends'
