@@ -22,6 +22,7 @@ class Application
 	SDLptr sdl;
 	bool onRaspberry;
 	bool shouldStop;
+	bool shouldRestart;
 
 	TimerPtr timer;
 	ScriptManagerPtr scripts;
@@ -54,6 +55,8 @@ class Application
 	 */
 	bool getShouldStop() { return shouldStop; }
 	void setShouldStop(bool val) { shouldStop = val; }
+	bool getShouldRestart() { return shouldRestart; }
+	void setShouldRestart(bool val) { shouldRestart = val; }
 	int getTicks() { return SDL_GetTicks(); }
 	RenderListPtr getRenderList() { return renderList; }
 	RenderListPtr getOverlay() { return overlayRenderList; }

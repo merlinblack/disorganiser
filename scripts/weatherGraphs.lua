@@ -5,6 +5,7 @@ require 'clock'
 class 'WeatherGraphs' (Screen)
 
 function WeatherGraphs:build()
+	self.nextBuild = 0
 	self.titleFont = Font('media/pirulen.otf',22)
 	self.font = Font('media/mono.ttf',24)
 
@@ -23,11 +24,11 @@ function WeatherGraphs:build()
 	self.graphBot = app.height - 100
 	self.graphRight = app.width - self.graphLeft
 
-	local titleTexture <close> = app.renderer:textureFromText(self.titleFont, 'Weather Graphs', self.textcolor)
+	local titleTexture <close> = app.renderer:textureFromText(self.titleFont, 'Hava Grafikleri', self.textcolor)
 	local title <close> = Rectangle(titleTexture, {(app.width//2 - titleTexture.width//2), 5, 0, 0})
 	self.renderList:add(title)
 	
-	local subTitleTexture <close> = app.renderer:textureFromText(self.font, 'Last 24 hours', self.textcolor)
+	local subTitleTexture <close> = app.renderer:textureFromText(self.font, 'Son 24 saat', self.textcolor)
 	local subTitle <close> = Rectangle(subTitleTexture, {app.width//2 - subTitleTexture.width//2, 50, 0, 0})
 	self.renderList:add(subTitle)
 
@@ -43,8 +44,8 @@ function WeatherGraphs:build()
 	local btn = { app.width-120, app.height-70, 100, 50}
 	self:addButton(btn, 'Geri', function() mainScreen:activate() end, self.textcolor, nil, self.backcolor)
 
-	local btn = { app.width-250, app.height-70, 100, 50}
-	self:addButton(btn, 'Trends', function() weatherTrends:activate() end, self.textcolor, nil, self.backcolor)
+	local btn = { app.width-280, app.height-70, 140, 50}
+	self:addButton(btn, 'Trendler', function() weatherTrends:activate() end, self.textcolor, nil, self.backcolor)
 
 	local frame <close> = LineList(self.linecolor)
 	frame:addPoint(self.graphLeft,self.graphTop)
@@ -72,6 +73,10 @@ function WeatherGraphs:build()
 end
 
 function WeatherGraphs:buildGraphs()
+	if self.nextBuild > app.ticks then
+		return
+	end
+
 	print 'Building graphs'
 	self.dataRenderList:clear()
 
@@ -131,6 +136,10 @@ function WeatherGraphs:buildGraphs()
 	local humidity <close> = LineList(self.humColor)
 	local pressure <close> = LineList(self.presColor)
 
+	self.dataRenderList:add(temperature)
+	self.dataRenderList:add(humidity)
+	self.dataRenderList:add(pressure)
+
 	local x = self.graphLeft
 
 	for _,record in pairs(weatherSummaryData) do
@@ -140,15 +149,13 @@ function WeatherGraphs:buildGraphs()
 		x = x + scaleX
 	end
 
-	self.dataRenderList:add(temperature)
-	self.dataRenderList:add(humidity)
-	self.dataRenderList:add(pressure)
-
 	self.dataRenderList:shouldRender(true)
+	self.nextBuild = app.ticks + 60000
 end
 
 function WeatherGraphs:activate()
 	Screen.activate(self)
+	addTask(function() weatherGraphs:buildGraphs() end, 'activation weather graph build')
 end
 
 weatherGraphs = WeatherGraphs()

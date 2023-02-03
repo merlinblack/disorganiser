@@ -89,6 +89,7 @@ void Logging(void *userdata, int category, SDL_LogPriority priority, const char*
 int main(int argc, char *argv[])
 {
     bool onRaspberry = false;
+    bool restartWanted = false;
 
     if (argc > 1)
     {
@@ -110,7 +111,12 @@ int main(int argc, char *argv[])
         app->eventLoop();
 
         app->shutdown();
+
+        restartWanted = app->getShouldRestart();
     }
+
+    if (restartWanted)
+        return 2;
 
     return 0;
 }

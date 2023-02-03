@@ -16,13 +16,38 @@ function Button.create(rect, captionText, font, func, textColor, frameColor, bac
 	local rectangle <close> = Rectangle(backgroundColor, true, rect)
 	renderList:add(rectangle)
 
-	local text <close> = app.renderer:textureFromText(font, captionText, textColor)
-	local rectangle <close> = Rectangle(
-		text,
-		rect[1]+((rect[3]//2)-(text.width//2)),
-		rect[2]+((rect[4]//2)-(text.height//2))
-	)
-	renderList:add(rectangle)
+	if captionText:find('\n') then
+		local position  = captionText:find('\n')
+		local topLine = captionText:sub(1,position-1)
+		local bottomLine = captionText:sub(position+1)
+
+		local thirdHeight = rect[4]//3
+
+		local text <close> = app.renderer:textureFromText(font, topLine, textColor)
+		local rectangle <close> = Rectangle(
+			text,
+			rect[1]+((rect[3]//2)-(text.width//2)),
+			rect[2]+((thirdHeight)-(text.height//2))
+		)
+		renderList:add(rectangle)
+
+		local text <close> = app.renderer:textureFromText(font, bottomLine, textColor)
+		local rectangle <close> = Rectangle(
+			text,
+			rect[1]+((rect[3]//2)-(text.width//2)),
+			rect[2]+((thirdHeight*2)-(text.height//2))
+		)
+		renderList:add(rectangle)
+
+	else
+		local text <close> = app.renderer:textureFromText(font, captionText, textColor)
+		local rectangle <close> = Rectangle(
+			text,
+			rect[1]+((rect[3]//2)-(text.width//2)),
+			rect[2]+((rect[4]//2)-(text.height//2))
+		)
+		renderList:add(rectangle)
+	end
 	local rectangle <close> = Rectangle( frameColor, false, rect )
 	renderList:add(rectangle)
 

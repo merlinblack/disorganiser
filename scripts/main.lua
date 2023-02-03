@@ -28,7 +28,10 @@ function MainScreen:build()
 	self:addButton(btn, 'Docker', function() docker:activate() end, textcolor, nil,backcolor)
 
 	btn[1] = btn[1] + 180
-	self:addButton(btn, 'Unlock', function() unlock:activate() end, textcolor, nil,backcolor)
+	self:addButton(btn, 'Kilidini\naç', function() unlock:activate() end, textcolor, nil,backcolor)
+
+	btn[2] = btn[2] + 140
+	self:addButton(btn, 'Tekrar\nBaşlat', function() app.shouldRestart = true app.shouldStop = true end, textcolor, nil,backcolor)
 
 	local weatherRect = {20,5,260,130}
 	local weatherbox <close> = Rectangle(backcolor, true, weatherRect)

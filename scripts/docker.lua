@@ -24,7 +24,7 @@ function Docker:build()
 	self:addButton(btn, 'durdur', function() self:durdur() end, textcolor, nil, backcolor)
 	btn[2] = btn[2] - 104
 
-	self:addButton(btn, 'products2', function() self:start('products2') end, textcolor, nil, backcolor)
+	self:addButton(btn, 'products\n2', function() self:start('products2') end, textcolor, nil, backcolor)
 	btn[2] = btn[2] - 104
 	
 	self:addButton(btn, 'orders', function() self:start('orders') end, textcolor, nil, backcolor)

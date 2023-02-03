@@ -1,5 +1,7 @@
 json = require('json')
 
+weatherRunningOperations = {}
+
 function asyncHttpRequest(url)
 	print ('requesting ' .. url)
 	local start = app.ticks
@@ -24,14 +26,14 @@ end
 
 function readLocalWeather()
 
-	if currentyGettingLocalWeather ~= nil then
-		while currentyGettingLocalWeather ~= nil do
+	if weatherRunningOperations.last20 ~= nil then
+		while weatherRunningOperations.last20 ~= nil do
 			wait(100)
 		end
 		return
 	end
 
-	currentyGettingLocalWeather = true
+	weatherRunningOperations.last20 = true
 
 	local data, status = asyncHttpRequest('http://octavo.local/api/weather')
 
@@ -50,11 +52,20 @@ function readLocalWeather()
 		}
 	end
 
-	currentyGettingLocalWeather = nil
+	weatherRunningOperations.last20 = nil
 
 end
 
 function readLocalWeatherTrends()
+
+	if weatherRunningOperations.trends ~= nil then
+		while weatherRunningOperations.trends ~= nil do
+			wait(100)
+		end
+		return
+	end
+
+	weatherRunningOperations.trends = true
 
 	local data, status = asyncHttpRequest('http://octavo.local/api/weathertrends')
 
@@ -64,9 +75,20 @@ function readLocalWeatherTrends()
 		weatherTrendsData = nil
 	end
 
+	weatherRunningOperations.trends = nil
+
 end
 
 function readLocalWeatherSummary()
+
+	if weatherRunningOperations.summary ~= nil then
+		while weatherRunningOperations.summary ~= nil do
+			wait(100)
+		end
+		return
+	end
+
+	weatherRunningOperations.summary = true
 
 	local data, status = asyncHttpRequest('http://octavo.local/api/weathersummary')
 
@@ -75,5 +97,7 @@ function readLocalWeatherSummary()
 	else
 		weatherSummaryData = nil
 	end
+
+	weatherRunningOperations.summary = nil
 
 end

@@ -16,6 +16,7 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 	{
 		static ManualBind::bind_properties properties[] = {
 			{ "shouldStop", get, setStopFlag },
+			{ "shouldRestart", get, setRestartFlag },
 			{ "ticks", get, nullptr },
 			{ "renderer", get, nullptr },
 			{ "width", get, nullptr },
@@ -38,6 +39,12 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 		if (field == "shouldStop")
 		{
 			lua_pushboolean(L, app->getShouldStop());
+			return 1;
+		}
+
+		if (field == "shouldRestart")
+		{
+			lua_pushboolean(L, app->getShouldRestart());
 			return 1;
 		}
 
@@ -84,6 +91,13 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 	{
 		ApplicationPtr app = fromStack(L, 1);
 		app->setShouldStop(lua_toboolean(L,3));
+		return 0;
+	}
+
+	static int setRestartFlag(lua_State* L)
+	{
+		ApplicationPtr app = fromStack(L, 1);
+		app->setShouldRestart(lua_toboolean(L,3));
 		return 0;
 	}
 

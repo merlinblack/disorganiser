@@ -77,8 +77,8 @@ end
 
 function checkForScreenSaveNeeded()
 	while true do
-		if getCurrentScreen() ~= screenSaver and getCurrentScreen() ~= suspend then
-			if lastEvent + 2*60000 < app.ticks then
+		if caffine ~= true and getCurrentScreen() ~= screenSaver and getCurrentScreen() ~= suspend then
+			if lastEvent + 10*60000 < app.ticks then
 				screenSaver:setDirectory('media/alara/')
 				addTask(screenSaveTask, 'screensaver')
 			end
