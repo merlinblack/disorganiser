@@ -55,6 +55,10 @@ function ScreenSaver:deactivate()
 	wakeTask('screensaver')
 end
 
+function ScreenSaver:swipe()
+	wakeTask('screensaver')
+end
+
 screenSaver = ScreenSaver()
 
 function screenSaveTask()

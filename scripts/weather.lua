@@ -40,12 +40,14 @@ function readLocalWeather()
 	if status == 200 then
 		weatherData = json.decode(data)
 		weather = {
+			valid = true,
 			temperature = string.format("%.2f", weatherData[1].temperature),
 			pressure =    string.format("%.2f", weatherData[1].pressure),
 			humidity =    string.format("%.2f", weatherData[1].humidity)
 		}
 	else
 		weather = {
+			valid = false,
 			temperature = '',
 			pressure = '',
 			humidity = ''

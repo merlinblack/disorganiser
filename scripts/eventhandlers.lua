@@ -6,6 +6,9 @@ require 'console'
 currentScreen = nil
 lastEvent = 0
 consoleActive = false
+mouseDown = false
+swipeStart = nil
+fingerDown = false
 
 function setCurrentScreen(newScreen)
 	if currentScreen then
@@ -31,11 +34,24 @@ function handleTouch(type, x, y, dx, dy)
 			currentScreen:mouseMoved(app.ticks, x*app.width, y*app.height, 1)
 		end
 		if type == EVENT_TOUCH_DOWN then
-			currentScreen:mouseDown(app.ticks, x*app.width, y*app.height, 1)
+			local lx = x * app.width
+			local ly = y * app.height
+			currentScreen:mouseDown(app.ticks, lx, ly, 1)
+			fingerDown = true
+			swipeStart = {x=lx, y=ly}
 		end
 		if type == EVENT_TOUCH_UP then
-			currentScreen:mouseClick(app.ticks, x*app.width, y*app.height, 1)
-			currentScreen:mouseUp(app.ticks, x*app.width, y*app.height, 1)
+			local lx = x * app.width
+			local ly = y * app.height
+			local swipeDirection = detectSwipe(swipeStart, lx, ly)
+			mouseDown = false
+			swipeStart = nil
+			if swipeDirection == Swipe.None then
+				currentScreen:mouseClick(app.ticks, lx, ly, 1)
+			else
+				currentScreen:swipe(swipeDirection)
+			end
+			currentScreen:mouseUp(app.ticks, lx, ly, 1)
 		end
 	end
 end
@@ -55,15 +71,44 @@ function handleMouse(type, x, y, button, state, clicks)
 			currentScreen:mouseMoved(app.ticks, x, y, button)
 		end
 		if type == EVENT_MOUSE_BUTTONUP then
-			if clicks == 1 then
+			local swipeDirection = detectSwipe(swipeStart, x, y)
+			mouseDown = false
+			swipeStart = nil
+			if swipeDirection == Swipe.None then
 				currentScreen:mouseClick(app.ticks, x, y, button)
+			else
+				currentScreen:swipe(swipeDirection)
 			end
 			currentScreen:mouseUp(app.ticks, x, y, button)
 		end
 		if type == EVENT_MOUSE_BUTTONDOWN then
+			mouseDown = true
+			swipeStart = {x=x, y=y}
 			currentScreen:mouseDown(app.ticks, x, y, button)
 		end
 	end
+end
+
+function detectSwipe(start, endX, endY)
+	local threshold = 50
+
+	if start.x - endX > threshold then
+		return Swipe.Left
+	end
+
+	if endX - start.x > threshold then
+		return Swipe.Right
+	end
+
+	if start.y - endY > threshold then
+		return Swipe.Up
+	end
+
+	if endY - start.y > threshold then
+		return Swipe.Down
+	end
+
+	return Swipe.None
 end
 
 function handleKeyUp(code, sym)

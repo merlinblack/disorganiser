@@ -76,6 +76,10 @@ function WeatherTrends:buildDataTable()
 	readLocalWeather()
 	readLocalWeatherTrends()
 
+	if weather == nil or weatherTrendsData == nil then
+		return
+	end
+
 	local bigger <close> = Font('media/mono.ttf',32)
 
 	local label <close> = Rectangle(app.renderer:textureFromText(bigger, weather.temperature, textcolor), {col2, 100, 0, 0})

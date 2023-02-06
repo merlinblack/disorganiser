@@ -46,3 +46,7 @@ function Screen:addButton(rect, captionText, func, textColor, frameColor, backgr
 	button:addToRender(self.renderList)
 	self:addChild(button)
 end
+
+function Screen:swipe(direction)
+	print('Swipe: ' .. direction)
+end

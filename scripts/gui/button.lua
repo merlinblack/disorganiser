@@ -40,6 +40,11 @@ function Button.create(rect, captionText, font, func, textColor, frameColor, bac
 		renderList:add(rectangle)
 
 	else
+		if captionText == '' then
+			captionText = ' '
+			print 'WARNING: Empty button caption.'
+			print(debug.traceback())
+		end
 		local text <close> = app.renderer:textureFromText(font, captionText, textColor)
 		local rectangle <close> = Rectangle(
 			text,

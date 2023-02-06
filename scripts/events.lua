@@ -6,3 +6,10 @@ EVENT_TOUCH_DOWN = 0x700
 EVENT_TOUCH_UP = 0x701
 EVENT_TOUCH_MOTION = 0x702
 
+Swipe = {
+	Up = 'Up',
+	Down = 'Down',
+	Left = 'Left',
+	Right = 'Right',
+	None = 'None'
+}
