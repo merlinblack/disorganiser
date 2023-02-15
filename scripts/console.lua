@@ -19,11 +19,11 @@ function Console:init()
 end
 
 function Console:build()
-	local backgroundColor = Color(32,127,32,96)
-	local frameColor = Color(64,127,64,255)
-	local cursorColor = Color(0,255,0,255)
+	local backgroundColor = Color '207f2060'
+	local frameColor = Color '407f40'
+	local cursorColor = Color '0f0'
 
-	self.textColor = Color(128,255,0,255)
+	self.textColor = Color '80ff00'
 	self.topMargin = 5
 	self.bottomMargin = 20
 	self.leftMargin = 10

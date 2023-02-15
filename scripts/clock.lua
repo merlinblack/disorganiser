@@ -6,7 +6,7 @@ clockRenderList = RenderList()
 function updateClock()
 	print('starting clock')
 	local font <close> = Font('media/pirulen.otf', 16)
-	local color = Color(0xfe,0x0a,0x4a,0xff)
+	local color = Color 'fe0a4a'
 	local clockRect <close> = Rectangle(color, false, {0, 480 - font.lineHeight, 0, 0})
 	clockRenderList:add(clockRect)
     local prevtext

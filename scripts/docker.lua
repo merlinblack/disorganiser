@@ -6,7 +6,7 @@ class 'Docker' (Screen)
 function Docker:build()
 	--Screen.build(self)
 	self.font = Font('media/pirulen.otf',16)
-	local rectangle <close> = Rectangle(Color(0,0,0,0), true, {0, 0, app.width, app.height})
+	local rectangle <close> = Rectangle(Color '000', true, {0, 0, app.width, app.height})
 	self.renderList:add(rectangle)
 	local background <close> = app.renderer:textureFromFile('media/docker.png')
 	local src = {0, 0, background.width, background.height}
@@ -15,8 +15,8 @@ function Docker:build()
 	self.renderList:add(rectangle)
 
 	local btn = {620, 350, 160, 100}
-	local textcolor = Color(0xff,0x45,0x8a,0xff)
-	local backcolor = Color(0xff,0x45,0x8a,0x30)
+	local textcolor = Color 'ff458a'
+	local backcolor = Color 'ff458a30'
 
 	self:addButton(btn, 'geri', function() mainScreen:activate() end, textcolor, nil, backcolor)
 	btn[2] = btn[2] - 120
@@ -61,8 +61,8 @@ function Docker:runOnVader(prog)
 		local tl = TextLog(
 			renderList, 
 			11, 24,
-			Color(0xff, 0, 0xff, 0x40),
-			Color(0xff, 0xff, 0xff, 0xff),
+			Color 'f0f4',
+			Color 'fff',
 			font, 
 			430, 20)
 

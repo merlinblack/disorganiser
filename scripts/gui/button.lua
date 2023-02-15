@@ -7,9 +7,9 @@ function Button.create(rect, captionText, font, func, textColor, frameColor, bac
 	local btnWidget = Button(rect)
 	btnWidget:setAction(func)
 
-	textColor = textColor or Color(0xff, 0xff, 0xff, 0xff)
+	textColor = textColor or Color 'FFF'
 	frameColor = frameColor or textColor
-	backgroundColor = backgroundColor or Color(0, 0, 0, 0xa0)
+	backgroundColor = backgroundColor or Color '000000a0'
 
 	local renderList <close> = RenderList()
 

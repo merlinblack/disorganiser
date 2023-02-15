@@ -20,7 +20,7 @@ function MainScreen:build()
 	self.renderList:add(rectangle)
 
 	local btn = { 30, 300, 150, 110}
-	local textcolor = Color(0xfe,0x0a,0x4a,0xff)
+	local textcolor = Color 'f30a4a'
 	local backcolor = textcolor:clone()
 	backcolor.a = 0x20
 	self:addButton(btn, 'Çikiş', function() app.shouldStop = true end, textcolor, nil, backcolor)
@@ -55,7 +55,7 @@ function MainScreen:build()
 	self.stopWeatherUpdate = false
 	function updateWeather()
 		local font <close> = Font('media/mono.ttf',24)
-		local color = Color(0xfe,0x0a,0x4a,0xc0)
+		local color = Color 'f30a4ac0'
 		while not self.stopWeatherUpdate do
 			readLocalWeather()
 			if weather.temperature ~= '' then

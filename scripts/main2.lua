@@ -10,8 +10,8 @@ class 'MainScreen2' (Screen)
 function MainScreen2:build()
 	Screen.build(self)
 	 
-	local offline = Color(0xfe,0x0a,0x4a,0xff)
-	local online = Color(0x00, 0xff, 0x00, 0xff)
+	local offline = Color 'fe0a4a'
+	local online = Color '0f0'
 
 	self.fontCode = Font('media/Aurek-Besh.ttf', 18)
 	self.font = Font('media/pirulen.otf', 22)
@@ -26,7 +26,7 @@ function MainScreen2:build()
 	self.renderList:add(rectangle)
 
 	local btn = { 30, 100, 160, 110}
-	local textcolor = Color(0xfe,0x0a,0x4a,0xff)
+	local textcolor = Color 'fe0a4a'
 	local backcolor = textcolor:clone()
 	backcolor.a = 0x20
 	self:addButton(btn, 'System\nUpdate', function() self:runTask('localhost','sudo apt update && sudo apt upgrade -y') end, textcolor, nil, backcolor)
@@ -86,12 +86,12 @@ function MainScreen2:runTask(host, command)
 		local tl = TextLog(
 			renderList, 
 			380, 100,
-			Color(0x0, 0, 0xff, 0x40),
-			Color(0x0, 0xff, 0xff, 0xff),
+			Color '00f4',
+			Color '0ff',
 			font, 
-			410, 20)
+			410, 15)
 
-		local frame <close> = Rectangle(Color(0xff,0,0xff,0xff), false, growRect(tl.bounds))
+		local frame <close> = Rectangle(Color('f0f'), false, growRect(tl.bounds))
 
 		renderList:add(frame)
 
