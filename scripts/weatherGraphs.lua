@@ -118,7 +118,7 @@ function WeatherGraphs:buildGraphs()
 
 	local graphHeight = self.graphBot - self.graphTop
 	local graphWidth = self.graphRight - self.graphLeft
-	local scaleX = graphWidth // 24
+	local scaleX = graphWidth // #weatherSummaryData
 
 	local tempBottom = minTemp - 2
 	local tempTop = maxTemp + 2
@@ -146,11 +146,21 @@ function WeatherGraphs:buildGraphs()
 		temperature:addPoint(x, math.floor(self.graphBot - (record.temperature-tempBottom) * tempScaleY))
 		humidity:addPoint(x, math.floor(self.graphBot - (record.humidity-humBottom) * humScaleY))
 		pressure:addPoint(x, math.floor(self.graphBot - (record.pressure-presBottom) * presScaleY))
+
+		local tick <close> = LineList(self.linecolor)
+		tick:addPoint(x, self.graphBot - 10)
+		tick:addPoint(x, self.graphBot)
+		self.dataRenderList:add(tick)
+
 		x = x + scaleX
 	end
 
 	self.dataRenderList:shouldRender(true)
 	self.nextBuild = app.ticks + 60000
+end
+
+function WeatherGraphs:swipe(direction)
+	weatherTrends:activate()
 end
 
 function WeatherGraphs:activate()

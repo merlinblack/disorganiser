@@ -69,42 +69,15 @@ function shrinkRect(rect, amount)
 	return growRect(rect, -amount)
 end
 
+function valuesToKeys( t )
+    local r = {}
+    for k, v in pairs( t ) do
+        r[v] = k
+    end
+    return r
+end
+
 function dirlist(path)
 	return io.popen('ls ' .. path):lines()
-end
-
-yield = coroutine.yield
-
-function wait(ticks)
-	local finish = app.ticks + ticks
-	local status = 'sleeping'
-	while app.ticks < finish and status ~= 'wakeup' do
-		status = yield()
-	end
-	return status == 'wakeup'
-end
-
-function waitForTask(taskName)
-	local found  = true
-	while found do
-		found = false
-		local tasks = getTasks()
-		for k,v in pairs(tasks) do
-			if v == taskName then
-				found = true
-			end
-		end
-		local status = yield()
-		if status == 'wakeup' then
-			found = false
-		end
-	end
-end
-
-function waitForWakeup()
-	local status = 'sleeping'
-	while status ~= 'wakeup' do
-		status = yield()
-	end
 end
 

@@ -53,6 +53,7 @@ class Application
 	/**
 	 * Allow Lua to get/set these
 	 */
+	bool getOnRaspberry() { return onRaspberry; }
 	bool getShouldStop() { return shouldStop; }
 	void setShouldStop(bool val) { shouldStop = val; }
 	bool getShouldRestart() { return shouldRestart; }
@@ -64,6 +65,7 @@ class Application
 	void setOverlay(RenderListPtr newList) { overlayRenderList = newList; }
 	const SDL_Renderer* getRenderer() { return sdl->getRenderer(); }
 	void setTextInputMode(bool enable);
+	void setShowCursor(bool enable);
 
 	TexturePtr getEmptyTexture();
 

@@ -2,6 +2,7 @@ require 'gui/widget'
 require 'misc'
 require 'run'
 require 'history'
+require 'autocomplete'
 
 class 'Console' (Widget)
 
@@ -85,12 +86,13 @@ end
 function Console:keyUp(code, sym)
 	--print('Console - key up: ', code, sym)
 	if code == 40 then -- enter
-		line = self.edit:getString()
+		local line = self.edit:getString()
 		self.history:insert(line)
 		self.edit:clear()
 		self:addLine(line)
 		self.run:insertLine(line)
 		self:updateInputDisplay()
+		autoCompleteClear()
 	end
 	if code == 41 then -- Escape
 		self:toggleEnabled()
@@ -101,6 +103,10 @@ function Console:keyUp(code, sym)
 			self.edit:erase()
 			self:updateInputDisplay()
 		end
+	end
+	if code == 43 then -- Tab
+		self.edit:setString(autoComplete(self.edit:getString()))
+		self:updateInputDisplay()
 	end
 	if code == 74 then -- home
 		self.edit:gotoStart()

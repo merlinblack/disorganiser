@@ -4,11 +4,13 @@ require 'console'
 
 -- Perhaps this should be part of screen class?
 currentScreen = nil
+
 lastEvent = 0
 consoleActive = false
 mouseDown = false
 swipeStart = nil
 fingerDown = false
+lastMouseEvent = -math.huge
 
 function setCurrentScreen(newScreen)
 	if currentScreen then
@@ -58,6 +60,8 @@ end
 
 function handleMouse(type, x, y, button, state, clicks)
 	lastEvent = app.ticks
+	lastMouseEvent = lastEvent
+	showCursor()
 	if false then
 		print('Mouse: ' .. EventNames[type])
 		print('x,y:', x, y)
@@ -132,4 +136,20 @@ end
 
 function handleTextInput(text)
 	console:textInput(text)
+end
+
+function hideCursorTask()
+	stopHideCursorTask = false
+	while not stopHideCursorTask do
+		wait(1000)
+		if lastMouseEvent + 5000 < app.ticks then
+			app.showCursor = false
+			stopHideCursorTask = true
+		end
+	end
+end
+
+function showCursor()
+	app.showCursor = true
+	addUniqueTask(hideCursorTask, 'hideCursorTask')
 end

@@ -26,7 +26,7 @@ function Run:insertLine(line)
 
 	func, err = load(self.currentLine)
 
-	print(func, err)
+	--print(func, err)
 
 	if func == nil then
 		if err:endsWith '<eof>' then

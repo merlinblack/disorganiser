@@ -4,7 +4,7 @@ class 'Button' (Widget)
 
 -- Should be called on class, rather than instance.
 function Button.create(rect, captionText, font, func, textColor, frameColor, backgroundColor)
-	btnWidget = Button(rect)
+	local btnWidget = Button(rect)
 	btnWidget:setAction(func)
 
 	textColor = textColor or Color(0xff, 0xff, 0xff, 0xff)

@@ -126,6 +126,10 @@ function WeatherTrends:buildDataTable()
 	self.nextBuild = app.ticks + 60000
 end
 
+function WeatherTrends:swipe(direction)
+	weatherGraphs:activate()
+end
+
 function WeatherTrends:activate()
 	Screen.activate(self)
 	addTask(function() weatherTrends:buildDataTable() end, 'activation weather data table build')

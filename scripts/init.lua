@@ -1,6 +1,7 @@
 dofile (os.getenv('HOME')..'/.config/disorganiser/config.lua')
 lanes = require('lanes').configure()
 
+require 'tasks'
 require 'weatherGraphs'
 require 'weatherTrends'
 require 'garbage'

@@ -18,6 +18,7 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 			{ "shouldStop", get, setStopFlag },
 			{ "shouldRestart", get, setRestartFlag },
 			{ "ticks", get, nullptr },
+			{ "onRaspberry", get, nullptr },
 			{ "renderer", get, nullptr },
 			{ "width", get, nullptr },
 			{ "height", get, nullptr },
@@ -26,6 +27,7 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 			{ "overlay", getOverlay, setOverlay },
 			{ "emptyTexture", get, nullptr },
 			{ "textInputMode", getTextInputMode, setTextInputMode },
+			{ "showCursor", nullptr, setShowCursor },
 			{ nullptr, nullptr, nullptr }
 		};
 		return properties;
@@ -35,31 +37,27 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 	{
 		ApplicationPtr app = fromStack(L, 1);
 		std::string field(lua_tostring(L, 2));
-
-		if (field == "shouldStop")
-		{
-			lua_pushboolean(L, app->getShouldStop());
-			return 1;
-		}
-
-		if (field == "shouldRestart")
-		{
-			lua_pushboolean(L, app->getShouldRestart());
-			return 1;
-		}
+		
+		// Roughly ordered by how often used 
 
 		if (field == "ticks")
 		{
 			lua_pushinteger(L, app->getTicks());
 			return 1;
 		}
-
+		
 		if (field == "renderer")
 		{
 			RendererBinding::push(L, app->getRenderer());
 			return 1;
 		}
 
+		if (field == "emptyTexture")
+		{
+			TextureBinding::push(L, app->getEmptyTexture());
+			return 1;
+		}
+		
 		if (field == "width")
 		{
 			lua_pushinteger(L, WINDOW_WIDTH);
@@ -78,9 +76,21 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 			return 1;
 		}
 
-		if (field == "emptyTexture")
+		if (field == "shouldStop")
 		{
-			TextureBinding::push(L, app->getEmptyTexture());
+			lua_pushboolean(L, app->getShouldStop());
+			return 1;
+		}
+
+		if (field == "shouldRestart")
+		{
+			lua_pushboolean(L, app->getShouldRestart());
+			return 1;
+		}
+
+		if (field == "onRaspberry")
+		{
+			lua_pushboolean(L, app->getOnRaspberry());
 			return 1;
 		}
 
@@ -98,6 +108,13 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 	{
 		ApplicationPtr app = fromStack(L, 1);
 		app->setShouldRestart(lua_toboolean(L,3));
+		return 0;
+	}
+
+	static int setShowCursor(lua_State* L)
+	{
+		ApplicationPtr app = fromStack(L, 1);
+		app->setShowCursor(lua_toboolean(L,3));
 		return 0;
 	}
 

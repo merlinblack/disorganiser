@@ -105,6 +105,11 @@ void Application::setTextInputMode(bool enable)
 	}
 }
 
+void Application::setShowCursor(bool enable)
+{
+	SDL_ShowCursor( enable ? SDL_ENABLE : SDL_DISABLE );
+}
+
 void Application::handleTextInput(const SDL_Event& event)
 {
 	LuaRef textInput = scripts->getGlobal("handleTextInput");
