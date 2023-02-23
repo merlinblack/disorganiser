@@ -85,7 +85,7 @@ end
 
 function Console:keyUp(code, sym)
 	--print('Console - key up: ', code, sym)
-	if code == 40 then -- enter
+	if code == 40 or code == 88 then -- enter or keypad enter
 		local line = self.edit:getString()
 		self.history:insert(line)
 		self.edit:clear()

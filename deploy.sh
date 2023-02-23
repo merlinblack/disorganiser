@@ -2,7 +2,8 @@
 
 mkdir -p pibuild
 cd pibuild
-cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/prog/rpi/toolchain-raspberrypi.cmake -Wno-dev .. 
+cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE=$HOME/prog/rpi/toolchain-raspberrypi.cmake -Wno-dev .. 
+#cmake -DCMAKE_TOOLCHAIN_FILE=$HOME/prog/rpi/toolchain-raspberrypi.cmake -Wno-dev .. 
 make -j24
 
 ssh rpi "mkdir -p ~/prog/disorganiser"

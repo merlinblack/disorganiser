@@ -11,18 +11,12 @@ function wait(ticks)
 end
 
 function waitForTask(taskName)
-	local found  = true
-	while found do
-		found = false
-		local tasks = getTasks()
-		for k,v in pairs(tasks) do
-			if v == taskName then
-				found = true
-			end
-		end
+	local running  = true
+	while running do
+		running = isTaskRunning(taskName)
 		local status = yield()
 		if status == 'wakeup' then
-			found = false
+			running = false
 		end
 	end
 end
@@ -34,19 +28,21 @@ function waitForWakeup()
 	end
 end
 
+function isTaskRunning(taskName)
+	for _, name in ipairs(getTasks()) do
+		if name == taskName then
+			return true
+		end
+	end
+	return false
+end
+
 function addUniqueTask(taskFunc, taskName)
 	if not taskName or taskName == '' then
 		error('task name is required for addUniqueTask')
 	end
-	local found = false
-	for idx, name in ipairs(getTasks()) do
-		if name == taskName then
-			found = true
-			break
-		end
-	end
 
-	if found == false then
+	if not isTaskRunning(taskName) then
 		addTask(taskFunc, taskName)
 	end
 end
