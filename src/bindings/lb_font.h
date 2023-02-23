@@ -21,7 +21,8 @@ struct FontBinding : public ManualBind::Binding<FontBinding,Font>
 	static luaL_Reg* members()
 	{
 		static luaL_Reg members[] = {
-			{ "sizeText", sizeText }
+			{ "sizeText", sizeText },
+			{ nullptr, nullptr }
 		};
 		return members;
 	}
