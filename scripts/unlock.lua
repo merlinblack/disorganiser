@@ -59,4 +59,13 @@ function Unlock:unlock()
 	addTask(screenSaveTask, 'screensaver')
 end
 
+function Unlock:swipe(direction)
+	if direction == Swipe.Left then
+		mainScreen:activate()
+	end
+	if direction == Swipe.Right then
+		mainScreen2:activate()
+	end
+end
+
 unlock = Unlock()

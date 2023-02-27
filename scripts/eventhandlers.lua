@@ -12,11 +12,14 @@ swipeStart = nil
 fingerDown = false
 lastMouseEvent = -math.huge
 
-function setCurrentScreen(newScreen)
-	if currentScreen then
+function setCurrentScreen(newScreen, noDeactivate)
+	local previousScreen = currentScreen
+	if currentScreen and noDeactivate == nil then
 		currentScreen:deactivate()
 	end
 	currentScreen = newScreen
+
+	return previousScreen
 end
 
 function getCurrentScreen()
@@ -25,6 +28,11 @@ end
 
 function handleTouch(type, x, y, dx, dy)
 	lastEvent = app.ticks
+	-- looks Raspian is setup to send synthetic mouse events. So we can't turn them off.
+	-- So turn the cursor back off here (mouse events come first)
+	app.showCursor = false
+	stopHideCursorTask = true
+
 	if false then
 		print('Touched: ' .. EventNames[type])
 		print(x,y)
@@ -58,7 +66,7 @@ function handleTouch(type, x, y, dx, dy)
 	end
 end
 
-function handleMouse(type, x, y, button, state, clicks)
+function handleMouse(type, x, y, button, state, clicks, which)
 	lastEvent = app.ticks
 	lastMouseEvent = lastEvent
 	showCursor()
@@ -68,6 +76,7 @@ function handleMouse(type, x, y, button, state, clicks)
 		print('button', button)
 		print('state', state)
 		print('clicks', clicks)
+		print('which', which)
 	end
 
 	if currentScreen then
@@ -120,7 +129,7 @@ function handleKeyUp(code, sym)
 	lastEvent = app.ticks
 	if not console:isEnabled() then
 		if code == 41 then -- Escape
-			app.shouldStop = true
+			quit()
 		end
 		if sym == 's' then
 			screenSaver:setDirectory('media/alara/')

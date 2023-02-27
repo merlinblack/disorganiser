@@ -24,7 +24,7 @@ function Screen:build()
 end
 
 function Screen:activate()
-	setCurrentScreen(self)
+	self.previousScreen = setCurrentScreen(self)
 	app.renderList = self.renderList
 	self.renderList:shouldRender()
 end

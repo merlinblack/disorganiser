@@ -46,7 +46,7 @@ function ScreenSaver:setPicture(filename)
 end
 
 function ScreenSaver:mouseClick(time, x, y, button)
-	mainScreen:activate()
+	self.previousScreen:activate()
 end
 
 function ScreenSaver:deactivate()
@@ -79,12 +79,16 @@ function screenSaveTask()
 	clockJitter = false
 end
 
+function startScreenSave()
+	screenSaver:setDirectory('media/alara/')
+	addTask(screenSaveTask, 'screensaver')
+end
+
 function checkForScreenSaveNeeded()
 	while true do
 		if caffine ~= true and getCurrentScreen() ~= screenSaver and getCurrentScreen() ~= suspend then
 			if lastEvent + 10*60000 < app.ticks then
-				screenSaver:setDirectory('media/alara/')
-				addTask(screenSaveTask, 'screensaver')
+				startScreenSave()
 			end
 		end
 		wait(1000)

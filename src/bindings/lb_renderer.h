@@ -40,7 +40,7 @@ struct RendererBinding: public ManualBind::PODBinding<RendererBinding,const SDL_
 	{
 		const SDL_Renderer* renderer = fromStack(L,1);
 		FontPtr font = FontBinding::fromStack(L,2);
-		std::string text = lua_tostring(L, 3);
+		std::string text = luaL_checkstring(L, 3);
 		SDL_Color& color = ColorBinding::fromStack(L,4);
 
 		TexturePtr texture = font->renderTextNice(renderer, text, color);

@@ -23,7 +23,7 @@ function MainScreen:build()
 	local textcolor = Color 'f30a4a'
 	local backcolor = textcolor:clone()
 	backcolor.a = 0x20
-	self:addButton(btn, 'Çikiş', function() app.shouldStop = true end, textcolor, nil, backcolor)
+	self:addButton(btn, 'Çikiş', function() quit() end, textcolor, nil, backcolor)
 
 	btn[2] = btn[2] - 140
 	self:addButton(btn, 'Docker', function() docker:activate() end, textcolor, nil, backcolor)
@@ -32,7 +32,7 @@ function MainScreen:build()
 	self:addButton(btn, 'Kilidini\naç', function() unlock:activate() end, textcolor, nil, backcolor)
 
 	btn[2] = btn[2] + 140
-	self:addButton(btn, 'Tekrar\nBaşlat', function() app.shouldRestart = true app.shouldStop = true end, textcolor, nil, backcolor)
+	self:addButton(btn, 'Tekrar\nBaşlat', function() restart() end, textcolor, nil, backcolor)
 
 	local weatherRect = {20,5,260,130}
 	local weatherbox <close> = Rectangle(backcolor, true, weatherRect)
@@ -81,6 +81,9 @@ end
 function MainScreen:swipe(direction)
 	if direction == Swipe.Left then
 		mainScreen2:activate()
+	end
+	if direction == Swipe.Right then
+		unlock:activate()
 	end
 end
 

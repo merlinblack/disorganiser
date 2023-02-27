@@ -73,6 +73,9 @@ function MainScreen2:swipe(direction)
 	if direction == Swipe.Right then
 		mainScreen:activate()
 	end
+	if direction == Swipe.Left then
+		unlock:activate()
+	end
 end
 
 function MainScreen2:runTask(host, command)

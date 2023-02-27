@@ -130,6 +130,9 @@ void Application::handleKeyUp(const SDL_Event& event)
 
 void Application::handleMouse(const SDL_Event& event)
 {
+	if (event.button.which == SDL_TOUCH_MOUSEID)
+		return;
+
 	LuaRef mouse = scripts->getGlobal("handleMouse");
 	if (mouse.isFunction())
 	{
@@ -143,7 +146,8 @@ void Application::handleMouse(const SDL_Event& event)
 					event.button.y,
 					event.button.button,
 					event.button.state,
-					event.button.clicks
+					event.button.clicks,
+					event.button.which
 				);
 				break;
 		}
