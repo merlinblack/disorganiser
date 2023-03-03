@@ -83,7 +83,7 @@ function MainScreen:swipe(direction)
 		mainScreen2:activate()
 	end
 	if direction == Swipe.Right then
-		unlock:activate()
+		systemUpdate:activate()
 	end
 end
 

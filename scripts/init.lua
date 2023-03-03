@@ -9,6 +9,8 @@ require 'weatherTrends'
 require 'garbage'
 require 'vader'
 require 'main'
+require 'main2'
+require 'systemupdate'
 require 'screensaver'
 require 'console'
 

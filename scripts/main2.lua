@@ -12,6 +12,7 @@ function MainScreen2:build()
 	 
 	local offline = Color 'fe0a4a'
 	local online = Color '0f0'
+	local grey = Color '777'
 
 	self.fontCode = Font('media/Aurek-Besh.ttf', 18)
 	self.font = Font('media/pirulen.otf', 22)
@@ -25,18 +26,21 @@ function MainScreen2:build()
 	local rectangle <close> = Rectangle(texture, dest, src)
 	self.renderList:add(rectangle)
 
-	local btn = { 30, 100, 160, 110}
+	local btn = { 30, 100, 180, 110}
 	local textcolor = Color 'fe0a4a'
 	local backcolor = textcolor:clone()
 	backcolor.a = 0x20
-	self:addButton(btn, 'System\nUpdate', function() self:runTask('localhost','sudo apt update && sudo apt upgrade -y') end, textcolor, nil, backcolor)
+	self:addButton(btn, 'System\nUpdate', function() systemUpdate:activate() end, textcolor, nil, backcolor)
 
-	btn[1] = btn[1] + 180
-	self:addButton(btn, 'ModelB\nUpdate', function() self:runTask('modelb.local','sudo apt update && sudo apt upgrade -y') end, textcolor, nil, backcolor)
+	btn[1] = btn[1] + 200
+	--self:addButton(btn, 'ModelB\nUpdate', function() self:runTask('modelb.local','sudo apt update && sudo apt upgrade -y') end, textcolor, nil, backcolor)
+	self:addButton(btn, 'Octavo\nUpdate', function() self:runTask('octavo','sudo dnf update -y') end, textcolor, nil, backcolor)
 
-	btn[1] = btn[1] - 180
 	btn[2] = btn[2] + 140
-	self:addButton(btn, 'Retry\nWeather', function() self:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py') end, textcolor, nil, backcolor)
+	self.wakeBtn = self:addButton(btn, 'Detecting\nStatus', function() end, grey, textcolor, backcolor)
+
+	btn[1] = btn[1] - 200
+	self.retryBtn = self:addButton(btn, 'Retry\nWeather', function() self:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py') end, grey, textcolor, backcolor)
 
 	local static <close> = Rectangle(app.renderer:textureFromText(self.fontCode, 'Main Screen Two', textcolor ), { 30,5,0,0})
 	self.renderList:add(static)
@@ -54,8 +58,14 @@ function MainScreen2:build()
 				readLocalWeather()
 				if weather == nil or weather.valid == false then
 					self.octavoStatus.texture = self.offlineTexture
+					self.wakeBtn:setCaption('Wake up\nOctavo', self.font, online)
+					self.wakeBtn:setAction(function() self:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63') end)
+					self.retryBtn:setCaption('Retry\nWeather', self.font, grey)
 				else
 					self.octavoStatus.texture = self.onlineTexture
+					self.wakeBtn:setCaption('Poweroff\nOctavo', self.font, textcolor)
+					self.wakeBtn:setAction(function() self:runTask('octavo', 'sudo poweroff') end)
+					self.retryBtn:setCaption('Retry\nWeather', self.font, textcolor)
 				end
 				self.renderList:shouldRender()
 			end
@@ -88,13 +98,13 @@ function MainScreen2:runTask(host, command)
 		local font <close> = Font('media/mono.ttf',14)
 		local tl = TextLog(
 			renderList, 
-			380, 100,
+			420, 100,
 			Color '00f4',
 			Color '0ff',
 			font, 
-			410, 15)
+			360, 18)
 
-		local frame <close> = Rectangle(Color('f0f'), false, growRect(tl.bounds))
+		local frame <close> = Rectangle(Color('00f'), false, growRect(tl.bounds))
 
 		renderList:add(frame)
 
@@ -111,6 +121,9 @@ function MainScreen2:runTask(host, command)
 		end
 		proc:add(command)
 		proc:open()
+
+		tl:add('host: ' .. host)
+		tl:add(command)
 
 		local more = true
 		local results

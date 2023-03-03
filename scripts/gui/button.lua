@@ -11,33 +11,62 @@ function Button.create(rect, captionText, font, func, textColor, frameColor, bac
 	frameColor = frameColor or textColor
 	backgroundColor = backgroundColor or Color '000000a0'
 
-	local renderList <close> = RenderList()
-
 	local rectangle <close> = Rectangle(backgroundColor, true, rect)
-	renderList:add(rectangle)
+	btnWidget.normalRenderList:add(rectangle)
+
+	local rectangle <close> = Rectangle( frameColor, false, rect )
+	btnWidget.normalRenderList:add(rectangle)
+
+	btnWidget.normalRenderList:add(btnWidget.captionRenderList)
+
+	local fadeFrameColor = frameColor:clone()
+	fadeFrameColor.a = fadeFrameColor.a // 3
+	local rectangle <close> = Rectangle( fadeFrameColor, true, rect)
+	btnWidget.pressedRenderList:add(rectangle)
+
+	btnWidget.renderList = RenderList()
+	btnWidget.renderList:add(btnWidget.normalRenderList)
+
+	btnWidget:setCaption(captionText, font, textColor)
+
+	return btnWidget
+end
+
+function Button:init( rect )
+	Widget.init(self, rect)
+	self.pressed = false
+	self.usingPressedRenderList = false
+	self.normalRenderList = RenderList()
+	self.pressedRenderList = RenderList()
+	self.captionRenderList = RenderList()
+end
+
+function Button:setCaption(captionText, font, textColor)
+
+	self.captionRenderList:clear()
 
 	if captionText:find('\n') then
 		local position  = captionText:find('\n')
 		local topLine = captionText:sub(1,position-1)
 		local bottomLine = captionText:sub(position+1)
 
-		local thirdHeight = rect[4]//3
+		local thirdHeight = self.height//3
 
 		local text <close> = app.renderer:textureFromText(font, topLine, textColor)
 		local rectangle <close> = Rectangle(
 			text,
-			rect[1]+((rect[3]//2)-(text.width//2)),
-			rect[2]+((thirdHeight)-(text.height//2))
+			self.left+((self.width//2)-(text.width//2)),
+			self.top+((thirdHeight)-(text.height//2))
 		)
-		renderList:add(rectangle)
+		self.captionRenderList:add(rectangle)
 
 		local text <close> = app.renderer:textureFromText(font, bottomLine, textColor)
 		local rectangle <close> = Rectangle(
 			text,
-			rect[1]+((rect[3]//2)-(text.width//2)),
-			rect[2]+((thirdHeight*2)-(text.height//2))
+			self.left+((self.width//2)-(text.width//2)),
+			self.top+((thirdHeight*2)-(text.height//2))
 		)
-		renderList:add(rectangle)
+		self.captionRenderList:add(rectangle)
 
 	else
 		if captionText == '' then
@@ -48,33 +77,11 @@ function Button.create(rect, captionText, font, func, textColor, frameColor, bac
 		local text <close> = app.renderer:textureFromText(font, captionText, textColor)
 		local rectangle <close> = Rectangle(
 			text,
-			rect[1]+((rect[3]//2)-(text.width//2)),
-			rect[2]+((rect[4]//2)-(text.height//2))
+			self.left+((self.width//2)-(text.width//2)),
+			self.top+((self.height//2)-(text.height//2))
 		)
-		renderList:add(rectangle)
+		self.captionRenderList:add(rectangle)
 	end
-	local rectangle <close> = Rectangle( frameColor, false, rect )
-	renderList:add(rectangle)
-
-	btnWidget.normalRenderList = renderList
-
-	btnWidget.pressedRenderList = RenderList()
-
-	local fadeFrameColor = frameColor:clone()
-	fadeFrameColor.a = fadeFrameColor.a // 3
-	local rectangle <close> = Rectangle( fadeFrameColor, true, rect)
-	btnWidget.pressedRenderList:add(rectangle)
-
-	btnWidget.renderList = RenderList()
-	btnWidget.renderList:add(btnWidget.normalRenderList)
-
-	return btnWidget
-end
-
-function Button:init( rect )
-	Widget.init(self, rect)
-	self.pressed = false
-	self.usingPressedRenderList = false
 end
 
 function Button:mouseClick( time, x, y, button )

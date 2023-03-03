@@ -49,19 +49,22 @@ function Unlock:btnPressed(value)
 	self.animation.texture = app.renderer:textureFromText(self.font, #self.code .. ' ' .. self.code, color )
 	self.renderList:shouldRender()
 	if self.code == secret.pass then
-		Unlock:unlock()
+		Unlock:unlock('media/special/')
+	end
+	if self.code == secret.pass2 then
+		Unlock:unlock('media/special2/')
 	end
 end
 
-function Unlock:unlock()
+function Unlock:unlock(directory)
 	print('Unlocked')
-	screenSaver:setDirectory('media/special/')
+	screenSaver:setDirectory(directory)
 	addTask(screenSaveTask, 'screensaver')
 end
 
 function Unlock:swipe(direction)
 	if direction == Swipe.Left then
-		mainScreen:activate()
+		systemUpdate:activate()
 	end
 	if direction == Swipe.Right then
 		mainScreen2:activate()
