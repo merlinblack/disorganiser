@@ -70,13 +70,13 @@ function WeatherTrends:buildDataTable()
 		return
 	end
 	self.dataRenderList:clear()
-	textcolor = Color(0xff, 0xff, 0xff, 0xff)
+	local textcolor = Color 'fff'
 
 	print('Building weather trend table')
 	readLocalWeather()
 	readLocalWeatherTrends()
 
-	if weather == nil or weatherTrendsData == nil then
+	if weather.valid == false or weatherTrendsData == nil then
 		return
 	end
 

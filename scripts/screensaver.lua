@@ -6,6 +6,7 @@ class 'ScreenSaver' (Screen)
 
 function ScreenSaver:build()
 	Screen.build(self)
+	self.font = Font('media/mono.ttf', 48)
 end
 
 function ScreenSaver:setDirectory(directory)
@@ -42,6 +43,14 @@ function ScreenSaver:setPicture(filename)
 
 	local rectangle = Rectangle(texture, dest, src);
 	self.renderList:add(rectangle)
+
+	if weather.valid then
+		local texture <close> = app.renderer:textureFromText(self.font, weather.temperature .. '°', Color('bbb'))
+		local yjitter = math.random(5, app.height - 25 - texture.height)
+		local rectangle = Rectangle(texture, {app.width - texture.width - 25, yjitter, 0, 0})
+		self.renderList:add(rectangle)
+	end
+
 	self.renderList:add(clockRenderList)
 end
 

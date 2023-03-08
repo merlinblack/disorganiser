@@ -1,6 +1,7 @@
 json = require('json')
 
 weatherRunningOperations = {}
+weather = { valid = false }
 
 function asyncHttpRequest(url)
 	print ('requesting ' .. url)
