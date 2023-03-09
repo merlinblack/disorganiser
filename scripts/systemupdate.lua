@@ -34,9 +34,12 @@ function SystemUpdate:build()
 	btn[2] = btn[2] + 80
 	self:addButton(btn, 'Vader', function() self:runTask('vader', 'sudo dnf update -y') end, textcolor, nil, backcolor)
 
-	local title <close> = app.renderer:textureFromText(self.fontCode, 'System Update', Color('0f0') )
-	local static <close> = Rectangle(title, { app.width-title.width-30, 5,0,0})
-	self.renderList:add(static)
+	btn[2] = btn[2] + 80
+	self:addButton(btn, 'All', function() self:all() end, textcolor, nil, backcolor)
+
+	self.titleTexture = app.renderer:textureFromText(self.fontCode, 'System Update', Color('0f0') )
+	self.title = Rectangle(self.titleTexture, {app.width-self.titleTexture.width-30, 5,0,0})
+	self.renderList:add(self.title)
 
 	self.renderList:add(clockRenderList)
 	self.renderList:shouldRender()
@@ -55,6 +58,11 @@ function SystemUpdate:runTask(host, command)
 	if self.alreadyRunning then return end
 	
 	self.alreadyRunning = true
+
+	local newTitle <close> = app.renderer:textureFromText(self.fontCode, host .. ' - System Update', Color('0f0') )
+	self.title.texture = newTitle
+	self.title:setDest {app.width-newTitle.width-30, 5,0,0}
+	self.renderList:shouldRender()
 
 	function task()
 		local renderList = RenderList()
@@ -107,10 +115,28 @@ function SystemUpdate:runTask(host, command)
 		wait(2500)
 		tl:destroy()
 		self.renderList:remove(renderList)
+		self.title.texture = self.titleTexture
+		self.title:setDest {app.width-self.titleTexture.width-30, 5,0,0}
 		self.renderList:shouldRender()
 		self.alreadyRunning = false
 	end
 	addTask(task, 'runSystemTask')
 end
+
+function SystemUpdate:all()
+	pt(getTasks())
+	self:runTask('rpi','sudo apt update && sudo apt upgrade -y')
+	print 'wait for task...'
+	waitForTask('runSystemTask')
+
+	self:runTask('octavo','sudo dnf update -y')
+	waitForTask('runSystemTask')
+	
+	self:runTask('modelb','sudo apt update && sudo apt upgrade -y')
+	waitForTask('runSystemTask')
+	
+	self:runTask('vader', 'sudo dnf update -y')
+end
+
 
 systemUpdate = SystemUpdate()

@@ -14,8 +14,8 @@ function asyncHttpRequest(url)
 	)(url)
 
 	while get.status ~= "done" and get.status ~= "error" do
-		print('waiting for ' .. url)
-		wait(10)
+		--print('waiting for ' .. url)
+		wait(250)
 	end
 
 	local duration = app.ticks - start

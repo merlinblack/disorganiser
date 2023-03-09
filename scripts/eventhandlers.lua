@@ -126,14 +126,15 @@ end
 
 function handleKeyUp(code, sym)
 	--print('handleKeyUp()', code, sym)
+	stopKeyRepeatTask = true
+	wakeTask('keyRepeatTask')
 	lastEvent = app.ticks
 	if not console:isEnabled() then
 		if code == 41 then -- Escape
 			quit()
 		end
 		if sym == 's' then
-			screenSaver:setDirectory('media/alara/')
-			addTask(screenSaveTask, 'screensaver')
+			startScreenSave()
 		end
 		if sym == '`' then
 			console:toggleEnabled()
@@ -141,6 +142,22 @@ function handleKeyUp(code, sym)
 	else
 		console:keyUp(code, sym)
 	end
+end
+
+function handleKeyDown(code, sym)
+	stopKeyRepeatTask = false
+	addUniqueTask(
+		function()
+			local keyCode = code
+			local keySym = sym
+			wait(1000)
+			while stopKeyRepeatTask == false do
+				console:keyUp(keyCode,keySym)
+				wait(100)
+			end
+		end,
+		'keyRepeatTask'
+	)
 end
 
 function handleTextInput(text)

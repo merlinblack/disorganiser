@@ -68,7 +68,7 @@ bool Application::init(bool onRaspberry_ = false)
 		SDL_ShowCursor(SDL_DISABLE);
 	}
 
-	timer->withInterval(100)->start();
+	timer->withInterval(10)->start();
 
 	if (scripts->loadFromFile("scripts/init.lua"))
 	{
@@ -125,6 +125,15 @@ void Application::handleKeyUp(const SDL_Event& event)
 	if (keyUp.isFunction())
 	{
 		keyUp((int)event.key.keysym.scancode, (char)event.key.keysym.sym);
+	}
+}
+
+void Application::handleKeyDown(const SDL_Event& event)
+{
+	LuaRef keyDown = scripts->getGlobal("handleKeyDown");
+	if (keyDown.isFunction())
+	{
+		keyDown((int)event.key.keysym.scancode, (char)event.key.keysym.sym);
 	}
 }
 
@@ -206,6 +215,9 @@ void Application::dispatchEvent(const SDL_Event& event)
 		break;
 	case SDL_KEYUP:
 		handleKeyUp(event);
+		break;
+	case SDL_KEYDOWN:
+		handleKeyDown(event);
 		break;
 	case SDL_MOUSEBUTTONDOWN:
 	case SDL_MOUSEBUTTONUP:

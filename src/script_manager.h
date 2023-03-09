@@ -33,7 +33,7 @@ class ScriptManager
 	lua_State* main;
 	TaskList tasks;
 	/** current task. Normally increments each call to resume. */
-	TaskList::iterator taskIter;
+	int currentTaskIndex;
 
 	void threadFromStack(lua_State* L, const std::string& name);
 
@@ -55,6 +55,7 @@ class ScriptManager
 	/** Methods for calling from Lua */
 	static int taskFromFunction(lua_State* L);
 	static int getTaskList(lua_State* L);
+	static int getCurrentTaskName(lua_State*L);
 	static int wakeupTask(lua_State* L);
 };
 

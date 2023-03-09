@@ -14,7 +14,7 @@ static const char LuaRegisteryGUID = 0;
 ScriptManager::ScriptManager()
 {
 	tasks.reserve(15);
-	taskIter = tasks.begin();
+	currentTaskIndex = 0;
 	main = luaL_newstate();
 	luaL_openlibs(main);
 	registerAllBindings(main);
@@ -26,6 +26,8 @@ ScriptManager::ScriptManager()
 	lua_setglobal(main,"addTask");
 	lua_pushcfunction(main, getTaskList);
 	lua_setglobal(main,"getTasks");
+	lua_pushcfunction(main, getCurrentTaskName);
+	lua_setglobal(main,"getCurrentTaskName");
 	lua_pushcfunction(main, wakeupTask);
 	lua_setglobal(main,"wakeTask");
 
@@ -100,6 +102,18 @@ int ScriptManager::getTaskList(lua_State* L)
 }
 
 /** \note static member **/
+int ScriptManager::getCurrentTaskName(lua_State *L)
+{
+	ScriptManager* self = getInstance(L);
+
+	auto& task = self->tasks.at(self->currentTaskIndex);
+
+	lua_pushstring(L, task.getName().c_str());
+
+	return 1;
+}
+
+/** \note static member **/
 int ScriptManager::wakeupTask(lua_State* L)
 {
 	ScriptManager* self = getInstance(L);
@@ -158,10 +172,7 @@ void ScriptManager::threadFromStack(lua_State* L, const std::string& name)
 
 	lua_xmove(L, thread, lua_gettop(L));
 
-	// Adding to tasks might re-allocate the vector somewhere else and invalidate taskIter.
-	int index = taskIter - tasks.begin();
 	tasks.emplace_back(coroutine, name);
-	taskIter = tasks.begin() + index;
 }
 
 bool ScriptManager::resume()
@@ -173,19 +184,20 @@ bool ScriptManager::resume()
 
 	if (tasks.size() < tasks.capacity() / 2)
 	{
-		int index = taskIter - tasks.begin();
 		tasks.shrink_to_fit();
-		taskIter = tasks.begin() + index;
 	}
 
-	taskIter->getRef().push();
+	auto& currentTask = tasks.at(currentTaskIndex);
+
+	currentTask.getRef().push();
 	lua_State* thread = lua_tothread(main, -1);
 	lua_pop(main, 1);
 
-	if (taskIter->shouldWake())
+	if (currentTask.shouldWake())
 	{
+		// Return value for yield
 		lua_pushliteral(thread, "wakeup");
-		taskIter->wakeUp(false);
+		currentTask.wakeUp(false);
 	}
 
 	int nargs = lua_gettop(thread);
@@ -198,6 +210,8 @@ bool ScriptManager::resume()
 	int nResults;
 	int ret = lua_resume(thread, main, nargs, &nResults);
 
+	/** \note After lua_resume, 'currentTask' may be invalid */
+	
 	bool errorFlag = false;
 
 	switch (ret)
@@ -207,16 +221,16 @@ bool ScriptManager::resume()
 			// Fall through.
 		case 0:
 			// Ran to completion or had an error.
-			taskIter = tasks.erase(taskIter);
+			tasks.erase(tasks.begin()+currentTaskIndex);
 			break;
 		case LUA_YIELD:
-			taskIter++;
+			currentTaskIndex++;
 			break;
 	}
 
-	if (taskIter == tasks.end())
+	if (currentTaskIndex == tasks.size())
 	{
-		taskIter = tasks.begin();
+		currentTaskIndex = 0;
 	}
 
 	reportStack(thread, errorFlag);

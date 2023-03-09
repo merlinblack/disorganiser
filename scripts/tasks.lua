@@ -7,6 +7,11 @@ function wait(ticks)
 	while app.ticks < finish and status ~= 'wakeup' do
 		status = yield()
 	end
+	local over = app.ticks - finish
+	if over > 500 then
+		print('Task: ' .. getCurrentTaskName() .. ' overslept by: ' .. over)
+		pt(getTasks())
+	end
 	return status == 'wakeup'
 end
 

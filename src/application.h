@@ -43,6 +43,7 @@ class Application
 
 	void handleTextInput(const SDL_Event &event);
 	void handleKeyUp(const SDL_Event &event);
+	void handleKeyDown(const SDL_Event &event);
 	void handleMouse(const SDL_Event &event);
 	void handleTouch(const SDL_Event &event);
 	void handleTimer(const SDL_Event &event);

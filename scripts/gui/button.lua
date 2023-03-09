@@ -86,9 +86,7 @@ end
 
 function Button:mouseClick( time, x, y, button )
 	if self:intersects( x, y ) and self.pressed then
-		if self.action then
-			return self:action( time, x, y, button )
-		end
+		self:callAction(time, x, y, button)
 	end
 end
 
@@ -136,6 +134,12 @@ end
 
 function Button:setAction(func)
 	self.action = func
+end
+
+function Button:callAction(time, x, y, button)
+	if self.action then
+		addTask(function()	self:action( time, x, y, button ) end, 'buttonHandler')
+	end
 end
 
 function Button:addToRender(renderList)
