@@ -81,7 +81,9 @@ int ScriptManager::taskFromFunction(lua_State* L)
 
 	self->threadFromStack(L, name);
 
-	return 0;
+	lua_pushstring(L, name.c_str());
+
+	return 1;
 }
 
 /** \note static member **/

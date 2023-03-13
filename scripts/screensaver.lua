@@ -21,8 +21,8 @@ function ScreenSaver:setTime(secs)
 end
 
 function ScreenSaver:setPicture(filename)
-	local width = 800
-	local height = 460
+	local width = app.width
+	local height = app.height - clockHeight
 	print('Setting',filename)
 	self.renderList:clear()
 	self.renderList:shouldRender()

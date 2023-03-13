@@ -12,8 +12,15 @@
 
 class Application;
 
+//#define BUYUK
+
+#ifndef BUYUK
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 480
+#else
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1200
+#endif
 
 using ApplicationPtr = std::shared_ptr<Application>;
 

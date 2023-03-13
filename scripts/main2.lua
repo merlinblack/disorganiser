@@ -34,7 +34,7 @@ function MainScreen2:build()
 
 	btn[1] = btn[1] + 200
 	--self:addButton(btn, 'ModelB\nUpdate', function() self:runTask('modelb.local','sudo apt update && sudo apt upgrade -y') end, textcolor, nil, backcolor)
-	self:addButton(btn, 'Octavo\nUpdate', function() self:runTask('octavo','sudo dnf update -y') end, textcolor, nil, backcolor)
+	self.wakeNBake = self:addButton(btn, 'Detecting\nStatus', function() end, grey, textcolor, backcolor)
 
 	btn[2] = btn[2] + 140
 	self.wakeBtn = self:addButton(btn, 'Detecting\nStatus', function() end, grey, textcolor, backcolor)
@@ -51,21 +51,33 @@ function MainScreen2:build()
 	self.octavoStatus = Rectangle(self.offlineTexture, { 320,50,0,0})
 	self.renderList:add(self.octavoStatus)
 
+	function wakeNBake()
+		waitForTask(self:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63'))
+		self.wakeNBake:setCaption('Waiting...', self.font, offline)
+		self.renderList:shouldRender()
+		waitForTask(addTask(function() while weather.valid == false do wait(200) end end))
+		self:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py')
+	end
+
 	self.stopOctavoUpdate = false
 	function updateOctavoStatus()
 		while self.stopOctavoUpdate == false do
 			if self:isActive() then
 				readLocalWeather()
-				if weather == nil or weather.valid == false then
+				if weather.valid == false then
 					self.octavoStatus.texture = self.offlineTexture
 					self.wakeBtn:setCaption('Wake up\nOctavo', self.font, online)
 					self.wakeBtn:setAction(function() self:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63') end)
 					self.retryBtn:setCaption('Retry\nWeather', self.font, grey)
+					self.wakeNBake:setCaption('Wake N\nBake', self.font, online)
+					self.wakeNBake:setAction(wakeNBake)
 				else
 					self.octavoStatus.texture = self.onlineTexture
 					self.wakeBtn:setCaption('Poweroff\nOctavo', self.font, textcolor)
 					self.wakeBtn:setAction(function() self:runTask('octavo', 'sudo poweroff') end)
 					self.retryBtn:setCaption('Retry\nWeather', self.font, textcolor)
+					self.wakeNBake:setCaption('Wake N\nBake', self.font, grey)
+					self.wakeNBake:setAction(function() end)
 				end
 				self.renderList:shouldRender()
 			end
@@ -147,7 +159,7 @@ function MainScreen2:runTask(host, command)
 		self.renderList:shouldRender()
 		self.alreadyRunning = false
 	end
-	addTask(task, 'runSystemTask')
+	return addTask(task, 'runSystemTask-main2')
 end
 
 mainScreen2 = MainScreen2()

@@ -30,37 +30,38 @@ function ConfirmDialog:build()
 	self.renderList:add(background)
 
 
-	local dialogWidth = 500
-	local dialogHeight = 300
-	local textWidth = 480
-	local centre = app.width // 2
-	local dialogLeft = centre - dialogWidth//2
-	local dialogRight = centre + dialogWidth//2
+	self.dialogWidth = 500
+	self.dialogHeight = 300
+	self.textWidth = 480
+	self.buttonWidth = 200
+	self.centre = app.width // 2
+	self.dialogLeft = self.centre - self.dialogWidth//2
+	self.dialogRight = self.centre + self.dialogWidth//2
 
-	local frameColor = Color 'f30a4a'
-	local backColor = frameColor:clone()
-	backColor.a = 0x10
+	self.frameColor = Color 'f30a4a'
+	self.backColor = self.frameColor:clone()
+	self.backColor.a = 0x10
 
-	local dialogBox <close> = Rectangle(backColor, true, {centre - dialogWidth//2, app.height//8, dialogWidth, dialogHeight})
+	local dialogBox <close> = Rectangle(self.backColor, true, {self.centre - self.dialogWidth//2, app.height//8, self.dialogWidth, self.dialogHeight})
 	self.renderList:add(dialogBox)
 
-	local dialogBox <close> = Rectangle(frameColor, false, {centre - dialogWidth//2, app.height//8, dialogWidth, dialogHeight})
+	local dialogBox <close> = Rectangle(self.frameColor, false, {self.centre - self.dialogWidth//2, app.height//8, self.dialogWidth, self.dialogHeight})
 	self.renderList:add(dialogBox)
 
-	local buttonWidth = 200
-	self:addButton({dialogLeft, dialogHeight, buttonWidth, 60}, 'Tamam', function() self.result = 'ok' end, Color 'fff', frameColor, backColor)
-	self:addButton({dialogRight-buttonWidth, dialogHeight, buttonWidth, 60}, 'Iptal', function() self.result = 'cancel' end, Color 'fff', frameColor, backColor)
+	local btnHeight = 60
+	local btnY = app.height//8 + self.dialogHeight - btnHeight
+
+	self:addButton({self.dialogLeft, btnY, self.buttonWidth, btnHeight}, 'Tamam', function() self.result = 'ok' end, Color 'fff', self.frameColor, self.backColor)
+	self:addButton({self.dialogRight-self.buttonWidth, btnY, self.buttonWidth, btnHeight}, 'Iptal', function() self.result = 'cancel' end, Color 'fff', self.frameColor, self.backColor)
 
 end
 
 function ConfirmDialog:run(message)
 	self:activate()
 
-	local centre = app.width // 2
-
 	local text <close> = app.renderer:textureFromText(self.font, message, Color 'fff')
-	local left = centre - text.width // 2
-	local textRect <close> = Rectangle(text, left, app.height//4)
+	local left = self.centre - text.width // 2
+	local textRect <close> = Rectangle(text, left, app.height//8+self.dialogHeight//3)
 
 	self.renderList:add(textRect)
 
