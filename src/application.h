@@ -12,7 +12,11 @@
 
 class Application;
 
-//#define BUYUK
+#define BUYUK
+
+#ifdef NOBUYUK	// Defined by deploy scripts
+#undef BUYUK	// Make sure 'big' is turned off
+#endif
 
 #ifndef BUYUK
 #define WINDOW_WIDTH 800

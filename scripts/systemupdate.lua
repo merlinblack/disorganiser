@@ -73,7 +73,7 @@ function SystemUpdate:runTask(host, command)
 			Color '00f4',
 			Color 'fff',
 			font, 
-			app.width - 210 - 20, 22)
+			app.width - 210 - 20, app.height - clockHeight - 50)
 
 		local frame <close> = Rectangle(Color('00f'), false, growRect(tl.bounds))
 

@@ -64,7 +64,7 @@ function Docker:runOnVader(prog)
 			Color 'f0f4',
 			Color 'fff',
 			font, 
-			430, 20)
+			430, app.height-clockHeight-24)
 
 		local frame <close> = Rectangle(Color(0xff,0,0xff,0xff), false, growRect(tl.bounds))
 

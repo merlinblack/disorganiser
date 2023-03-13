@@ -114,7 +114,7 @@ function MainScreen2:runTask(host, command)
 			Color '00f4',
 			Color '0ff',
 			font, 
-			360, 18)
+			app.width - 420 - 10, app.height - clockHeight - 100)
 
 		local frame <close> = Rectangle(Color('00f'), false, growRect(tl.bounds))
 

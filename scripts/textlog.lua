@@ -3,9 +3,10 @@ require 'misc'
 
 class 'TextLog'
 
-function TextLog:init(renderList, x, y, backgroundColor, color, font, width, nlines)
+function TextLog:init(renderList, x, y, backgroundColor, color, font, width, height)
     local lineHeight = math.floor(font.lineHeight * 1.2)
-    self.bounds = { x, y, width, (nlines+2) * lineHeight }
+    local nlines = (height // lineHeight) - 2
+    self.bounds = { x, y, width, height }
     self.renderList = renderList
     self.font = font
     self.color = color
