@@ -54,7 +54,7 @@ end
 function wt(t)
 	local str = ''
 	for k,v in pairs(t) do
-		str = str .. k .. ' ' .. v .. '\n'
+		str = str .. tostring(k) .. ': ' .. tostring(v) .. '\n'
 	end
 	write(str)
 end
