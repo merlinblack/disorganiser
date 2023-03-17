@@ -52,11 +52,29 @@ function pt(t)
 end
 
 function wt(t)
+	if type(t) ~= 'table' then
+		write(tostring(t))
+	else
+		write(wtt(t))
+	end
+end
+
+function wtt(t, visited, indent)
+	local visited = visited or {}
+	local indent = indent or ''
 	local str = ''
 	for k,v in pairs(t) do
-		str = str .. tostring(k) .. ': ' .. tostring(v) .. '\n'
+		str = str .. indent .. tostring(k) .. ': '
+		if type(v) == 'table' and visited[v] ~= true then
+			visited[v] = true
+			str = str .. '\n' .. indent .. wtt(v, visited, indent .. '..')
+		elseif visited[v] == true then
+			str = str .. 'looped ref: ' .. k .. '\n'
+		else
+			str = str .. tostring(v) .. '\n'
+		end
 	end
-	write(str)
+	return str
 end
 
 function growRect(rect, amount)

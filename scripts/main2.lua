@@ -52,11 +52,13 @@ function MainScreen2:build()
 	self.renderList:add(self.octavoStatus)
 
 	function wakeNBake()
+		self.waitingForOctavo = true
 		waitForTask(self:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63'))
 		self.wakeNBake:setCaption('Waiting...', self.font, offline)
 		self.renderList:shouldRender()
 		waitForTask(addTask(function() while weather.valid == false do wait(200) end end))
 		self:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py')
+		self.waitingForOctavo = false
 	end
 
 	self.stopOctavoUpdate = false
@@ -69,8 +71,10 @@ function MainScreen2:build()
 					self.wakeBtn:setCaption('Wake up\nOctavo', self.font, online)
 					self.wakeBtn:setAction(function() self:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63') end)
 					self.retryBtn:setCaption('Retry\nWeather', self.font, grey)
-					self.wakeNBake:setCaption('Wake N\nBake', self.font, online)
-					self.wakeNBake:setAction(wakeNBake)
+					if self.waitingForOctavo ~= true then
+						self.wakeNBake:setCaption('Wake N\nBake', self.font, online)
+						self.wakeNBake:setAction(wakeNBake)
+					end
 				else
 					self.octavoStatus.texture = self.onlineTexture
 					self.wakeBtn:setCaption('Poweroff\nOctavo', self.font, textcolor)

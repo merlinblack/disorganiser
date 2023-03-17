@@ -32,14 +32,20 @@ function WeatherGraphs:build()
 	local subTitle <close> = Rectangle(subTitleTexture, {app.width//2 - subTitleTexture.width//2, 50, 0, 0})
 	self.renderList:add(subTitle)
 
-	local tempLabel <close> = Rectangle(app.renderer:textureFromText(self.font, 'Deg °C', self.tempColor), {60, app.height-70, 0, 0})
+	local tempLabel <close> = Rectangle(app.renderer:textureFromText(self.font, 'Deg °C', self.tempColor), {20, app.height-70, 0, 0})
 	self.renderList:add(tempLabel)
+	self.tempRange = Rectangle(app.emptyTexture, {20, app.height-50, 0, 0})
+	self.renderList:add(self.tempRange)
 
-	local pressLabel <close> = Rectangle(app.renderer:textureFromText(self.font, 'mbar', self.presColor), {200, app.height-70, 0, 0})
+	local pressLabel <close> = Rectangle(app.renderer:textureFromText(self.font, 'mbar', self.presColor), {160, app.height-70, 0, 0})
 	self.renderList:add(pressLabel)
+	self.presRange = Rectangle(app.emptyTexture, {160, app.height-50, 0, 0})
+	self.renderList:add(self.presRange)
 
-	local humLabel <close> = Rectangle(app.renderer:textureFromText(self.font, '% RH', self.humColor), {300, app.height-70, 0, 0})
+	local humLabel <close> = Rectangle(app.renderer:textureFromText(self.font, '% RH', self.humColor), {380, app.height-70, 0, 0})
 	self.renderList:add(humLabel)
+	self.humRange = Rectangle(app.emptyTexture, {380, app.height-50, 0, 0})
+	self.renderList:add(self.humRange)
 
 	local btn = { app.width-120, app.height-70, 100, 50}
 	self:addButton(btn, 'Geri', function() mainScreen:activate() end, self.textcolor, nil, self.backcolor)
@@ -115,6 +121,9 @@ function WeatherGraphs:buildGraphs()
 	end
 
 	--print('Max',maxTemp,'Min',minTemp)
+	self.tempRange.texture = app.renderer:textureFromText(self.font, minTemp .. '-' .. maxTemp, self.tempColor)
+	self.presRange.texture = app.renderer:textureFromText(self.font, minPres .. '-' .. maxPres, self.presColor)
+	self.humRange.texture = app.renderer:textureFromText(self.font, minHum .. '-' .. maxHum, self.humColor)
 
 	local graphHeight = self.graphBot - self.graphTop
 	local graphWidth = self.graphRight - self.graphLeft

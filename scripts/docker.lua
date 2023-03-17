@@ -14,7 +14,7 @@ function Docker:build()
 	local rectangle <close> = Rectangle(background, dest, src)
 	self.renderList:add(rectangle)
 
-	local btn = {620, 350, 160, 100}
+	local btn = {app.width-180, 350, 160, 100}
 	local textcolor = Color 'ff458a'
 	local backcolor = Color 'ff458a30'
 
@@ -64,7 +64,7 @@ function Docker:runOnVader(prog)
 			Color 'f0f4',
 			Color 'fff',
 			font, 
-			430, app.height-clockHeight-24)
+			app.width-400, app.height-clockHeight-24)
 
 		local frame <close> = Rectangle(Color(0xff,0,0xff,0xff), false, growRect(tl.bounds))
 
