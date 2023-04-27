@@ -3,7 +3,9 @@
 
 #include "LuaBinding.h"
 #include "LuaRef.h"
+#include "bindings.h"
 #include "rectangle.h"
+#include "lb_renderlist.h"
 #include "lb_color.h"
 #include "lb_texture.h"
 #include <sstream>
@@ -100,36 +102,6 @@ struct RectangleBinding : public ManualBind::Binding<RectangleBinding,Rectangle>
 		push(L, rectangle);
 
 		return 1;
-	}
-
-	static SDL_Rect getRectFromTable(lua_State* L, int index)
-	{
-		using ManualBind::LuaRef;
-		SDL_Rect rect;
-		LuaRef rectTable = LuaRef::fromStack(L, index);
-
-		if (!rectTable.isTable())
-		{
-			luaL_error(L, "Parameter %d must be a table.", index);
-		}
-
-		/** Lua tables start at 1 :-) **/
-		for (int i = 1; i < 5; i++)
-		{
-			if (!rectTable[i].isNumber())
-			{
-				luaL_error(L, "Parameter %d table must have four numbers (x,y,w,h).", index);
-			}
-		}
-
-		LuaRef x = rectTable[1];
-		LuaRef y = rectTable[2];
-		LuaRef w = rectTable[3];
-		LuaRef h = rectTable[4];
-
-		rect = {x, y, w, h};
-
-		return rect;
 	}
 
 	static int upcast( lua_State *L )

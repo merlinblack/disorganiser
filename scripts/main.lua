@@ -58,6 +58,13 @@ function MainScreen:build()
 		local color = Color 'f30a4ac0'
 		while not self.stopWeatherUpdate do
 			readLocalWeather()
+			if weather.valid == false then
+				if fileReadable('/tmp/weather.lua') then
+					dofile('/tmp/weather.lua')
+					weather.valid = false
+				end
+			end
+
 			if weather.temperature ~= '' then
 				temperature.texture = app.renderer:textureFromText(font, weather.temperature .. ' °C',color)
 				pressure.texture = app.renderer:textureFromText(font, weather.pressure .. ' mbar',color)

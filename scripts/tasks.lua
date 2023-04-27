@@ -16,6 +16,9 @@ function wait(ticks)
 end
 
 function waitForTask(taskName)
+	if getCurrentTaskName() == taskName then
+		error('Task can not wait for itself.')
+	end
 	local running  = true
 	while running do
 		running = isTaskRunning(taskName)

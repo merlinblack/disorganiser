@@ -95,7 +95,16 @@ function valuesToKeys( t )
     return r
 end
 
-function dirlist(path)
+function dirList(path)
 	return io.popen('ls ' .. path):lines()
 end
 
+function fileReadable(name)
+    local f=io.open(name,"r")
+    if f~=nil then
+        f:close()
+        return true
+    else
+        return false
+    end
+end

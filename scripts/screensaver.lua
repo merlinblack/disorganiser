@@ -78,7 +78,7 @@ function screenSaveTask()
 	while not screenSaver.stop do
 		picture = screenSaver.pictureIter()
 		if not picture then
-			screenSaver.pictureIter = dirlist(screenSaver.directory .. '*.jpg')
+			screenSaver.pictureIter = dirList(screenSaver.directory .. '*.jpg')
 			picture = screenSaver.pictureIter()
 		end
 
