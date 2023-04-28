@@ -2,6 +2,7 @@
 #define __LB_FONT_H
 
 #include "LuaBinding.h"
+#include "LuaRef.h"
 #include "font.h"
 
 #include <unordered_map>
@@ -20,6 +21,7 @@ struct FontBinding : public ManualBind::Binding<FontBinding,Font>
 	{
 		static ManualBind::bind_properties properties[] = {
 			{ "lineHeight", getLineHeight, nullptr },
+			{ "cacheStats", getCacheStats, nullptr },
 			{ nullptr, nullptr, nullptr}
 		};
 
@@ -41,7 +43,7 @@ struct FontBinding : public ManualBind::Binding<FontBinding,Font>
 		int size = lua_tointeger(L,2);
 
 		std::ostringstream oss;
-		oss << path << size;
+		oss << path << " - " << size;
 		std::string cacheKey(oss.str());
 
 		if(cache.count(cacheKey))
@@ -64,10 +66,24 @@ struct FontBinding : public ManualBind::Binding<FontBinding,Font>
 		return 1;
 	}
 
-	static int getLineHeight( lua_State* L )
+	static int getLineHeight(lua_State* L)
 	{
 		FontPtr font = fromStack( L, 1);
 		lua_pushinteger( L, font->lineHeight() );
+		return 1;
+	}
+
+	static int getCacheStats(lua_State* L)
+	{
+		ManualBind::LuaRef stats = ManualBind::LuaRef::newTable(L);
+
+		for( auto& [key, ptr] : cache)
+		{
+			stats[key] = ptr.use_count();
+		}
+
+		stats.push();
+
 		return 1;
 	}
 

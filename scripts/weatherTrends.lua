@@ -6,6 +6,7 @@ class 'WeatherTrends' (Screen)
 
 function WeatherTrends:build()
 	self.nextBuild = 0
+	self.bigger = Font('media/mono.ttf',32)
 	self.titleFont = Font('media/pirulen.otf',22)
 	self.font = Font('media/mono.ttf',24)
 	textcolor = Color(0xff, 0xff, 0xff, 0xff)
@@ -80,15 +81,13 @@ function WeatherTrends:buildDataTable()
 		return
 	end
 
-	local bigger <close> = Font('media/mono.ttf',32)
-
-	local label <close> = Rectangle(app.renderer:textureFromText(bigger, weather.temperature, textcolor), {col2, 100, 0, 0})
+	local label <close> = Rectangle(app.renderer:textureFromText(self.bigger, weather.temperature, textcolor), {col2, 100, 0, 0})
 	self.dataRenderList:add(label)
 
-	local label <close> = Rectangle(app.renderer:textureFromText(bigger, weather.pressure, textcolor), {col3, 100, 0, 0})
+	local label <close> = Rectangle(app.renderer:textureFromText(self.bigger, weather.pressure, textcolor), {col3, 100, 0, 0})
 	self.dataRenderList:add(label)
 
-	local label <close> = Rectangle(app.renderer:textureFromText(bigger, weather.humidity, textcolor), {col4, 100, 0, 0})
+	local label <close> = Rectangle(app.renderer:textureFromText(self.bigger, weather.humidity, textcolor), {col4, 100, 0, 0})
 	self.dataRenderList:add(label)
 
 	local row = 150
