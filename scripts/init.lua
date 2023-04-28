@@ -1,4 +1,13 @@
-dofile (os.getenv('HOME')..'/.config/disorganiser/config.lua')
+require 'misc'
+cfg = os.getenv('HOME')..'/.config/disorganiser/config.lua'
+if not fileReadable(cfg) then
+	app.shouldStop = true
+	print('Configuration file does not exist.')
+	return
+else
+	dofile (cfg)
+end
+
 lanes = require('lanes').configure()
 
 require 'tasks'
