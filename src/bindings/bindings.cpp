@@ -1,6 +1,6 @@
 #include "LuaBinding.h"
 #include "lb_application.h"
-//#include "lb_atlas.h"
+#include "lb_atlas.h"
 #include "lb_color.h"
 #include "lb_font.h"
 #include "lb_rectangle.h"
@@ -15,11 +15,12 @@
 using ManualBind::LuaRef;
 
 const char* ColorBinding::prop_keys[] = {"r", "g", "b", "a"};
+FontCache FontBinding::cache;
 
 void registerAllBindings(lua_State* L)
 {
 	ApplicationBinding::register_class(L);
-//	AtlasBinding::register_class(L);
+	AtlasBinding::register_class(L);
 	ColorBinding::register_class(L);
 	FontBinding::register_class(L);
 	RectangleBinding::register_class(L);

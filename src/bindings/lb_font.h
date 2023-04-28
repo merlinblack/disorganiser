@@ -4,9 +4,17 @@
 #include "LuaBinding.h"
 #include "font.h"
 
+#include <unordered_map>
+#include <sstream>
+
+using WeakFontPtr = std::weak_ptr<Font>;
+using FontCache = std::unordered_map<std::string, WeakFontPtr>;
+
 struct FontBinding : public ManualBind::Binding<FontBinding,Font>
 {
 	static constexpr const char* class_name = "Font";
+
+	static FontCache cache;
 
 	static ManualBind::bind_properties* properties()
 	{
@@ -32,7 +40,24 @@ struct FontBinding : public ManualBind::Binding<FontBinding,Font>
 		std::string path = lua_tostring(L, 1);
 		int size = lua_tointeger(L,2);
 
+		std::ostringstream oss;
+		oss << path << size;
+		std::string cacheKey(oss.str());
+
+		if(cache.count(cacheKey))
+		{
+			FontPtr font = cache[cacheKey].lock();
+			if(font) {
+				push(L, font);
+				return 1;
+			}
+			/* else our cached font ref count went to zero,
+			   so we need to make a new one */
+		}
+
 		FontPtr font = std::make_shared<Font>(path, size);
+
+		cache[cacheKey] = font;
 
 		push(L, font);
 
