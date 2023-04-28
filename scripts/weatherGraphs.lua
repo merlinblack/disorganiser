@@ -1,10 +1,12 @@
 require 'gui/screen'
+require 'gui/hovertext'
 require 'weather'
 require 'clock'
 
 class 'WeatherGraphs' (Screen)
 
 function WeatherGraphs:build()
+	self.hoverText = {}
 	self.nextBuild = 0
 	self.titleFont = Font('media/pirulen.otf',22)
 	self.font = Font('media/mono.ttf',24)
@@ -85,6 +87,10 @@ function WeatherGraphs:buildGraphs()
 
 	print 'Building graphs'
 	self.dataRenderList:clear()
+	for _,hoverText in pairs(self.hoverText) do
+		hoverText:removeFromScreen(self)
+	end
+	self.hoverText = {}
 
 	readLocalWeatherSummary()
 
@@ -152,9 +158,17 @@ function WeatherGraphs:buildGraphs()
 	local x = self.graphLeft
 
 	for _,record in pairs(weatherSummaryData) do
-		temperature:addPoint(x, math.floor(self.graphBot - (record.temperature-tempBottom) * tempScaleY))
-		humidity:addPoint(x, math.floor(self.graphBot - (record.humidity-humBottom) * humScaleY))
-		pressure:addPoint(x, math.floor(self.graphBot - (record.pressure-presBottom) * presScaleY))
+		y = math.floor(self.graphBot - (record.temperature-tempBottom) * tempScaleY)
+		temperature:addPoint(x, y)
+		table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.temperature, self.tempColor, self.tempColor, self.font))
+
+		y = math.floor(self.graphBot - (record.humidity-humBottom) * humScaleY)
+		humidity:addPoint(x, y)
+		table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.humidity, self.humColor, self.humColor, self.font))
+
+		y = math.floor(self.graphBot - (record.pressure-presBottom) * presScaleY)
+		pressure:addPoint(x, y)
+		table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.pressure, self.presColor, self.presColor, self.font))
 
 		local tick <close> = LineList(self.linecolor)
 		tick:addPoint(x, self.graphBot - 10)
@@ -162,6 +176,10 @@ function WeatherGraphs:buildGraphs()
 		self.dataRenderList:add(tick)
 
 		x = x + scaleX
+	end
+
+	for _, hoverText in pairs(self.hoverText) do
+		hoverText:addToScreen(self)
 	end
 
 	self.dataRenderList:shouldRender(true)

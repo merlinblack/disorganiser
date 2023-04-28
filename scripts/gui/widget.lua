@@ -89,6 +89,13 @@ function Widget:addChild( widget )
     table.insert(self.children, widget)
 end
 
+function Widget:removeChild( widget )
+    local index = table.getIndex(self.children, widget)
+    if index > 0 then
+        table.remove(self.children, index)
+    end
+end
+
 -- Return true to cancel move, when it would move off view
 function Widget:move( x, y )
     local left = self.left

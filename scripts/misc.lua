@@ -9,6 +9,15 @@ function splitByNewline(str)
 	return lines
 end
 
+function table.getIndex(tbl, element)
+	for index, value in pairs(tbl) do
+		if value == element then
+			return index
+		end
+	end
+	return 0
+end
+
 -- String routines from https://gist.github.com/kgriffs/124aae3ac80eefe57199451b823c24ec
 function string:contains(sub)
 	return self:find(sub, 1, true) ~= nil
