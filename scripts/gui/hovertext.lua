@@ -7,7 +7,9 @@ function HoverText:init(rect, text, textcolor, color, font)
 	self.hoverRenderList = RenderList()
 	self.renderList = RenderList()
 	self.font = font or Font('media/mono.ttf',24)
-	self:setText(text, textcolor)
+	addTask(function()
+		self:setText(text, textcolor)
+	end, 'HoverText')
 	self:setColor(color)
 end
 
@@ -37,6 +39,7 @@ function HoverText:addToScreen(screen)
 end
 
 function HoverText:removeFromScreen(screen)
+	app.renderList:remove(self.hoverRenderList)
 	screen.renderList:remove(self.renderList)
 	screen.renderList:shouldRender()
 	screen:removeChild(self)

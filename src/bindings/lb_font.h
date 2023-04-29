@@ -77,7 +77,7 @@ struct FontBinding : public ManualBind::Binding<FontBinding,Font>
 	{
 		ManualBind::LuaRef stats = ManualBind::LuaRef::newTable(L);
 
-		for( auto& [key, ptr] : cache)
+		for(const auto& [key, ptr] : cache)
 		{
 			stats[key] = ptr.use_count();
 		}
