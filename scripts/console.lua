@@ -158,6 +158,7 @@ function Console:addLine(text)
 
 	if text == '' then
 		self.lineRectangles[self.currentLine].texture = self.emptyline
+		self:scroll()
 	else
 		local max = 60
 		local min = 50
@@ -173,15 +174,23 @@ function Console:addLine(text)
 
 		local remainder = text:sub(splitPosition+1)
 		text = text:sub(1,splitPosition)
+		print('txt: ['.. text .. ']')
+		print('rem: ['.. remainder .. ']')
 
 		local newTexture <close> = app.renderer:textureFromText(self.font, text, self.textColor)
 		self.lineRectangles[self.currentLine].texture = newTexture
+
+		self:scroll()
 
 		if remainder ~= '' then
 			self:addLine(remainder)
 		end
 	end
 
+	self.renderList:shouldRender()
+end
+
+function Console:scroll()
 	if self.currentLine == self.nlines then
 		for i = 1, self.nlines-1 do
 			self.lineRectangles[i].texture = self.lineRectangles[i+1].texture
@@ -190,8 +199,6 @@ function Console:addLine(text)
 	end
 
 	self.currentLine = self.currentLine + 1
-
-	self.renderList:shouldRender()
 end
 
 function Console:updateInputDisplay()

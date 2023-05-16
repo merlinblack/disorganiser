@@ -92,3 +92,24 @@ function animate()
 	end
 
 end
+
+function lc(command)
+	local proc <close> = ProcessReader()
+
+	proc:set('bash')
+	proc:add('-c')
+	proc:add(command)
+	proc:open()
+
+	local more = true
+	local results
+	while more do
+		more, results = proc:read()
+		results = string.gsub(results, '^%s*(.-)%s*$', '%1')
+
+		if results ~= '' then
+			write(results)
+		end
+		yield()
+	end
+end
