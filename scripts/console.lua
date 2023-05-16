@@ -12,7 +12,7 @@ function Console:init()
 	self.font = Font('media/mono.ttf', 24)
 	self.enabled = false
 	self.edit = EditString()
-	self.currentLine = 0
+	self.currentLine = 1
 	self.run = Run()
 	self.history = History()
 	self:build()
@@ -36,7 +36,7 @@ function Console:build()
 	self.renderList:add(rectangle)
 
 	self.emptyline = app.emptyTexture
-	self.lineHeight = self.font.lineHeight
+	self.lineHeight = self.font.lineHeight + 1
 	self.charWidth,self.charHeight = self.font:sizeText('X')
 	self.charWidth = self.charWidth -1
 	self.lineRectangles = {}
@@ -45,7 +45,7 @@ function Console:build()
 	for i = 1, self.nlines do
 		r = Rectangle(
 			self.emptyline,
-			self.leftMargin, self.topMargin + (i) * self.lineHeight
+			self.leftMargin, self.topMargin + (i-1) * self.lineHeight
 		)
 		r:setClip({0,0,self.width-(self.leftMargin+self.rightMargin),self.lineHeight})
 		self.lineRectangles[i]  = r
@@ -89,7 +89,7 @@ function Console:keyUp(code, sym)
 		local line = self.edit:getString()
 		self.history:insert(line)
 		self.edit:clear()
-		self:addLine(line)
+		self:addLine(self.run:getPrompt() .. line)
 		self.run:insertLine(line)
 		self:updateInputDisplay()
 		autoCompleteClear()
@@ -146,30 +146,15 @@ function Console:keyUp(code, sym)
 	end
 end
 
-function Console:write(text, addLastNewLine)
-	if addLastNewLine == nil then
-		addLastNewLine = true
-	end
+function Console:write(text)
 
 	lines = splitByNewline(text)
 	for _,line in pairs(lines) do
 		self:addLine(line)
 	end
-	if addLastNewLine then
-		self:addLine("")
-	end
 end
 
 function Console:addLine(text)
-
-	if self.currentLine == self.nlines then
-		for i = 1, self.nlines-1 do
-			self.lineRectangles[i].texture = self.lineRectangles[i+1].texture
-		end
-		self.currentLine = self.currentLine - 1
-	end
-
-	self.currentLine = self.currentLine + 1
 
 	if text == '' then
 		self.lineRectangles[self.currentLine].texture = self.emptyline
@@ -197,6 +182,15 @@ function Console:addLine(text)
 		end
 	end
 
+	if self.currentLine == self.nlines then
+		for i = 1, self.nlines-1 do
+			self.lineRectangles[i].texture = self.lineRectangles[i+1].texture
+		end
+		self.currentLine = self.currentLine - 1
+	end
+
+	self.currentLine = self.currentLine + 1
+
 	self.renderList:shouldRender()
 end
 
@@ -215,7 +209,7 @@ function Console:updateInputDisplay()
 	end
 
 	local pos = self.edit:index() + #self.run:getPrompt()
-	self.cursorRectangle:setDest({self.leftMargin + pos * self.charWidth, self.topMargin + line*self.lineHeight, self.charWidth, self.lineHeight})
+	self.cursorRectangle:setDest({self.leftMargin + pos * self.charWidth, self.topMargin + (line-1)*self.lineHeight, self.charWidth, self.lineHeight})
 
 	self.renderList:shouldRender()
 end
@@ -239,7 +233,7 @@ function Console:blinkCursor()
 
 		if self.cursorShown then
 			local pos = self.edit:index() + #self.run:getPrompt()
-			self.cursorRectangle:setDest({self.leftMargin + pos * self.charWidth, self.topMargin + (self.currentLine)*self.lineHeight, self.charWidth, self.lineHeight})
+			self.cursorRectangle:setDest({self.leftMargin + pos * self.charWidth, self.topMargin + (self.currentLine-1)*self.lineHeight, self.charWidth, self.lineHeight})
 		else
 			self.cursorRectangle:setDest({0, 0, 0, 0})
 		end
@@ -259,8 +253,7 @@ function write(...)
 		str = str .. ' ' .. args[i]
 	end
 	str = str:sub(2)
-	console:write(str, false)
-	console:addLine ""
+	console:write(str)
 	console:updateInputDisplay()
 end
 

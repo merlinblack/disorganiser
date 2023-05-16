@@ -17,6 +17,7 @@ class 'Screen' (Widget)
 function Screen:init()
 	Widget.init(self,  {0, 0, app.width, app.height})
 	self.renderList = RenderList()
+	print('Building Screen: ', self.__type)
 	self:build()
 end
 
