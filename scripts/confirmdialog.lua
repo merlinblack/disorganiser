@@ -18,9 +18,21 @@ function ConfirmDialog:activate()
 end
 
 function ConfirmDialog:deactivate()
-	print('Deactivating:', self)
+	Screen.deactivate(self)
 	app.overlay = self.prevRenderList
 	app.overlay:shouldRender()
+end
+
+function ConfirmDialog:keyPressed(keyCode, codePoint)
+
+	if keyCode == 41 then -- ESC
+		self.result = 'cancel'
+	end
+
+	if keyCode == 40 or keyCode == 88 then -- enter or keypad enter
+		self.result = 'ok'
+	end
+
 end
 
 function ConfirmDialog:build()

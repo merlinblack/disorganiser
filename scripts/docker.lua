@@ -36,7 +36,7 @@ function Docker:build()
 	self:addButton(btn, 'scrapbook', function() self:start('scrapbook') end, textcolor, nil, backcolor)
 	btn[2] = btn[2] + 104
 
-	self:addButton(btn, 'hq', function() self:start('hq') end, textcolor, nil, backcolor)
+	--self:addButton(btn, 'hq', function() self:start('hq') end, textcolor, nil, backcolor)
 	
 	self.renderList:add(clockRenderList)
 end

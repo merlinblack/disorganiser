@@ -65,14 +65,14 @@ function Console:toggleEnabled()
 end
 
 function Console:setEnabled(enabled)
-		self.enabled = enabled
-		app.textInputMode = enabled
-		if enabled then
-			app.overlay:add(console.renderList)
-		else
-			app.overlay:remove(console.renderList)
-		end
-		app.overlay:shouldRender()
+	self.enabled = enabled
+	app.textInputMode = enabled
+	if enabled then
+		app.overlay:add(console.renderList)
+	else
+		app.overlay:remove(console.renderList)
+	end
+	app.overlay:shouldRender()
 end
 
 function Console:textInput(input)

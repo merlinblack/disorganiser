@@ -25,12 +25,15 @@ function Screen:build()
 end
 
 function Screen:activate()
+	print('Activating Screen: ', self.__type)
 	self.previousScreen = setCurrentScreen(self)
 	app.renderList = self.renderList
 	self.renderList:shouldRender()
 end
 
 function Screen:deactivate()
+	print('Deactivating Screen: ', self.__type)
+	self.previousScreen = nil
 end
 
 function Screen:isActive()

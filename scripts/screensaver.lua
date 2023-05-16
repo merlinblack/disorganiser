@@ -58,9 +58,20 @@ function ScreenSaver:mouseClick(time, x, y, button)
 	self.previousScreen:activate()
 end
 
+function ScreenSaver:activate()
+	print('Activating Screen: ', self.__type)
+	if self.previousScreen == nil then
+		self.previousScreen = setCurrentScreen(self)
+	else
+		setCurrentScreen(self)
+	end
+	app.renderList = self.renderList
+	self.renderList:shouldRender()
+end
+
 function ScreenSaver:deactivate()
+	Screen.deactivate(self)
 	self.stop = true
-	print('deactivating screen saver')
 	wakeTask('screensaver')
 end
 

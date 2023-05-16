@@ -35,12 +35,19 @@ pt(getTasks())
 print('init.lua loaded.')
 
 function animate()
-	local spriteTexture <close> = app.renderer:textureFromFile('media/increasing.png')
+	wait(20)
+	local spriteTexture1 <close> = app.renderer:textureFromFile('media/increasing.png')
+	local spriteTexture2 <close> = app.renderer:textureFromFile('media/decreasing.png')
 	local sprites = {}
 	local n = 4000
 	local speed = 10
 	for i=1,n do
-		local sprite = Rectangle(spriteTexture,{0,0,0,0})
+		local sprite 
+		if i%2 == 0 then
+			sprite = Rectangle(spriteTexture1,{0,0,0,0})
+		else
+			sprite = Rectangle(spriteTexture2,{0,0,0,0})
+		end
 		sprites[i] = {
 			rect= sprite,
 			x= math.random(0,app.width),
@@ -54,7 +61,7 @@ function animate()
 		app.renderList:add(sprite)
 	end
 
-	for x=0, 1000 do
+	for x=0, 150 do
 		for i=1,n do
 			local sprite = sprites[i]
 			sprite.x = sprite.x + sprite.dx
@@ -65,9 +72,23 @@ function animate()
 		wait(1)
 	end
 
-	for i=1,n do
-		app.renderList:remove(sprites[i].rect)
+	for x=0, 150 do
+		for i=1,n do
+			local sprite = sprites[i]
+			sprite.x = sprite.x - sprite.dx
+			sprite.y = sprite.y - sprite.dy
+			sprite.rect:setDest{sprite.x, sprite.y, 0,0}
+		end
+		app.renderList:shouldRender()
+		wait(1)
 	end
 
-	app.renderList:shouldRender()
+	for i=1,n do
+		app.renderList:remove(sprites[i].rect)
+		app.renderList:shouldRender()
+		if i%100 == 0 then
+			wait(1)
+		end
+	end
+
 end

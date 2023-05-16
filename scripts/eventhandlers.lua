@@ -130,14 +130,14 @@ function handleKeyUp(code, sym)
 	wakeTask('keyRepeatTask')
 	lastEvent = app.ticks
 	if not console:isEnabled() then
-		if code == 41 then -- Escape
+		if code == 41 and not quitting == true then -- Escape
 			quit()
-		end
-		if sym == 's' then
+		elseif sym == 's' then
 			startScreenSave()
-		end
-		if sym == '`' then
+		elseif sym == '`' then
 			console:toggleEnabled()
+		else
+			currentScreen:keyPressed(code, sym)
 		end
 	else
 		console:keyUp(code, sym)
@@ -151,7 +151,7 @@ function handleKeyDown(code, sym)
 			local keyCode = code
 			local keySym = sym
 			wait(1000)
-			while stopKeyRepeatTask == false do
+			while stopKeyRepeatTask == false and console:isEnabled() do
 				console:keyUp(keyCode,keySym)
 				wait(100)
 			end
