@@ -26,6 +26,18 @@ function getCurrentScreen()
 	return currentScreen
 end
 
+addTask(
+	function()
+		while true do
+			if currentScreen then
+				currentScreen:update()
+			end
+			wait(1000)
+		end
+	end,
+	'Screen update'
+)
+
 function handleTouch(type, x, y, dx, dy)
 	lastEvent = app.ticks
 	-- looks Raspian is setup to send synthetic mouse events. So we can't turn them off.
@@ -131,7 +143,7 @@ function handleKeyUp(code, sym)
 	lastEvent = app.ticks
 	if not console:isEnabled() then
 		if code == 41 and not quitting == true then -- Escape
-			quit()
+			restart()
 		elseif sym == 's' then
 			startScreenSave()
 		elseif sym == '`' then

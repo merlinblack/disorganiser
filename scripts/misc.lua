@@ -68,17 +68,18 @@ function wt(t)
 	end
 end
 
-function wtt(t, visited, indent)
+function wtt(t, visited, indent, chain)
 	local visited = visited or {}
 	local indent = indent or ''
+	local chain = chain or ''
 	local str = ''
 	for k,v in pairs(t) do
 		str = str .. indent .. tostring(k) .. ': '
-		if type(v) == 'table' and visited[v] ~= true then
-			visited[v] = true
-			str = str .. '\n' .. indent .. wtt(v, visited, indent .. '..')
-		elseif visited[v] == true then
-			str = str .. 'looped ref: ' .. k .. '\n'
+		if type(v) == 'table' and visited[v] == nil then
+			visited[v] = chain .. '.' .. k
+			str = str .. '\n' .. wtt(v, visited, indent .. '..', visited[v])
+		elseif visited[v] ~= nil then
+			str = str .. 'seen ref: ' .. visited[v] .. '\n'
 		else
 			str = str .. tostring(v) .. '\n'
 		end
@@ -106,6 +107,12 @@ end
 
 function dirList(path)
 	return io.popen('ls ' .. path):lines()
+end
+
+function fileExists(path)
+	local success, retReason, retValue = os.execute('stat ' .. path .. ' > /dev/null 2>&1')
+
+	return retValue == 0
 end
 
 function fileReadable(name)

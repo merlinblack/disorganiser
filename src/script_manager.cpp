@@ -34,7 +34,9 @@ ScriptManager::ScriptManager()
 	luaL_dostring( main, "package.path = './scripts/?.lua;' .. package.path" );
 	luaL_dostring( main, "package.cpath = './scripts/?.so;' .. package.cpath" );
 	luaL_dostring( main, "package.path = '/usr/share/lua/5.4/?.lua;' .. package.path" );
+	luaL_dostring( main, "package.path = '/usr/share/lua/5.4/?/init.lua;' .. package.path" );
 	luaL_dostring( main, "package.cpath = '/usr/lib64/lua/5.4/?.so;' .. package.cpath" );
+	luaL_dostring( main, "write = print" );
 }
 
 ScriptManager::~ScriptManager()
@@ -248,8 +250,6 @@ void ScriptManager::reportStack( lua_State* thread, bool wasError )
 	// In the case of a yielded chunk these are the parameters to yield.
 	if( wasError ) {
 	  lua_getglobal( thread, "write" );
-	  if (!lua_isfunction( thread, -1))
-		lua_getglobal( thread, "print" );
 	  lua_pushliteral( thread, "Error" );
 	  lua_pushvalue( thread, -3 );
 	  luaL_traceback( thread, thread, nullptr, 0);

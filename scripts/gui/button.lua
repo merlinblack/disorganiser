@@ -27,7 +27,10 @@ function Button.create(rect, captionText, font, func, textColor, frameColor, bac
 	btnWidget.renderList = RenderList()
 	btnWidget.renderList:add(btnWidget.normalRenderList)
 
-	btnWidget:setCaption(captionText, font, textColor)
+	btnWidget:setCaption(captionText, textColor, font)
+
+	btnWidget.font = font
+	btnWidget.textColor = textColor
 
 	return btnWidget
 end
@@ -41,9 +44,17 @@ function Button:init( rect )
 	self.captionRenderList = RenderList()
 end
 
-function Button:setCaption(captionText, font, textColor)
+function Button:setCaption(captionText, textColor, font)
 
 	self.captionRenderList:clear()
+
+	if font == nil then
+		font = self.font
+	end
+
+	if textColor == nil then
+		textColor = self.textColor
+	end
 
 	if captionText:find('\n') then
 		local position  = captionText:find('\n')

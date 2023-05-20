@@ -173,10 +173,8 @@ function Console:addLine(text)
 		end
 
 		local remainder = text:sub(splitPosition+1)
-		text = text:sub(1,splitPosition)
-		print('txt: ['.. text .. ']')
-		print('rem: ['.. remainder .. ']')
 
+		text = text:sub(1,splitPosition)
 		local newTexture <close> = app.renderer:textureFromText(self.font, text, self.textColor)
 		self.lineRectangles[self.currentLine].texture = newTexture
 

@@ -81,7 +81,7 @@ end
 
 function Widget:keyPressed( keyCode, codepoint )
     for _,child in pairs(self.children) do
-        if child.keypressed then child:keypressed( keyCode, codepoint ) end
+        child:keyPressed( keyCode, codepoint )
     end
 end
 
@@ -125,4 +125,14 @@ end
 
 function Widget:getRect()
     return {self.left, self.top, self.width, self.height}
+end
+
+function Widget:update()
+    if type(self.updateAction) == 'function' then
+        self:updateAction()
+    end
+
+    for _,child in pairs( self.children ) do
+        child:update()
+    end
 end
