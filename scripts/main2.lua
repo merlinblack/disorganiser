@@ -34,7 +34,7 @@ function MainScreen2:build()
 
 	btn[1] = btn[1] + 200
 	--self:addButton(btn, 'ModelB\nUpdate', function() self:runTask('modelb.local','sudo apt update && sudo apt upgrade -y') end, textcolor, nil, backcolor)
-	self.wakeNBake = self:addButton(btn, 'Detecting\nStatus', function() end, grey, textcolor, backcolor)
+	self.wakeNBakeBtn = self:addButton(btn, 'Detecting\nStatus', function() end, grey, textcolor, backcolor)
 
 	btn[2] = btn[2] + 140
 	self.wakeBtn = self:addButton(btn, 'Detecting\nStatus', function() end, grey, textcolor, backcolor)
@@ -106,7 +106,7 @@ function MainScreen2:build()
 
 	end
 
-	function self.wakeNBake:updateAction()
+	function self.wakeNBakeBtn:updateAction()
 		local enabled = false
 
 		if weather.valid == false then
@@ -152,11 +152,12 @@ end
 function MainScreen2:wakeNBake()
 	self.waitingForOctavo = true
 	waitForTask(self:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63'))
-	self.wakeNBake:setCaption('Waiting...', offline)
+	self.wakeNBakeBtn:setCaption('Waiting...', offline)
 	self.renderList:shouldRender()
 	waitForTask(addTask(function() while weather.valid == false do wait(200) end end))
 	self:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py')
 	self.waitingForOctavo = false
+	self.wakeNBakeBtn:setCaption('Wake N\nBake', grey)
 end
 
 function MainScreen2:runTask(host, command)
