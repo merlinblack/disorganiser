@@ -144,11 +144,14 @@ function Button:updateRenderList()
 end
 
 function Button:setAction(func)
+	if type(func) ~= 'function' then
+		error('Button:setAction called with non-function argument')
+	end
 	self.action = func
 end
 
 function Button:callAction(time, x, y, button)
-	if self.action then
+	if type(self.action) == 'function' then
 		addTask(function()	self:action( time, x, y, button ) end, 'buttonHandler')
 	end
 end

@@ -40,7 +40,7 @@ function MainScreen2:build()
 	self.wakeBtn = self:addButton(btn, 'Detecting\nStatus', function() end, grey, textcolor, backcolor)
 
 	btn[1] = btn[1] - 200
-	self.retryBtn = self:addButton(btn, 'Retry\nWeather', function() self:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py') end, grey, textcolor, backcolor)
+	self.retryBtn = self:addButton(btn, 'Retry\nWeather', function(self) self.parent:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py') end, grey, textcolor, backcolor)
 
 	local static <close> = Rectangle(app.renderer:textureFromText(self.fontCode, 'Main Screen Two', textcolor ), { 30,5,0,0})
 	self.renderList:add(static)
@@ -72,10 +72,10 @@ function MainScreen2:build()
 			self.prev = enabled
 			if enabled then
 				self:setCaption('Wake up\nOctavo', online)
-				self:setAction(function() mainScreen2:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63') end)
+				self:setAction(function() self.parent:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63') end)
 			else
 				self:setCaption('Poweroff\nOctavo', textcolor)
-				self:setAction(function() mainScreen2:runTask('octavo', 'sudo poweroff') end)
+				self:setAction(function() self.parent:runTask('octavo', 'sudo poweroff') end)
 			end
 		end
 
@@ -110,8 +110,11 @@ function MainScreen2:build()
 		local enabled = false
 
 		if weather.valid == false then
-			if mainScreen2.waitingForOctavo ~= true then
+			if self.parent.waitingForOctavo ~= true then
 				enabled = true
+			else
+				-- Don't update caption yet - wakeNBake function has already
+				self.prev = enabled
 			end
 		end
 
@@ -119,7 +122,7 @@ function MainScreen2:build()
 			self.prev = enabled
 			if enabled then
 				self:setCaption('Wake N\nBake', online)
-				self:setAction(function() mainScreen2:wakeNBake() end)
+				self:setAction(function() self.parent:wakeNBake() end)
 			else
 				self:setCaption('Wake N\nBake', grey)
 				self:setAction(function() end)
@@ -153,11 +156,12 @@ function MainScreen2:wakeNBake()
 	self.waitingForOctavo = true
 	waitForTask(self:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63'))
 	self.wakeNBakeBtn:setCaption('Waiting...', offline)
+	self.wakeNBakeBtn:setAction(function() end)
 	self.renderList:shouldRender()
 	waitForTask(addTask(function() while weather.valid == false do wait(200) end end))
 	self:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py')
 	self.waitingForOctavo = false
-	self.wakeNBakeBtn:setCaption('Wake N\nBake', grey)
+	self.wakeNBakeBtn.prev = nil
 end
 
 function MainScreen2:runTask(host, command)

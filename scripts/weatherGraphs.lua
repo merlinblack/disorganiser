@@ -81,18 +81,24 @@ function WeatherGraphs:build()
 end
 
 function WeatherGraphs:buildGraphs()
+
+	if not self:isActive() then
+		return
+	end
+
 	if self.nextBuild > app.ticks then
 		return
 	end
 
+	readLocalWeatherSummary()
+
 	print 'Building graphs'
 	self.dataRenderList:clear()
+	write(os.date(),'Number of hoverText to remove: ', #self.hoverText)
 	for _,hoverText in pairs(self.hoverText) do
 		hoverText:removeFromScreen(self)
 	end
 	self.hoverText = {}
-
-	readLocalWeatherSummary()
 
 	if weatherSummaryData == nil then
 		return

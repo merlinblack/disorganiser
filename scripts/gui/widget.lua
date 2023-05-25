@@ -86,6 +86,7 @@ function Widget:keyPressed( keyCode, codepoint )
 end
 
 function Widget:addChild( widget )
+    widget.parent = self
     table.insert(self.children, widget)
 end
 
@@ -93,6 +94,7 @@ function Widget:removeChild( widget )
     local index = table.getIndex(self.children, widget)
     if index > 0 then
         table.remove(self.children, index)
+        widget.parent = nil
     end
 end
 
