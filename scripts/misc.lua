@@ -50,6 +50,33 @@ function string:replace(old, new)
     return s
 end
 
+function string:replaceFirst(old, new)
+    local s = self
+
+    local start_idx, end_idx = s:find(old, 1, true)
+
+    if start_idx then
+        local postfix = s:sub(end_idx + 1)
+        s = s:sub(1, (start_idx - 1)) .. new .. postfix
+    end
+
+    return s
+end
+
+function string:tabsToSpaces(tabWidth)
+	local tabWidth = tabWidth or 8
+	local s = self
+
+	while s:contains('\t') do
+		local pos = s:find('\t', 1, true)
+		local nextTabStop = ((pos // tabWidth)+1) * tabWidth
+		local spaces = nextTabStop - pos + 1
+		s = s:replaceFirst('\t', string.rep(' ', spaces))
+	end
+
+	return s
+end
+
 function string:insert(pos, text)
     return self:sub(1, pos - 1) .. text .. self:sub(pos)
 end
@@ -74,14 +101,14 @@ function wtt(t, visited, indent, chain)
 	local chain = chain or ''
 	local str = ''
 	for k,v in pairs(t) do
-		str = str .. indent .. tostring(k) .. ': '
+		str = str .. indent .. tostring(k) .. ':'
 		if type(v) == 'table' and visited[v] == nil then
 			visited[v] = chain .. '.' .. k
 			str = str .. '\n' .. wtt(v, visited, indent .. '..', visited[v])
 		elseif visited[v] ~= nil then
-			str = str .. 'seen ref: ' .. visited[v] .. '\n'
+			str = str .. '\tseen ref: ' .. visited[v] .. '\n'
 		else
-			str = str .. tostring(v) .. '\n'
+			str = str .. '\t' .. tostring(v) .. '\n'
 		end
 	end
 	return str

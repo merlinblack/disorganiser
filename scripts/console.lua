@@ -164,6 +164,8 @@ function Console:addLine(text)
 		local min = 50
 		local splitPosition = max
 
+		text = text:tabsToSpaces()
+
 		while true do
 			local splitChar = text:sub(splitPosition,splitPosition)
 			if splitChar == '' or splitChar == ' ' or splitPosition == min then
