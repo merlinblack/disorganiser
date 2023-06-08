@@ -166,6 +166,13 @@ function Console:addLine(text)
 
 		text = text:tabsToSpaces()
 
+		while text:find('\v',1,true) do
+			if self.currentLine > 1 then
+				self.currentLine = self.currentLine - 1
+			end
+			text = text:replaceFirst('\v','')
+		end
+
 		while true do
 			local splitChar = text:sub(splitPosition,splitPosition)
 			if splitChar == '' or splitChar == ' ' or splitPosition == min then
@@ -236,16 +243,11 @@ end
 
 function Console:blinkCursor()
 	while true do
-		self.cursorShown = not self.cursorShown
-
-		if self.cursorShown then
-			local pos = self.edit:index() + #self.run:getPrompt()
-			self.cursorRectangle:setDest({self.leftMargin + pos * self.charWidth, self.topMargin + (self.currentLine-1)*self.lineHeight, self.charWidth, self.lineHeight})
-		else
-			self.cursorRectangle:setDest({0, 0, 0, 0})
+		if app.ticks - lastEvent < 30000 then
+			self.cursorShown = not self.cursorShown
+			self.cursorRectangle:setFill(self.cursorShown)
+			self.renderList:shouldRender()
 		end
-
-		self.renderList:shouldRender()
 		wait(450)
 	end
 end
