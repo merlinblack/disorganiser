@@ -61,15 +61,25 @@ function WeatherTrends:build()
 	end
 
 	addTask(updateTask,'weatherTrends')
+	addTask(function() wait(50) self:buildDataTable(true) end, 'initial weather trend build')
 	
 	self.renderList:add(clockRenderList)
 
 end
 
-function WeatherTrends:buildDataTable()
-	if self.nextBuild > app.ticks then
-		return
+function WeatherTrends:buildDataTable(force)
+	local force = force or false
+
+	if not force then
+		if not self:isActive() then
+			return
+		end
+
+		if self.nextBuild > app.ticks then
+			return
+		end
 	end
+
 	self.dataRenderList:clear()
 	local textcolor = Color 'fff'
 
@@ -131,8 +141,7 @@ end
 
 function WeatherTrends:activate()
 	Screen.activate(self)
-	addTask(function() weatherTrends:buildDataTable() end, 'activation weather data table build')
+	addTask(function() self:buildDataTable() end, 'activation weather data table build')
 end
 
 weatherTrends = WeatherTrends()
-addTask(function() weatherTrends:buildDataTable() end, 'initial weather data table build')
