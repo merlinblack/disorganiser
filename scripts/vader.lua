@@ -24,6 +24,7 @@ function isVaderAlive()
 end
 
 function checkVaderTask()
+	wait(10)
 	while true do
 		vaderAlive = isVaderAlive()
 		if not vaderAlive then
