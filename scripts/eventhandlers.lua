@@ -138,8 +138,7 @@ end
 
 function handleKeyUp(code, sym)
 	--print('handleKeyUp()', code, sym)
-	stopKeyRepeatTask = true
-	wakeTask('keyRepeatTask')
+	killTask('keyRepeatTask')
 	lastEvent = app.ticks
 	if not console:isEnabled() then
 		if code == 41 and not quitting == true then -- Escape
@@ -157,15 +156,14 @@ function handleKeyUp(code, sym)
 end
 
 function handleKeyDown(code, sym)
-	stopKeyRepeatTask = false
 	addUniqueTask(
 		function()
 			local keyCode = code
 			local keySym = sym
-			wait(1000)
-			while stopKeyRepeatTask == false and console:isEnabled() do
+			local status = wait(1000)
+			while status ~= 'killed' and console:isEnabled() do
 				console:keyUp(keyCode,keySym)
-				wait(100)
+				status = wait(100)
 			end
 		end,
 		'keyRepeatTask'

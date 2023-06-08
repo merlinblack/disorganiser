@@ -12,15 +12,19 @@ class Task
 	ManualBind::LuaRef ref;
 	std::string name;
 	bool wake;
+	bool killed;
 
 	public:
-	Task(ManualBind::LuaRef& ref, const std::string& name) : ref(ref), name(name), wake(false) {}
+	Task(ManualBind::LuaRef& ref, const std::string& name) : ref(ref), name(name), wake(false), killed(false) {}
 	/** \brief if the task is waiting, signal to stop waiting */
 	void wakeUp(bool flag = true) { wake = flag; }
+	/** \brief the task should stop immediately */
+	void kill(bool flag = true) { killed = flag; }
 
 	const ManualBind::LuaRef& getRef() { return ref; }
 	const std::string& getName() { return name; }
-	int shouldWake() { return wake; }
+	bool shouldWake() { return wake; }
+	bool shouldTerminate() { return killed; }
 };
 
 using TaskList = std::vector<Task>;
@@ -51,12 +55,14 @@ class ScriptManager
 
 	lua_State* getMainLuaState() { return main; }
 	ManualBind::LuaRef getGlobal(const std::string &name);
+	auto getTaskByName(std::string name);
 
 	/** Methods for calling from Lua */
 	static int taskFromFunction(lua_State* L);
 	static int getTaskList(lua_State* L);
 	static int getCurrentTaskName(lua_State*L);
 	static int wakeupTask(lua_State* L);
+	static int killTask(lua_State* L);
 };
 
 using ScriptManagerPtr = std::shared_ptr<ScriptManager>;

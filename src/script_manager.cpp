@@ -30,6 +30,8 @@ ScriptManager::ScriptManager()
 	lua_setglobal(main,"getCurrentTaskName");
 	lua_pushcfunction(main, wakeupTask);
 	lua_setglobal(main,"wakeTask");
+	lua_pushcfunction(main, killTask);
+	lua_setglobal(main,"killTask");
 
 	luaL_dostring( main, "package.path = './scripts/?.lua;' .. package.path" );
 	luaL_dostring( main, "package.cpath = './scripts/?.so;' .. package.cpath" );
@@ -117,6 +119,13 @@ int ScriptManager::getCurrentTaskName(lua_State *L)
 	return 1;
 }
 
+auto ScriptManager::getTaskByName(std::string name)
+{
+	auto matchName = [&name](Task& t){ return t.getName() == name; };
+
+	return std::find_if(tasks.begin(), tasks.end(), matchName);
+}
+
 /** \note static member **/
 int ScriptManager::wakeupTask(lua_State* L)
 {
@@ -124,13 +133,28 @@ int ScriptManager::wakeupTask(lua_State* L)
 
 	std::string name = luaL_checkstring(L, 1);
 
-	auto matchName = [&name](Task& t){ return t.getName() == name; };
+	auto task = self->getTaskByName(name);
 
-	auto i = std::find_if(self->tasks.begin(), self->tasks.end(), matchName);
-
-	if (i != self->tasks.end())
+	if (task != self->tasks.end())
 	{
-		i->wakeUp();
+		task->wakeUp();
+	}
+
+	return 0;
+}
+
+/** \note static member **/
+int ScriptManager::killTask(lua_State* L)
+{
+	ScriptManager* self = getInstance(L);
+
+	std::string name = luaL_checkstring(L, 1);
+
+	auto task = self->getTaskByName(name);
+
+	if (task != self->tasks.end())
+	{
+		task->kill();
 	}
 
 	return 0;
@@ -186,11 +210,6 @@ bool ScriptManager::resume()
 		return true;
 	}
 
-	if (tasks.size() < tasks.capacity() / 2)
-	{
-		tasks.shrink_to_fit();
-	}
-
 	auto& currentTask = tasks.at(currentTaskIndex);
 
 	currentTask.getRef().push();
@@ -202,6 +221,12 @@ bool ScriptManager::resume()
 		// Return value for yield
 		lua_pushliteral(thread, "wakeup");
 		currentTask.wakeUp(false);
+	}
+
+	if (currentTask.shouldTerminate())
+	{
+		// Return value for yield - soft terminate request rather than abrupt erase.
+		lua_pushliteral(thread, "killed");
 	}
 
 	int nargs = lua_gettop(thread);
@@ -235,6 +260,11 @@ bool ScriptManager::resume()
 	if (currentTaskIndex == tasks.size())
 	{
 		currentTaskIndex = 0;
+	}
+	
+	if (tasks.size() < tasks.capacity() / 2)
+	{
+		tasks.shrink_to_fit();
 	}
 
 	reportStack(thread, errorFlag);
