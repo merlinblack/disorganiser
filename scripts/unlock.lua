@@ -69,6 +69,12 @@ function Unlock:swipe(direction)
 	if direction == Swipe.Right then
 		mainScreen2:activate()
 	end
+	if direction == Swipe.Down then
+		console:setEnabled(true)
+	end
+	if direction == Swipe.Up then
+		console:setEnabled(false)
+	end
 end
 
 unlock = Unlock()

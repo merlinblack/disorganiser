@@ -79,6 +79,7 @@ function MainScreen:build()
 		end
 		print 'Weather update stopped.'
 	end
+
 	addTask(updateWeather,'weather')
 	
 	self.renderList:add(clockRenderList)
@@ -91,6 +92,12 @@ function MainScreen:swipe(direction)
 	end
 	if direction == Swipe.Right then
 		systemUpdate:activate()
+	end
+	if direction == Swipe.Down then
+		console:setEnabled(true)
+	end
+	if direction == Swipe.Up then
+		console:setEnabled(false)
 	end
 end
 

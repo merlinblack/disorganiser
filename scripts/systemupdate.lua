@@ -52,6 +52,12 @@ function SystemUpdate:swipe(direction)
 	if direction == Swipe.Left then
 		mainScreen:activate()
 	end
+	if direction == Swipe.Down then
+		console:setEnabled(true)
+	end
+	if direction == Swipe.Up then
+		console:setEnabled(false)
+	end
 end
 
 function SystemUpdate:runTask(host, command)

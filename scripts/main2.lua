@@ -150,6 +150,12 @@ function MainScreen2:swipe(direction)
 	if direction == Swipe.Left then
 		unlock:activate()
 	end
+	if direction == Swipe.Down then
+		console:setEnabled(true)
+	end
+	if direction == Swipe.Up then
+		console:setEnabled(false)
+	end
 end
 
 function MainScreen2:wakeNBake()
