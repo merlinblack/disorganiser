@@ -12,7 +12,7 @@ function wait(ticks)
 		print('Task: ' .. getCurrentTaskName() .. ' overslept by: ' .. over)
 		pt(getTasks())
 	end
-	return status == 'wakeup'
+	return status
 end
 
 function waitForTask(taskName)
@@ -23,15 +23,15 @@ function waitForTask(taskName)
 	while running do
 		running = isTaskRunning(taskName)
 		local status = yield()
-		if status == 'wakeup' then
-			running = false
+		if status == 'wakeup' or status == 'killed' then
+			return status
 		end
 	end
 end
 
 function waitForWakeup()
 	local status = 'sleeping'
-	while status ~= 'wakeup' do
+	while status ~= 'wakeup' and status ~= 'killed' do
 		status = yield()
 	end
 end
