@@ -32,8 +32,6 @@ write("Welcome to the konsole!")
 
 pt(getTasks())
 
-print('init.lua loaded.')
-
 function animate()
 	wait(20)
 	local spriteTexture1 <close> = app.renderer:textureFromFile('media/increasing.png')
@@ -113,3 +111,24 @@ function lc(command)
 		yield()
 	end
 end
+
+function aslan()
+	local birthdate = {
+		year = 2023,
+		month = 2,
+		day = 11,
+		hour = 11,
+		min = 21
+	}
+	local birthdateTS = os.time(birthdate)
+	local now = os.time()
+	local diff = os.difftime(now, birthdateTS)
+
+	write('Seconds:\t' .. string.format('%.0d', diff))
+	write('Days:\t\t'  .. string.format('%.2f', diff / (24*60*60)))
+	write('Weeks:\t\t' .. string.format('%.1f', diff / (24*60*60*7)))
+
+	write('10,000,000 (10 million) seconds on: ' .. os.date('%c', birthdateTS+10000000))
+end
+
+print('init.lua loaded.')
