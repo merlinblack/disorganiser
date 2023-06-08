@@ -13,13 +13,13 @@ function WeatherGraphs:build()
 
 	self.dataRenderList = RenderList()
 
-	self.textcolor = Color(0xff, 0xff, 0xff, 0xff)
-	self.backcolor = Color(0x00, 0x20, 0x7f, 0xff)
-	self.linecolor = Color(0xff, 0xff, 0xff, 0xff)
+	self.textcolor = Color 'fff'
+	self.backcolor = Color '00207f'
+	self.linecolor = Color 'fff'
 
-	self.tempColor = Color(0xff, 0x00, 0x00, 0xff)
-	self.humColor = Color(0x40, 0x90, 0xff, 0xff)
-	self.presColor = Color(0x00, 0xff, 0x00, 0xff)
+	self.tempColor = Color 'f00'
+	self.humColor = Color '4090ff'
+	self.presColor = Color '0f0'
 
 	self.graphLeft = 20
 	self.graphTop = 70
@@ -75,19 +75,23 @@ function WeatherGraphs:build()
 	end
 
 	addTask(updateTask,'weatherGraphs')
+	addTask(function() wait(100) self:buildGraphs(true) end, 'initial graph build')
 	
 	self.renderList:add(clockRenderList)
 
 end
 
-function WeatherGraphs:buildGraphs()
+function WeatherGraphs:buildGraphs(force)
+	local force = force or false
 
-	if not self:isActive() then
-		return
-	end
+	if not force then
+		if not self:isActive() then
+			return
+		end
 
-	if self.nextBuild > app.ticks then
-		return
+		if self.nextBuild > app.ticks then
+			return
+		end
 	end
 
 	readLocalWeatherSummary()
@@ -202,4 +206,3 @@ function WeatherGraphs:activate()
 end
 
 weatherGraphs = WeatherGraphs()
-addTask(function() weatherGraphs:buildGraphs() end, 'initial weather graph build')
