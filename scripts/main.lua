@@ -13,7 +13,7 @@ function MainScreen:build()
 
 	self.fontCode = Font('media/Aurek-Besh.ttf', 18)
 
-	local texture <close> = app.renderer:textureFromFile('media/vader.jpg')
+	local texture <close> = Texture('media/vader.jpg')
 	local src = { 0, 0, texture.width, texture.height}
 	local dest = {0, 0, app.width, app.height}
 	local rectangle <close> = Rectangle(texture, dest, src)
@@ -49,7 +49,7 @@ function MainScreen:build()
 	local humidity = Rectangle(app.emptyTexture, {30, 95, 0, 0})
 	self.renderList:add(humidity)
 
-	local static = Rectangle(app.renderer:textureFromText(self.fontCode, '<3 Alara', textcolor ), { 300,5,0,0})
+	local static = Rectangle(Texture(self.fontCode, '<3 Alara', textcolor ), { 300,5,0,0})
 	self.renderList:add(static)
 
 	self.stopWeatherUpdate = false
@@ -66,9 +66,9 @@ function MainScreen:build()
 			end
 
 			if weather.temperature ~= '' then
-				temperature.texture = app.renderer:textureFromText(font, weather.temperature .. ' °C',color)
-				pressure.texture = app.renderer:textureFromText(font, weather.pressure .. ' mbar',color)
-				humidity.texture = app.renderer:textureFromText(font, weather.humidity .. '% RH',color)
+				temperature.texture = Texture(font, weather.temperature .. ' °C',color)
+				pressure.texture = Texture(font, weather.pressure .. ' mbar',color)
+				humidity.texture = Texture(font, weather.humidity .. '% RH',color)
 			else
 				temperature.texture = app.emptyTexture
 				pressure.texture = app.emptyTexture

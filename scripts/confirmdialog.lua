@@ -71,7 +71,7 @@ end
 function ConfirmDialog:run(message)
 	self:activate()
 
-	local text <close> = app.renderer:textureFromText(self.font, message, Color 'fff')
+	local text <close> = Texture(self.font, message, Color 'fff')
 	local left = self.centre - text.width // 2
 	local textRect <close> = Rectangle(text, left, app.height//8+self.dialogHeight//3)
 

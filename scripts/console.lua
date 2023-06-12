@@ -184,7 +184,7 @@ function Console:addLine(text)
 		local remainder = text:sub(splitPosition+1)
 
 		text = text:sub(1,splitPosition)
-		local newTexture <close> = app.renderer:textureFromText(self.font, text, self.textColor)
+		local newTexture <close> = Texture(self.font, text, self.textColor)
 		self.lineRectangles[self.currentLine].texture = newTexture
 
 		self:scroll()
@@ -217,7 +217,7 @@ function Console:updateInputDisplay()
 	if text == '' then
 		self.lineRectangles[line].texture = self.emptyline
 	else
-		local newTexture <close> = app.renderer:textureFromText(self.font, text, self.textColor)
+		local newTexture <close> = Texture(self.font, text, self.textColor)
 
 		self.lineRectangles[line].texture = newTexture
 	end

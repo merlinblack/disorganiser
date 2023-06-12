@@ -26,7 +26,7 @@ function ScreenSaver:setPicture(filename)
 	print('Setting',filename)
 	self.renderList:clear()
 	self.renderList:shouldRender()
-	local texture <close> = app.renderer:textureFromFile(filename)
+	local texture <close> = Texture(filename)
 	local src = { 0, 0, texture.width, texture.height}
 	-- Zoom
 	local scaleX = width / texture.width
@@ -45,7 +45,7 @@ function ScreenSaver:setPicture(filename)
 	self.renderList:add(rectangle)
 
 	if weather.valid then
-		local texture <close> = app.renderer:textureFromText(self.font, weather.temperature .. '°', Color('bbb'))
+		local texture <close> = Texture(self.font, weather.temperature .. '°', Color('bbb'))
 		local yjitter = math.random(5, app.height - 25 - texture.height)
 		local rectangle = Rectangle(texture, {app.width - texture.width - 25, yjitter, 0, 0})
 		self.renderList:add(rectangle)

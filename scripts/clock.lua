@@ -15,7 +15,7 @@ function updateClock()
 	while runClock do
 		local text = os.date('  %A %I:%M %p - %B %d %Y')
 		if prevtext ~= text then
-			local clockTexture <close> = app.renderer:textureFromText(font, text, color)
+			local clockTexture <close> = Texture(font, text, color)
 			clockRect.texture = clockTexture
 			local x
 			if clockJitter then

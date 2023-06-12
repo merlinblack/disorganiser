@@ -8,7 +8,7 @@ function Docker:build()
 	self.font = Font('media/pirulen.otf',16)
 	local rectangle <close> = Rectangle(Color '000', true, {0, 0, app.width, app.height})
 	self.renderList:add(rectangle)
-	local background <close> = app.renderer:textureFromFile('media/docker.png')
+	local background <close> = Texture('media/docker.png')
 	local src = {0, 0, background.width, background.height}
 	local dest = {40, 60, background.width//2, background.height//2}
 	local rectangle <close> = Rectangle(background, dest, src)

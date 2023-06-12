@@ -34,8 +34,8 @@ pt(getTasks())
 
 function animate()
 	wait(20)
-	local spriteTexture1 <close> = app.renderer:textureFromFile('media/increasing.png')
-	local spriteTexture2 <close> = app.renderer:textureFromFile('media/decreasing.png')
+	local spriteTexture1 <close> = Texture('media/increasing.png')
+	local spriteTexture2 <close> = Texture('media/decreasing.png')
 	local sprites = {}
 	local n = 4000
 	local speed = 10

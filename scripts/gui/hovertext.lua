@@ -18,7 +18,7 @@ function HoverText:setText(text, color)
 		text = ' '
 	end
 	self.hoverRenderList:clear()
-	local texture <close> = app.renderer:textureFromText(self.font, text, color)
+	local texture <close> = Texture(self.font, text, color)
 	local rect <close> = Rectangle(texture, self.left - texture.width // 2, self.top - texture.height)
 	self.hoverRenderList:add(rect)
 end

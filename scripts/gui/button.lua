@@ -63,7 +63,7 @@ function Button:setCaption(captionText, textColor, font)
 
 		local thirdHeight = self.height//3
 
-		local text <close> = app.renderer:textureFromText(font, topLine, textColor)
+		local text <close> = Texture(font, topLine, textColor)
 		local rectangle <close> = Rectangle(
 			text,
 			self.left+((self.width//2)-(text.width//2)),
@@ -71,7 +71,7 @@ function Button:setCaption(captionText, textColor, font)
 		)
 		self.captionRenderList:add(rectangle)
 
-		local text <close> = app.renderer:textureFromText(font, bottomLine, textColor)
+		local text <close> = Texture(font, bottomLine, textColor)
 		local rectangle <close> = Rectangle(
 			text,
 			self.left+((self.width//2)-(text.width//2)),
@@ -85,7 +85,7 @@ function Button:setCaption(captionText, textColor, font)
 			print 'WARNING: Empty button caption.'
 			print(debug.traceback())
 		end
-		local text <close> = app.renderer:textureFromText(font, captionText, textColor)
+		local text <close> = Texture(font, captionText, textColor)
 		local rectangle <close> = Rectangle(
 			text,
 			self.left+((self.width//2)-(text.width//2)),

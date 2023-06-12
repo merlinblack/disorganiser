@@ -39,7 +39,7 @@ function TextLog:add(text)
     if text == '' then
         self.lineRectangles[self.nlines].texture = self.emptyline
     else
-        local newTexture <close> = app.renderer:textureFromText(self.font, text, self.color)
+        local newTexture <close> = Texture(self.font, text, self.color)
         self.lineRectangles[self.nlines].texture = newTexture
     end
     self.renderList:shouldRender()

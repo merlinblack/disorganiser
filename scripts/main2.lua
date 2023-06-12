@@ -17,10 +17,10 @@ function MainScreen2:build()
 	self.fontCode = Font('media/Aurek-Besh.ttf', 18)
 	self.font = Font('media/pirulen.otf', 22)
 
-	self.offlineTexture = app.renderer:textureFromText(self.font, 'Offline', offline)
-	self.onlineTexture = app.renderer:textureFromText(self.font, 'Online', online)
+	self.offlineTexture = Texture(self.font, 'Offline', offline)
+	self.onlineTexture = Texture(self.font, 'Online', online)
 
-	local texture <close> = app.renderer:textureFromFile('media/vader.jpg')
+	local texture <close> = Texture('media/vader.jpg')
 	local src = { 0, 0, texture.width, texture.height}
 	local dest = {0, 0, app.width, app.height}
 	local rectangle <close> = Rectangle(texture, dest, src)
@@ -42,10 +42,10 @@ function MainScreen2:build()
 	btn[1] = btn[1] - 200
 	self.retryBtn = self:addButton(btn, 'Retry\nWeather', function(self) self.parent:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py') end, grey, textcolor, backcolor)
 
-	local static <close> = Rectangle(app.renderer:textureFromText(self.fontCode, 'Main Screen Two', textcolor ), { 30,5,0,0})
+	local static <close> = Rectangle(Texture(self.fontCode, 'Main Screen Two', textcolor ), { 30,5,0,0})
 	self.renderList:add(static)
 
-	local static <close> = Rectangle(app.renderer:textureFromText(self.font, 'Octavo Status:', textcolor ), { 30,50,0,0})
+	local static <close> = Rectangle(Texture(self.font, 'Octavo Status:', textcolor ), { 30,50,0,0})
 	self.renderList:add(static)
 
 	self.octavoStatus = Rectangle(self.offlineTexture, { 320,50,0,0})

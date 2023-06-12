@@ -46,7 +46,7 @@ function Unlock:btnPressed(value)
 	self.code = self.code .. value
 	print ('Code:', self.code)
 	local color = Color(0xfe,0x0a,0x4a,0xc0)
-	self.animation.texture = app.renderer:textureFromText(self.font, #self.code .. ' ' .. self.code, color )
+	self.animation.texture = Texture(self.font, #self.code .. ' ' .. self.code, color )
 	self.renderList:shouldRender()
 	if self.code == secret.pass then
 		Unlock:unlock('media/special/')

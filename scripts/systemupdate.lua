@@ -13,7 +13,7 @@ function SystemUpdate:build()
 	self.fontCode = Font('media/Aurek-Besh.ttf', 18)
 	self.font = Font('media/pirulen.otf', 22)
 
-	local texture <close> = app.renderer:textureFromFile('media/falcon.png')
+	local texture <close> = Texture('media/falcon.png')
 	local src = { 0, 0, texture.width, texture.height}
 	local dest = {0, 0, app.width, app.height}
 	local rectangle <close> = Rectangle(texture, dest, src)
@@ -37,7 +37,7 @@ function SystemUpdate:build()
 	btn[2] = btn[2] + 80
 	self:addButton(btn, 'All', function() self:all() end, textcolor, nil, backcolor)
 
-	self.titleTexture = app.renderer:textureFromText(self.fontCode, 'System Update', Color('0f0') )
+	self.titleTexture = Texture(self.fontCode, 'System Update', Color('0f0') )
 	self.title = Rectangle(self.titleTexture, {app.width-self.titleTexture.width-30, 5,0,0})
 	self.renderList:add(self.title)
 
@@ -65,7 +65,7 @@ function SystemUpdate:runTask(host, command)
 	
 	self.alreadyRunning = true
 
-	local newTitle <close> = app.renderer:textureFromText(self.fontCode, host .. ' - System Update', Color('0f0') )
+	local newTitle <close> = Texture(self.fontCode, host .. ' - System Update', Color('0f0') )
 	self.title.texture = newTitle
 	self.title:setDest {app.width-newTitle.width-30, 5,0,0}
 	self.renderList:shouldRender()

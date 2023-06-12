@@ -26,25 +26,25 @@ function WeatherGraphs:build()
 	self.graphBot = app.height - 100
 	self.graphRight = app.width - self.graphLeft
 
-	local titleTexture <close> = app.renderer:textureFromText(self.titleFont, 'Hava Grafikleri', self.textcolor)
+	local titleTexture <close> = Texture(self.titleFont, 'Hava Grafikleri', self.textcolor)
 	local title <close> = Rectangle(titleTexture, {(app.width//2 - titleTexture.width//2), 5, 0, 0})
 	self.renderList:add(title)
 	
-	local subTitleTexture <close> = app.renderer:textureFromText(self.font, 'Son 24 saat', self.textcolor)
+	local subTitleTexture <close> = Texture(self.font, 'Son 24 saat', self.textcolor)
 	local subTitle <close> = Rectangle(subTitleTexture, {app.width//2 - subTitleTexture.width//2, 50, 0, 0})
 	self.renderList:add(subTitle)
 
-	local tempLabel <close> = Rectangle(app.renderer:textureFromText(self.font, 'Deg °C', self.tempColor), {20, app.height-70, 0, 0})
+	local tempLabel <close> = Rectangle(Texture(self.font, 'Deg °C', self.tempColor), {20, app.height-70, 0, 0})
 	self.renderList:add(tempLabel)
 	self.tempRange = Rectangle(app.emptyTexture, {20, app.height-50, 0, 0})
 	self.renderList:add(self.tempRange)
 
-	local pressLabel <close> = Rectangle(app.renderer:textureFromText(self.font, 'mbar', self.presColor), {160, app.height-70, 0, 0})
+	local pressLabel <close> = Rectangle(Texture(self.font, 'mbar', self.presColor), {160, app.height-70, 0, 0})
 	self.renderList:add(pressLabel)
 	self.presRange = Rectangle(app.emptyTexture, {160, app.height-50, 0, 0})
 	self.renderList:add(self.presRange)
 
-	local humLabel <close> = Rectangle(app.renderer:textureFromText(self.font, '% RH', self.humColor), {380, app.height-70, 0, 0})
+	local humLabel <close> = Rectangle(Texture(self.font, '% RH', self.humColor), {380, app.height-70, 0, 0})
 	self.renderList:add(humLabel)
 	self.humRange = Rectangle(app.emptyTexture, {380, app.height-50, 0, 0})
 	self.renderList:add(self.humRange)
@@ -137,9 +137,9 @@ function WeatherGraphs:buildGraphs(force)
 	end
 
 	--print('Max',maxTemp,'Min',minTemp)
-	self.tempRange.texture = app.renderer:textureFromText(self.font, minTemp .. '-' .. maxTemp, self.tempColor)
-	self.presRange.texture = app.renderer:textureFromText(self.font, minPres .. '-' .. maxPres, self.presColor)
-	self.humRange.texture = app.renderer:textureFromText(self.font, minHum .. '-' .. maxHum, self.humColor)
+	self.tempRange.texture = Texture(self.font, minTemp .. '-' .. maxTemp, self.tempColor)
+	self.presRange.texture = Texture(self.font, minPres .. '-' .. maxPres, self.presColor)
+	self.humRange.texture = Texture(self.font, minHum .. '-' .. maxHum, self.humColor)
 
 	local graphHeight = self.graphBot - self.graphTop
 	local graphWidth = self.graphRight - self.graphLeft
