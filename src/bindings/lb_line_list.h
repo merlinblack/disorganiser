@@ -36,7 +36,7 @@ struct LineListBinding : public ManualBind::Binding<LineListBinding,LineList>
 	{
 		LineListPtr ll = std::make_shared<LineList>();
 
-		if (luaL_testudata(L, 1, ColorBinding::class_name))
+		if (ColorBinding::isType( L, 1))
 		{
 			SDL_Color &color = ColorBinding::fromStack(L, 1);
 			ll->setColor(color);

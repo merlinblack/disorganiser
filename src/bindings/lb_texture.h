@@ -24,7 +24,7 @@ struct TextureBinding : public ManualBind::Binding<TextureBinding,Texture>
 
 	static int create(lua_State* L)
 	{
-		if(luaL_testudata(L, 1, "Font"))
+		if(FontBinding::isType(L, 1))
 			return createFromText(L);
 		else
 			return createFromFile(L);

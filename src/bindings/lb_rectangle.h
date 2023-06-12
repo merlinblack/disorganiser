@@ -42,12 +42,12 @@ struct RectangleBinding : public ManualBind::Binding<RectangleBinding,Rectangle>
 	{
 		using ManualBind::LuaRef;
 
-		if (luaL_testudata(L, 1, ColorBinding::class_name))
+		if (ColorBinding::isType(L, 1))
 		{
 			return createColorFillRectangle(L);
 		}
 
-		if(!luaL_testudata(L, 1, TextureBinding::class_name))
+		if (!TextureBinding::isType(L, 1))
 		{
 			return luaL_error(L, "Parameter #1 should be either a Color or Texture.");
 		}
