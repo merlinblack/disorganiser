@@ -49,10 +49,10 @@ function WeatherGraphs:build()
 	self.humRange = Rectangle(app.emptyTexture, {380, app.height-50, 0, 0})
 	self.renderList:add(self.humRange)
 
-	local btn = { app.width-120, app.height-70, 100, 50}
+	local btn = { app.width-120, app.height-clockHeight-50, 100, 50}
 	self:addButton(btn, 'Geri', function() mainScreen:activate() end, self.textcolor, nil, self.backcolor)
 
-	local btn = { app.width-280, app.height-70, 140, 50}
+	local btn = { app.width-280, app.height-clockHeight-50, 140, 50}
 	self:addButton(btn, 'Trendler', function() weatherTrends:activate() end, self.textcolor, nil, self.backcolor)
 
 	local frame <close> = LineList(self.linecolor)
@@ -83,6 +83,8 @@ end
 
 function WeatherGraphs:buildGraphs(force)
 	local force = force or false
+	local hours = hours or 24
+	local showHoverText = showHoverText or true
 
 	if not force then
 		if not self:isActive() then
@@ -94,7 +96,7 @@ function WeatherGraphs:buildGraphs(force)
 		end
 	end
 
-	readLocalWeatherSummary()
+	readLocalWeatherSummary(hours)
 
 	print 'Building graphs'
 	self.dataRenderList:clear()
@@ -143,7 +145,7 @@ function WeatherGraphs:buildGraphs(force)
 
 	local graphHeight = self.graphBot - self.graphTop
 	local graphWidth = self.graphRight - self.graphLeft
-	local scaleX = graphWidth // #weatherSummaryData
+	local scaleX = graphWidth // (#weatherSummaryData-1)
 
 	local tempBottom = minTemp - 2
 	local tempTop = maxTemp + 2
@@ -170,15 +172,21 @@ function WeatherGraphs:buildGraphs(force)
 	for _,record in pairs(weatherSummaryData) do
 		y = math.floor(self.graphBot - (record.temperature-tempBottom) * tempScaleY)
 		temperature:addPoint(x, y)
-		table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.temperature, self.tempColor, self.tempColor, self.font))
+		if showHoverText then
+			table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.temperature, self.tempColor, self.tempColor, self.font))
+		end
 
 		y = math.floor(self.graphBot - (record.humidity-humBottom) * humScaleY)
 		humidity:addPoint(x, y)
-		table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.humidity, self.humColor, self.humColor, self.font))
+		if showHoverText then
+			table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.humidity, self.humColor, self.humColor, self.font))
+		end
 
 		y = math.floor(self.graphBot - (record.pressure-presBottom) * presScaleY)
 		pressure:addPoint(x, y)
-		table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.pressure, self.presColor, self.presColor, self.font))
+		if showHoverText then
+			table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.pressure, self.presColor, self.presColor, self.font))
+		end
 
 		local tick <close> = LineList(self.linecolor)
 		tick:addPoint(x, self.graphBot - 10)

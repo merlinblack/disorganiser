@@ -47,12 +47,17 @@ function readLocalWeather()
 			humidity =    string.format("%.2f", weatherData[1].humidity)
 		}
 	else
-		weather = {
-			valid = false,
-			temperature = '',
-			pressure = '',
-			humidity = ''
-		}
+		if fileReadable('/tmp/weather.lua') then
+			dofile('/tmp/weather.lua')
+			weather.valid = false
+		else
+			weather = {
+				valid = false,
+				temperature = '',
+				pressure = '',
+				humidity = ''
+			}
+		end
 	end
 
 	weatherRunningOperations.last20 = nil
@@ -82,7 +87,9 @@ function readLocalWeatherTrends()
 
 end
 
-function readLocalWeatherSummary()
+function readLocalWeatherSummary(hours)
+
+	local hours = hours or 24
 
 	if weatherRunningOperations.summary ~= nil then
 		while weatherRunningOperations.summary ~= nil do
@@ -93,7 +100,7 @@ function readLocalWeatherSummary()
 
 	weatherRunningOperations.summary = true
 
-	local data, status = asyncHttpRequest('http://octavo.local/api/weathersummary')
+	local data, status = asyncHttpRequest('http://octavo.local/api/weathersummary?hours=' .. hours)
 
 	if status == 200 then
 		weatherSummaryData = json.decode(data)

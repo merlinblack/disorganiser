@@ -3,13 +3,12 @@ require 'misc'
 runClock = true
 clockJitter = false
 clockRenderList = RenderList()
-clockHeight = 0
+clockHeight = 24
 function updateClock()
 	print('starting clock')
-	local font <close> = Font('media/pirulen.otf', 16)
+	local font <close> = Font('media/pirulen.otf', 20)
 	local color = Color 'fe0a4a'
 	local clockRect <close> = Rectangle(color, false, {0, app.height - font.lineHeight, 0, 0})
-	clockHeight = font.lineHeight
 	clockRenderList:add(clockRect)
 	local prevtext
 	while runClock do

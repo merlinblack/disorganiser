@@ -2,6 +2,7 @@ require 'clock'
 require 'docker'
 require 'weather'
 require 'unlock'
+require 'ping'
 
 require 'gui/screen'
 
@@ -9,6 +10,8 @@ class 'MainScreen2' (Screen)
 
 function MainScreen2:build()
 	Screen.build(self)
+
+	self.lastOctavoCheck = -math.huge
 	 
 	local offline = Color 'fe0a4a'
 	local online = Color '0f0'
@@ -26,14 +29,13 @@ function MainScreen2:build()
 	local rectangle <close> = Rectangle(texture, dest, src)
 	self.renderList:add(rectangle)
 
-	local btn = { 30, 100, 180, 110}
+	local btn = { 30, 150, 180, 110}
 	local textcolor = Color 'fe0a4a'
 	local backcolor = textcolor:clone()
 	backcolor.a = 0x20
 	self:addButton(btn, 'System\nUpdate', function() systemUpdate:activate() end, textcolor, nil, backcolor)
 
 	btn[1] = btn[1] + 200
-	--self:addButton(btn, 'ModelB\nUpdate', function() self:runTask('modelb.local','sudo apt update && sudo apt upgrade -y') end, textcolor, nil, backcolor)
 	self.wakeNBakeBtn = self:addButton(btn, 'Detecting\nStatus', function() end, grey, textcolor, backcolor)
 
 	btn[2] = btn[2] + 140
@@ -45,26 +47,42 @@ function MainScreen2:build()
 	local static <close> = Rectangle(Texture(self.fontCode, 'Main Screen Two', textcolor ), { 30,5,0,0})
 	self.renderList:add(static)
 
-	local static <close> = Rectangle(Texture(self.font, 'Octavo Status:', textcolor ), { 30,50,0,0})
+	local static <close> = Rectangle(Texture(self.font, 'Octavo Status', textcolor ), { 30,50,0,0})
+	self.renderList:add(static)
+	local static <close> = Rectangle(Texture(self.font, 'PING:               HTTPD:', textcolor ), { 30, 80,0,0})
 	self.renderList:add(static)
 
-	self.octavoStatus = Rectangle(self.offlineTexture, { 320,50,0,0})
-	self.renderList:add(self.octavoStatus)
+	self.octavoPingStatus = Rectangle(self.offlineTexture, { 120,80,0,0})
+	self.octavoHttpdStatus = Rectangle(self.offlineTexture, { 390,80,0,0})
+	self.renderList:add(self.octavoPingStatus)
+	self.renderList:add(self.octavoHttpdStatus)
 
 	function self:updateAction()
 		readLocalWeather()
+
 		if weather.valid == false then
-			self.octavoStatus.texture = self.offlineTexture
+			self.octavoHttpdStatus.texture = self.offlineTexture
 		else
-			self.octavoStatus.texture = self.onlineTexture
+			self.octavoHttpdStatus.texture = self.onlineTexture
 		end
+
+		if self.lastOctavoCheck + 1000 < app.ticks then
+			self.octavoPing = ping(ipaddr.octavo)
+		end
+
+		if self.octavoPing then
+			self.octavoPingStatus.texture = self.onlineTexture
+		else
+			self.octavoPingStatus.texture = self.offlineTexture
+		end
+
 		self.renderList:shouldRender()
 	end
 
 	function self.wakeBtn:updateAction()
 		local enabled = false
 
-		if weather.valid == false then
+		if self.parent.octavoPing == false then
 			enabled = true
 		end
 
@@ -109,7 +127,7 @@ function MainScreen2:build()
 	function self.wakeNBakeBtn:updateAction()
 		local enabled = false
 
-		if weather.valid == false then
+		if self.parent.octavoPing == false then
 			if self.parent.waitingForOctavo ~= true then
 				enabled = true
 			else

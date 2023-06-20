@@ -43,10 +43,10 @@ function WeatherTrends:build()
 		stable     = Texture(self.font, '-', textcolor)
 	}
 
-	local btn = { app.width-120, app.height-70, 100, 50}
+	local btn = { app.width-120, app.height-clockHeight-50, 100, 50}
 	self:addButton(btn, 'Geri', function() mainScreen:activate() end, textcolor, nil, backcolor)
 
-	local btn = { app.width-280, app.height-70, 140, 50}
+	local btn = { app.width-280, app.height-clockHeight-50, 140, 50}
 	self:addButton(btn, 'Grafikler', function() weatherGraphs:activate() end, textcolor, nil, backcolor)
 
 	function updateTask()

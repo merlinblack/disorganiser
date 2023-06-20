@@ -14,12 +14,12 @@ function MainScreen:build()
 	self.fontCode = Font('media/Aurek-Besh.ttf', 18)
 
 	local texture <close> = Texture('media/vader.jpg')
-	local src = { 0, 0, texture.width, texture.height}
-	local dest = {0, 0, app.width, app.height}
+	local src = { 0, 0, texture.width, texture.height }
+	local dest = { 0, 0, app.width, app.height }
 	local rectangle <close> = Rectangle(texture, dest, src)
 	self.renderList:add(rectangle)
 
-	local btn = { 30, 300, 150, 110}
+	local btn = { 30, 300, 150, 110 }
 	local textcolor = Color 'f30a4a'
 	local backcolor = textcolor:clone()
 	backcolor.a = 0x20
@@ -34,7 +34,7 @@ function MainScreen:build()
 	btn[2] = btn[2] + 140
 	self:addButton(btn, 'Tekrar\nBaşlat', function() restart() end, textcolor, nil, backcolor)
 
-	local weatherRect = {20,5,260,130}
+	local weatherRect = { 20, 5, 260, 130 }
 	local weatherbox <close> = Rectangle(backcolor, true, weatherRect)
 	local weatherBtn = Button(weatherRect)
 	weatherBtn.renderList = RenderList()
@@ -42,14 +42,14 @@ function MainScreen:build()
 	weatherBtn:setAction( function() weatherTrends:activate() end)
 	self:addChild(weatherBtn)
 	self.renderList:add(weatherbox)
-	local temperature = Rectangle(app.emptyTexture, {30, 15, 0, 0})
+	local temperature = Rectangle(app.emptyTexture, { 30, 15, 0, 0 })
 	self.renderList:add(temperature)
-	local pressure = Rectangle(app.emptyTexture, {30, 55, 0, 0})
+	local pressure = Rectangle(app.emptyTexture, { 30, 55, 0, 0 })
 	self.renderList:add(pressure)
-	local humidity = Rectangle(app.emptyTexture, {30, 95, 0, 0})
+	local humidity = Rectangle(app.emptyTexture, { 30, 95, 0, 0 })
 	self.renderList:add(humidity)
 
-	local static = Rectangle(Texture(self.fontCode, '<3 Alara', textcolor ), { 300,5,0,0})
+	local static = Rectangle(Texture(self.fontCode, '<3 Alara', textcolor ), { 300, 5, 0, 0 })
 	self.renderList:add(static)
 
 	self.stopWeatherUpdate = false
@@ -58,17 +58,11 @@ function MainScreen:build()
 		local color = Color 'f30a4ac0'
 		while not self.stopWeatherUpdate do
 			readLocalWeather()
-			if weather.valid == false then
-				if fileReadable('/tmp/weather.lua') then
-					dofile('/tmp/weather.lua')
-					weather.valid = false
-				end
-			end
 
 			if weather.temperature ~= '' then
-				temperature.texture = Texture(font, weather.temperature .. ' °C',color)
-				pressure.texture = Texture(font, weather.pressure .. ' mbar',color)
-				humidity.texture = Texture(font, weather.humidity .. '% RH',color)
+				temperature.texture = Texture(font, weather.temperature .. ' °C', color)
+				pressure.texture = Texture(font, weather.pressure .. ' mbar', color)
+				humidity.texture = Texture(font, weather.humidity .. '% RH', color)
 			else
 				temperature.texture = app.emptyTexture
 				pressure.texture = app.emptyTexture
