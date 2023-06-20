@@ -106,7 +106,7 @@ function Widget:move( x, y )
     local height = self.height
 
     if left + x < 0 or top + y < 0 then return true end
-    if left + width + x > info.width or top + height + y > info.height then
+    if left + width + x > app.width or top + height + y > app.height then
         return true
     end
 

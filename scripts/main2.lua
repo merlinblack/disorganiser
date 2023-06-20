@@ -177,6 +177,7 @@ function MainScreen2:swipe(direction)
 end
 
 function MainScreen2:wakeNBake()
+	local offline = Color 'fe0a4a'
 	self.waitingForOctavo = true
 	waitForTask(self:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63'))
 	self.wakeNBakeBtn:setCaption('Waiting...', offline)
