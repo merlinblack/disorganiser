@@ -26,7 +26,7 @@ struct LineListBinding : public ManualBind::Binding<LineListBinding,LineList>
 	static ManualBind::bind_properties* properties()
 	{
 		static ManualBind::bind_properties properties[] = {
-			{ "color", nullptr, setColor },
+			{ "color", getColor, setColor },
 			{ nullptr, nullptr, nullptr }
 		};
 		return properties;
@@ -83,6 +83,15 @@ struct LineListBinding : public ManualBind::Binding<LineListBinding,LineList>
 		ll->addPoint({x,y});
 
 		return 0;
+	}
+
+	static int getColor( lua_State* L )
+	{
+		LineListPtr ll = fromStack( L, 1 );
+
+		ColorBinding::push(L, ll->getColor());
+
+		return 1;
 	}
 
 	static int setColor( lua_State* L )

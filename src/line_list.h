@@ -13,6 +13,7 @@ class LineList : public Renderable
 
 	public:
 	void setColor(SDL_Color c) { color = c; }
+	SDL_Color getColor() { return color; }
 	void addPoint(SDL_Point p) { points.emplace_back(p); }
 	auto getPoints() { return points; }
 	void clearPoints() { points.clear(); }

@@ -159,6 +159,8 @@ function WeatherGraphs:buildGraphs(force)
 	local presTop = maxPres + 2
 	local presScaleY = graphHeight / (presTop-presBottom)
 
+	local white = Color 'fff'
+
 	local temperature <close> = LineList(self.tempColor)
 	local humidity <close> = LineList(self.humColor)
 	local pressure <close> = LineList(self.presColor)
@@ -191,6 +193,9 @@ function WeatherGraphs:buildGraphs(force)
 		local tick <close> = LineList(self.linecolor)
 		tick:addPoint(x, self.graphBot - 10)
 		tick:addPoint(x, self.graphBot)
+		if showHoverText then
+			table.insert(self.hoverText,HoverText({x-2, self.graphBot-12, 4, 4}, record.time, white, white, self.font))
+		end
 		self.dataRenderList:add(tick)
 
 		x = x + scaleX

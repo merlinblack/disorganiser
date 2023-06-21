@@ -54,6 +54,10 @@ struct RenderListBinding : public ManualBind::Binding<RenderListBinding,RenderLi
 	{
 		RenderListPtr rl = fromStack( L, 1 );
 		ManualBind::LuaBindingUpCast( L, 2 );
+		if (!RenderableBinding::isType( L,2 ))
+		{
+			return luaL_error(L, "Failed to upcast argument #1 to Renderable");
+		}
 		RenderablePtr r = RenderableBinding::fromStack( L, 2 );
 
 		rl->insert( std::move(r) );

@@ -7,5 +7,5 @@ cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_TOOLCHAIN_FILE=$HOME/prog/rpi/to
 make CXX_FLAGS=-DNOBUYUK -j24
 
 ssh rpi "mkdir -p ~/prog/disorganiser"
-rsync -avzhP --copy-dirlinks --delete ../rpi.sh disorganiser scripts media rpi:~/prog/disorganiser
+rsync -avzhP --copy-dirlinks --delete --exclude=scripts/definitions ../rpi.sh disorganiser scripts media rpi:~/prog/disorganiser
 

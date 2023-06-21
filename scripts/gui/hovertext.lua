@@ -4,13 +4,20 @@ class 'HoverText' (Widget)
 
 function HoverText:init(rect, text, textcolor, color, font)
 	Widget.init(self, rect)
+	--- @type RenderList
 	self.hoverRenderList = RenderList()
+	--- @type RenderList
 	self.renderList = RenderList()
+	--- @type Font
 	self.font = font or Font('media/mono.ttf',24)
+
 	addTask(function()
 		self:setText(text, textcolor)
 	end, 'HoverText')
-	self:setColor(color)
+
+	if color ~= nil then
+		self:setColor(color)
+	end
 end
 
 function HoverText:setText(text, color)
@@ -18,14 +25,22 @@ function HoverText:setText(text, color)
 		text = ' '
 	end
 	self.hoverRenderList:clear()
+	--- @type Texture
 	local texture <close> = Texture(self.font, text, color)
-	local rect <close> = Rectangle(texture, self.left - texture.width // 2, self.top - texture.height)
+	local left = math.max(0, self.left - texture.width // 2)
+	if left + texture.width > app.width then
+		left = app.width - texture.width
+	end
+	local top = math.max(0, self.top - texture.height)
+	--- @type Rectangle
+	local rect <close> = Rectangle(texture, left, top)
 	self.hoverRenderList:add(rect)
 end
 
 function HoverText:setColor(color)
 	self.renderList:clear()
 
+	--- @type Rectangle
 	local rect <close> = Rectangle(color, false, self:getRect())
 
 	self.renderList:add(rect)
