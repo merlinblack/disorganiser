@@ -38,6 +38,7 @@ ScriptManager::ScriptManager()
 	luaL_dostring( main, "package.path = '/usr/share/lua/5.4/?.lua;' .. package.path" );
 	luaL_dostring( main, "package.path = '/usr/share/lua/5.4/?/init.lua;' .. package.path" );
 	luaL_dostring( main, "package.cpath = '/usr/lib64/lua/5.4/?.so;' .. package.cpath" );
+	luaL_dostring( main, "package.cpath = '/usr/lib/lua/5.4/?.so;' .. package.cpath" );
 	luaL_dostring( main, "write = print" );
 }
 
