@@ -68,7 +68,7 @@ static const SDL_Renderer* getRenderer(lua_State* L)
 	lua_getglobal(L, "app");
 	lua_getfield(L, -1, "renderer");
 	const SDL_Renderer* renderer = RendererBinding::fromStack(L, -1);
-	lua_pop(L, 3);
+	lua_pop(L, 2);
 
 	return renderer;
 }
