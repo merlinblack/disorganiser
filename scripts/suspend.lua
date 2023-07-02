@@ -17,7 +17,7 @@ function Suspend:activate()
 	Screen.activate(self)
 	self.shouldWake = false
 	function wakeup()
-		self:setDisplayPower(0)
+		self:setDisplayPower('--off')
 		print('Screen power off')
 	
 		while not self.shouldWake and not vaderAlive do
@@ -34,7 +34,8 @@ end
 function Suspend:deactivate()
 	Screen.deactivate(self)
 	function powerOn()
-		self:setDisplayPower(1)
+		self:setDisplayPower('--auto')
+		app.renderList:shouldRender()
 	end
 	addTask(powerOn,'display on')
 end
@@ -42,8 +43,9 @@ end
 function Suspend:setDisplayPower(value)
 	local proc <close> = ProcessReader()
 
-	proc:set('vcgencmd')
-	proc:add('display_power')
+	proc:set('xrandr')
+	proc:add('--output')
+	proc:add('DSI-1')
 	proc:add(value)
 	proc:open()
 	local more = true
