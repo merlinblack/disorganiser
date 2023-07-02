@@ -80,7 +80,7 @@ struct LineListBinding : public ManualBind::Binding<LineListBinding,LineList>
 		int x = luaL_checkinteger( L, 2 );
 		int y = luaL_checkinteger( L, 3 );
 
-		ll->addPoint({x,y});
+		ll->addPoint({x, y});
 
 		return 0;
 	}

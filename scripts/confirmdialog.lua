@@ -1,5 +1,6 @@
 require 'class'
 require 'gui/screen'
+require 'console'
 
 class 'ConfirmDialog' (Screen)
 
@@ -69,6 +70,8 @@ function ConfirmDialog:build()
 end
 
 function ConfirmDialog:run(message)
+	local consoleEnabled = console:isEnabled()
+	console:setEnabled(false)
 	self:activate()
 
 	local text <close> = Texture(self.font, message, Color 'fff')
@@ -88,6 +91,8 @@ function ConfirmDialog:run(message)
 	self.renderList:remove(textRect)
 
 	self.previousScreen:activate()
+
+	console:setEnabled(consoleEnabled)
 
 	return self.result == 'ok'
 end

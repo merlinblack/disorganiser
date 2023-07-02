@@ -16,6 +16,10 @@ TexturePtr Texture::createFromFile(const SDL_Renderer* renderer, const std::stri
 		texture->createFromSurface(renderer, loadedSurface);
 		SDL_FreeSurface(loadedSurface);
 	}
+	else
+	{
+		SDL_Log(SDL_GetError());
+	}
 
 	return std::move(texture);
 }
@@ -26,6 +30,10 @@ bool Texture::createFromSurface(const SDL_Renderer* renderer, SDL_Surface* surfa
 	width = surface->w;
 	height = surface->h;
 	texture = SDL_CreateTextureFromSurface(const_cast<SDL_Renderer*>(renderer), surface);
+	if (!texture)
+	{
+		SDL_Log(SDL_GetError());
+	}
 	return texture == nullptr;
 }
 

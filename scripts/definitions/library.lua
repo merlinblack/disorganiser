@@ -36,9 +36,11 @@ function Color:clone() end
 ---@overload fun():EditString
 EditString = {}
 ---Retrieve the edited string
+---@return string
 function EditString:getString() end
 ---Set the string to be edited
-function EditString:setString() end
+---@param string string
+function EditString:setString(string) end
 ---Move the cursor to the start of the strig
 function EditString:gotoStart() end
 ---Move the cursor to the end of the string
@@ -52,11 +54,13 @@ function EditString:backWord() end
 ---Move the cursor forward one word
 function EditString:forwardWord() end
 ---Retrieve the cursor position
+---@return integer
 function EditString:index() end
 ---Set the string to be edited to ""
 function EditString:clear() end
 ---Insert a character at the cursor position
-function EditString:insert() end
+---@param characters string
+function EditString:insert(characters) end
 ---Remove the character at the cursor position
 function EditString:erase() end
 
@@ -72,7 +76,7 @@ function Font:sizeText(text) end
 
 ---@class LineList : Renderable
 ---@field color Color
----@overload fun(color?:Color):Color
+---@overload fun(color?:Color):LineList
 LineList = {}
 ---Add a point to the list
 ---@param x integer
@@ -217,6 +221,7 @@ Suspend = {}
 ---@class SystemUpdate : Screen
 SystemUpdate = {}
 ---@class TextLog : Class
+---@overload fun(renderList:RenderList, x:integer, y:integer, background:Color, color: Color, font:Font, width:integer, height:integer):TextLog
 TextLog = {}
 ---@class Unlock : Screen
 Unlock = {}

@@ -196,14 +196,14 @@ function MainScreen2:runTask(host, command)
 
 	function task()
 		local renderList = RenderList()
-		local font <close> = Font('media/mono.ttf',14)
+		local font <close> = Font('media/mono.ttf',18)
 		local tl = TextLog(
 			renderList, 
-			420, 100,
+			420, 150,
 			Color '00f4',
 			Color '0ff',
 			font, 
-			app.width - 420 - 10, app.height - clockHeight - 100)
+			app.width - 420 - 10, 250)
 
 		local frame <close> = Rectangle(Color('00f'), false, growRect(tl.bounds))
 

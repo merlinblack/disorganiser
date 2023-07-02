@@ -12,7 +12,7 @@
 
 class Application;
 
-#define BUYUK
+//#define BUYUK
 
 #ifdef NOBUYUK	// Defined by deploy scripts
 #undef BUYUK	// Make sure 'big' is turned off

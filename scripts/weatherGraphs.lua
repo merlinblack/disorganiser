@@ -56,8 +56,8 @@ function WeatherGraphs:build()
 	self:addButton(btn, 'Trendler', function() weatherTrends:activate() end, self.textcolor, nil, self.backcolor)
 
 	local frame <close> = LineList(self.linecolor)
-	frame:addPoint(self.graphLeft,self.graphTop)
-	frame:addPoint(self.graphLeft,self.graphBot)
+	frame:addPoint(self.graphLeft, self.graphTop)
+	frame:addPoint(self.graphLeft, self.graphBot)
 	frame:addPoint(self.graphRight, self.graphBot)
 	self.renderList:add(frame)
 

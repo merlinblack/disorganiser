@@ -131,4 +131,23 @@ function aslan()
 	write('10,000,000 (10 million) seconds on: ' .. os.date('%c', birthdateTS+10000000))
 end
 
+function citizenship()
+	local date = {
+		year = 2023,
+		month = 7,
+		day = 11,
+		hour = 15,
+		min = 30
+	}
+	local dateTS = os.time(date)
+	local now = os.time()
+	local diff = os.difftime(dateTS,now)
+
+	write('Time to citizenship:')
+	write('Secs:\t' .. string.format('%.0d', diff))
+	write('Days:\t'  .. string.format('%.2f', diff / (24*60*60)))
+	write('Weeks:\t' .. string.format('%.1f', diff / (24*60*60*7)))
+	write(' \r')
+end
+
 print('init.lua loaded.')

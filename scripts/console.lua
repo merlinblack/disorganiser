@@ -11,8 +11,11 @@ function Console:init()
 	self.renderList = RenderList()
 	self.font = Font('media/mono.ttf', 24)
 	self.enabled = false
+	self.doInputUpdateFlag = true
 	self.edit = EditString()
 	self.currentLine = 1
+	self.wordwrapMax = 60
+	self.wordwrapMin = 50
 	self.run = Run()
 	self.history = History()
 	self:build()
@@ -160,8 +163,8 @@ function Console:addLine(text)
 		self.lineRectangles[self.currentLine].texture = self.emptyline
 		self:scroll()
 	else
-		local max = 60
-		local min = 50
+		local max = self.wordwrapMax
+		local min = self.wordwrapMin
 		local splitPosition = max
 
 		text = text:tabsToSpaces()
@@ -209,6 +212,10 @@ function Console:scroll()
 end
 
 function Console:updateInputDisplay()
+	if self.doInputUpdateFlag == false then
+		return
+	end
+
 	text = self.run:getPrompt() .. self.edit:getString()
 	--print( 'InputLine: ['.. text ..']')
 
@@ -234,6 +241,27 @@ function Console:clear()
 	end
 	self.currentLine = 1
 	self:updateInputDisplay()
+end
+
+function Console:watch(fn, delay)
+	local delay = delay or 2000
+	addTask(
+		function()
+			while wait(delay) ~= 'killed' do
+				local line = self.currentLine
+				self.doInputUpdateFlag = false
+				self.currentLine = 1
+
+				fn()
+
+				if self.currentLine < line then
+					self.currentLine = line
+				end
+				self.doInputUpdateFlag = true
+				self:updateInputDisplay()
+			end
+		end, 'console-watch'
+	)
 end
 
 function Console:showHistory()
@@ -268,6 +296,14 @@ end
 
 function clear()
 	console:clear()
+end
+
+function watch(fn, delay)
+	console:watch(fn, delay)
+end
+
+function killWatch()
+	killTask 'console-watch'
 end
 
 addTask(function() console:blinkCursor() end, "console cursor blink")

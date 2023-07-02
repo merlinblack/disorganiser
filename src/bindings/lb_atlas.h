@@ -6,8 +6,6 @@
 #include "atlas.h"
 #include "lb_texture.h"
 
-#include "lb_renderer.h"
-
 struct AtlasBinding : public ManualBind::Binding<AtlasBinding, Atlas>
 {
 	static constexpr const char* class_name = "Atlas";
@@ -26,9 +24,13 @@ struct AtlasBinding : public ManualBind::Binding<AtlasBinding, Atlas>
 
 	static int render(lua_State* L)
 	{
+		const SDL_Renderer* renderer = getRenderer(L);
+
 		AtlasPtr atlas = fromStack(L, 1);
-		const SDL_Renderer* renderer = RendererBinding::fromStack(L,2);
-		int index = luaL_checkinteger(L,3);
+
+		int index = luaL_checkinteger(L, 2);
+		int x = luaL_checkinteger(L, 3);
+		int y = luaL_checkinteger(L, 4);
 
 		if (index == 0)
 			luaL_error(L, "invalid index (zero)." );
@@ -40,9 +42,6 @@ struct AtlasBinding : public ManualBind::Binding<AtlasBinding, Atlas>
 
 		if (index < 0)
 			luaL_error(L, "negitive indices unsupported." );
-
-		int x = luaL_checkinteger(L,4);
-		int y = luaL_checkinteger(L,5);
 
 		atlas->renderImage(renderer, index, x, y);
 

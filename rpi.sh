@@ -1,4 +1,13 @@
 #!/usr/bin/env sh
+
+cd $(dirname $0)
+
+touch startedAt
+
+if [ $1 = "delay" ]; then
+  sleep 10
+fi
+
 if [ -z "${DISPLAY}" ]; then
   export DISPLAY=:0
 fi

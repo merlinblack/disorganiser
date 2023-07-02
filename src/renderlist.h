@@ -88,7 +88,8 @@ class RenderList : public Renderable
 	inline void add( RenderablePtr&& item )
 	{
 		if ( list.empty() ) {
-			insert( std::forward<RenderablePtr>(item) );
+			item->setOrder( 100 ); // Allow for inserting infront.
+			list.emplace_back( std::move( item ) );
 			return;
 		}
 
