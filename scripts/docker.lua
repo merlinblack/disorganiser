@@ -15,8 +15,8 @@ function Docker:build()
 	self.renderList:add(rectangle)
 
 	local btn = {app.width-180, 350, 160, 100}
-	local textcolor = Color 'ff458a'
-	local backcolor = Color 'ff458a30'
+	local textcolor = Color 'ffff458a'
+	local backcolor = Color '30ff458a'
 
 	self:addButton(btn, 'geri', function() mainScreen:activate() end, textcolor, nil, backcolor)
 	btn[2] = btn[2] - 120
@@ -61,7 +61,7 @@ function Docker:runOnVader(prog)
 		local tl = TextLog(
 			renderList, 
 			11, 24,
-			Color 'f0f4',
+			Color '4f0f',
 			Color 'fff',
 			font, 
 			app.width-400, app.height-clockHeight-24)
@@ -74,7 +74,7 @@ function Docker:runOnVader(prog)
 
 		local proc <close> = ProcessReader()
 		proc:set('ssh')
-		proc:add('vader')
+		proc:add('vader.local')
 		proc:add(prog)
 		proc:open()
 

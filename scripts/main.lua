@@ -34,6 +34,12 @@ function MainScreen:build()
 	btn[2] = btn[2] + 140
 	self:addButton(btn, 'Tekrar\nBaşlat', function() restart() end, textcolor, nil, backcolor)
 
+	btn[1] = btn[1] + 180
+	self:addButton(btn, 'Weather', function() weatherTrends:activate() end, textcolor, nil, backcolor)
+
+	btn[2] = btn[2] - 140
+	self:addButton(btn, 'Takvim', function() calendar:activate() end, textcolor, nil, backcolor)
+
 	local weatherRect = { 20, 5, 260, 130 }
 	local weatherbox <close> = Rectangle(backcolor, true, weatherRect)
 	local weatherBtn = Button(weatherRect)
@@ -55,7 +61,7 @@ function MainScreen:build()
 	self.stopWeatherUpdate = false
 	function updateWeather()
 		local font <close> = Font('media/mono.ttf',24)
-		local color = Color 'f30a4ac0'
+		local color = Color 'c0f30a4a'
 		while not self.stopWeatherUpdate do
 			readLocalWeather()
 

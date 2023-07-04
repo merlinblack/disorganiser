@@ -9,8 +9,8 @@ class 'SystemUpdate' (Screen)
 
 function SystemUpdate:build()
 	Screen.build(self)
-	 
-	self.fontCode = Font('media/Aurek-Besh.ttf', 18)
+
+	self.fontCode = Font('media/Aurek-Besh.ttf', 16)
 	self.font = Font('media/pirulen.otf', 22)
 
 	local texture <close> = Texture('media/falcon.png')
@@ -21,18 +21,18 @@ function SystemUpdate:build()
 
 	local btn = { 10, 5, 180, 70}
 	local textcolor = Color 'fff'
-	local backcolor = Color '777a'
-	
-	self:addButton(btn, 'Local', function() self:runTask('rpi','sudo apt update && sudo apt upgrade -y') end, textcolor, nil, backcolor)
+	local backcolor = Color 'a777'
+
+	self:addButton(btn, 'Local', function() self:runTask('vimes.local','sudo apt update && sudo apt upgrade -y') end, textcolor, nil, backcolor)
 
 	btn[2] = btn[2] + 80
-	self:addButton(btn, 'Octavo', function() self:runTask('octavo','sudo dnf update -y') end, textcolor, nil, backcolor)
+	self:addButton(btn, 'Octavo', function() self:runTask('octavo.local','sudo dnf update -y') end, textcolor, nil, backcolor)
 
 	btn[2] = btn[2] + 80
-	self:addButton(btn, 'ModelB', function() self:runTask('modelb','sudo apt update && sudo apt upgrade -y') end, textcolor, nil, backcolor)
+	self:addButton(btn, 'ModelB', function() self:runTask('modelb.local','sudo apt update && sudo apt upgrade -y') end, textcolor, nil, backcolor)
 
 	btn[2] = btn[2] + 80
-	self:addButton(btn, 'Vader', function() self:runTask('vader', 'sudo dnf update -y') end, textcolor, nil, backcolor)
+	self:addButton(btn, 'Vader', function() self:runTask('vader.local', 'sudo dnf update -y') end, textcolor, nil, backcolor)
 
 	btn[2] = btn[2] + 80
 	self:addButton(btn, 'All', function() self:all() end, textcolor, nil, backcolor)
@@ -76,7 +76,7 @@ function SystemUpdate:runTask(host, command)
 		local tl = TextLog(
 			renderList, 
 			210, 50,
-			Color '00f4',
+			Color '400f',
 			Color 'fff',
 			font, 
 			app.width - 210 - 20, app.height - clockHeight - 50)
@@ -131,17 +131,17 @@ end
 
 function SystemUpdate:all()
 	pt(getTasks())
-	self:runTask('rpi','sudo apt update && sudo apt upgrade -y')
+	self:runTask('vimes.local','sudo apt update && sudo apt upgrade -y')
 	print 'wait for task...'
 	waitForTask('runSystemTask')
 
-	self:runTask('octavo','sudo dnf update -y')
+	self:runTask('octavo.local','sudo dnf update -y')
 	waitForTask('runSystemTask')
 	
-	self:runTask('modelb','sudo apt update && sudo apt upgrade -y')
+	self:runTask('modelb.local','sudo apt update && sudo apt upgrade -y')
 	waitForTask('runSystemTask')
 	
-	self:runTask('vader', 'sudo dnf update -y')
+	self:runTask('vader.local', 'sudo dnf update -y')
 end
 
 

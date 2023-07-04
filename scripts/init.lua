@@ -22,8 +22,10 @@ require 'main2'
 require 'systemupdate'
 require 'screensaver'
 require 'console'
+require 'calendar'
 
 mainScreen:activate()
+--calendar:activate()
 
 print('Version: ' .. app.version)
 
@@ -148,6 +150,26 @@ function citizenship()
 	write('Days:\t'  .. string.format('%.2f', diff / (24*60*60)))
 	write('Weeks:\t' .. string.format('%.1f', diff / (24*60*60*7)))
 	write(' \r')
+end
+
+function octavoDropboxStatus()
+	local proc <close> = ProcessReader()
+	proc:set('ssh')
+	proc:add('octavo.local')
+	proc:add('dropbox')
+	proc:add('status')
+	proc:open()
+	local more = true
+	local results
+	local combined ='Octavo dropbox status:\n'
+	while more do
+		wait(1000)
+		more, results = proc:read()
+		results = string.gsub(results, '^%s*(.-)%s*$', '%1')
+		combined = combined .. results
+	end
+	proc:close()
+	write(combined .. '\n ')
 end
 
 print('init.lua loaded.')

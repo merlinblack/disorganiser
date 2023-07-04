@@ -38,7 +38,7 @@ end
 
 function ConfirmDialog:build()
 	self.font = Font('media/pirulen.otf', 26)
-	local background <close> = Rectangle(Color '000000b0', true, {0,0,app.width, app.height})
+	local background <close> = Rectangle(Color 'b0000000', true, {0,0,app.width, app.height})
 
 	self.renderList:add(background)
 
@@ -90,7 +90,9 @@ function ConfirmDialog:run(message)
 
 	self.renderList:remove(textRect)
 
-	self.previousScreen:activate()
+	if self.previousScreen then
+		self.previousScreen:activate()
+	end
 
 	console:setEnabled(consoleEnabled)
 

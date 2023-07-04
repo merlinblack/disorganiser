@@ -200,6 +200,8 @@ Screen = {}
 ---@class HoverText : Widget
 HoverText = {}
 
+---@class Calendar : Screen
+Calendar = {}
 ---@class ConfirmDialog : Screen
 ConfirmDialog = {}
 ---@class Console : Widget

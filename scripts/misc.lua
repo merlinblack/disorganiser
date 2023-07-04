@@ -1,3 +1,21 @@
+function ordinalSuffix(n)
+	local i = n % 10
+	local j = n % 100;
+
+	if i == 1 and j ~= 11 then
+		return 'st'
+	end
+
+	if i == 2 and j ~= 12 then
+		return 'nd'
+	end
+
+	if i == 3 and j ~= 13 then
+		return 'rd'
+	end
+
+	return 'th'
+end
 
 function splitByNewline(str)
 	str = '' .. str

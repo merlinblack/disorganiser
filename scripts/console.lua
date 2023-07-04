@@ -22,11 +22,11 @@ function Console:init()
 end
 
 function Console:build()
-	local backgroundColor = Color '207f2060'
+	local backgroundColor = Color '85002F00'
 	local frameColor = Color '407f40'
-	local cursorColor = Color '0f0'
+	local cursorColor = Color 'ff00ff00'
 
-	self.textColor = Color '80ff00'
+	self.textColor = Color 'FFA2FF00'
 	self.topMargin = 5
 	self.bottomMargin = 20
 	self.leftMargin = 10

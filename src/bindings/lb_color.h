@@ -113,13 +113,14 @@ struct ColorBinding : public ManualBind::PODBinding<ColorBinding, SDL_Color>
             digit++;
         }
 
-        Uint8 alpha = 255;
-        if (hasAlpha)
-            alpha = elements[3];
-
-        SDL_Color c = {elements[0], elements[1], elements[2], alpha};
-
-        push(L, c);
+        if (hasAlpha) {
+            SDL_Color c = {elements[1], elements[2], elements[3], elements[0]};
+            push(L, c);
+        }
+        else {
+            SDL_Color c = {elements[0], elements[1], elements[2], 255};
+            push(L, c);
+        }
 
         return 1;
     }

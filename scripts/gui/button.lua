@@ -9,7 +9,7 @@ function Button.create(rect, captionText, font, func, textColor, frameColor, bac
 
 	textColor = textColor or Color 'FFF'
 	frameColor = frameColor or textColor
-	backgroundColor = backgroundColor or Color '000000a0'
+	backgroundColor = backgroundColor or Color 'a0000000'
 
 	local rectangle <close> = Rectangle(backgroundColor, true, rect)
 	btnWidget.normalRenderList:add(rectangle)

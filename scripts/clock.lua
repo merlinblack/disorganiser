@@ -6,7 +6,7 @@ clockRenderList = RenderList()
 clockHeight = 24
 function updateClock()
 	print('starting clock')
-	local font <close> = Font('media/pirulen.otf', 20)
+	local font <close> = Font('media/ECAM.ttf', 20)
 	local color = Color 'fe0a4a'
 	local clockRect <close> = Rectangle(color, false, {0, app.height - font.lineHeight, 0, 0})
 	clockRenderList:add(clockRect)

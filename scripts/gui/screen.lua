@@ -21,6 +21,10 @@ function Screen:init()
 	self:build()
 end
 
+function Screen:setStandardFont()
+	self.font = Font('media/pirulen.otf', 22)
+end
+
 function Screen:build()
 end
 
@@ -42,7 +46,7 @@ end
 
 function Screen:addButton(rect, captionText, func, textColor, frameColor, backgroundColor)
 	if not self.font then
-	    self.font = Font('media/pirulen.otf', 22)
+	    self:setStandardFont()
 	end
 
 	local button = Button.create(rect, captionText, self.font, func, textColor, frameColor, backgroundColor)

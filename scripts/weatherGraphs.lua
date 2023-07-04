@@ -100,7 +100,6 @@ function WeatherGraphs:buildGraphs(force)
 
 	print 'Building graphs'
 	self.dataRenderList:clear()
-	write(os.date(),'Number of hoverText to remove: ', #self.hoverText)
 	for _,hoverText in pairs(self.hoverText) do
 		hoverText:removeFromScreen(self)
 	end

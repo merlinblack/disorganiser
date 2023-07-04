@@ -93,7 +93,7 @@ function MainScreen2:build()
 				self:setAction(function() self.parent:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63') end)
 			else
 				self:setCaption('Poweroff\nOctavo', textcolor)
-				self:setAction(function() self.parent:runTask('octavo', 'sudo poweroff') end)
+				self:setAction(function() self.parent:runTask('octavo.local', 'sudo poweroff') end)
 			end
 		end
 
@@ -200,7 +200,7 @@ function MainScreen2:runTask(host, command)
 		local tl = TextLog(
 			renderList, 
 			420, 150,
-			Color '00f4',
+			Color '400f',
 			Color '0ff',
 			font, 
 			app.width - 420 - 10, 250)
