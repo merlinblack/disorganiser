@@ -37,6 +37,8 @@ function SystemUpdate:build()
 	btn[2] = btn[2] + 80
 	self:addButton(btn, 'All', function() self:all() end, textcolor, nil, backcolor)
 
+	self:addButton({app.width-105, app.height-clockHeight-70, 100, 60}, 'Geri', function() mainScreen2:activate() end, textcolor, nil, backcolor)
+
 	self.titleTexture = Texture(self.fontCode, 'System Update', Color('0f0') )
 	self.title = Rectangle(self.titleTexture, {app.width-self.titleTexture.width-30, 5,0,0})
 	self.renderList:add(self.title)

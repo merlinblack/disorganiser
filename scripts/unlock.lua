@@ -12,7 +12,7 @@ function Unlock:build()
 	local width = secret.width * buttonWidth + (secret.width-1) * buttonGap
 	local height = secret.height * buttonHeight + (secret.height-1) * buttonGap
 	local left = (app.width/2) - (width/2)
-	local top = (app.height/2) - (height/2)
+	local top = ((app.height-clockHeight)/2) - (height/2)
 
 	local buttonIndex = 1
 	local textcolor = Color(0xfe,0x0a,0x4a,0xff)
@@ -25,8 +25,8 @@ function Unlock:build()
 			buttonIndex = buttonIndex + 1
 		end
 	end
-	btn = { app.width-100, app.height - 70, 100, 50}
-	self:addButton(btn, 'Geri', function() mainScreen:activate() end, textcolor, nil, backcolor)
+	btn = { app.width-105, app.height-clockHeight-70, 100, 60}
+	self:addButton(btn, 'G', function() mainScreen:activate() end, textcolor, nil, backcolor)
 
 	self.animation = Rectangle(app.emptyTexture, {app.width/8,5,0,0})
 	self.renderList:add(self.animation)

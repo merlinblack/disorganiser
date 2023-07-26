@@ -44,6 +44,8 @@ function MainScreen2:build()
 	btn[1] = btn[1] - 200
 	self.retryBtn = self:addButton(btn, 'Retry\nWeather', function(self) self.parent:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py') end, grey, textcolor, backcolor)
 
+	self:addButton({app.width-105, app.height-clockHeight-70, 100, 60}, 'Geri', function() mainScreen:activate() end, textcolor, nil, backcolor)
+
 	local static <close> = Rectangle(Texture(self.fontCode, 'Main Screen Two', textcolor ), { 30,5,0,0})
 	self.renderList:add(static)
 

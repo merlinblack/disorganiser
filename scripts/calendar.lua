@@ -19,7 +19,7 @@ require 'gui/screen'
 appointments = require'appointments'
 
 local text = {
-    appointments = 'Randeular ve etkinlikler',
+    appointments = 'Randevular ve etkinlikler',
     calendar = 'Takvim',
     monday = 'Pazartesi',
     tuesday = 'Salı',
@@ -75,11 +75,30 @@ function Calendar:init()
 
     self.renderList:add(self.calendarRenderList)
 
-    local buttonTop = app.height - 50
+    local titleTex <close> = Texture(self.font, text.calendar, Color 'fff')
+    local title <close> = Rectangle(titleTex, (app.width // 2) - (titleTex.width // 2), 5 )
+    self.renderList:add(title)
+
+    local titleTex <close> = Texture(self.font2, text.appointments, Color 'fff')
+    local title <close> = Rectangle(titleTex, (3 * app.width // 4) - (titleTex.width // 2), 34 )
+    self.renderList:add(title)
+
+    local x = 20
+    for i,v in pairs(self.text.weekdaysShort) do
+        local texture = self.textures[v]
+        local rectangle <close> = Rectangle(texture, x, 74)
+        local hovertext = HoverText({x, 74, texture.width, texture.height}, self.text.weekdays[i], Color 'fff', nil, nil, Color 'ff0000ff')
+        hovertext:addToScreen(self)
+        hovertext.renderList:add(rectangle)
+        x = x + 50
+    end
+
+    local buttonTop = app.height - 50 - clockHeight
     self:addButton({  0, buttonTop, 140, 50}, text.previous, function() self:previous() end, Color 'ffffffff')
     self:addButton({150, buttonTop, 150, 50}, text.today, function() self:today() end, Color 'ffffffff')
     self:addButton({310, buttonTop, 165, 50}, text.next, function() self:next() end, Color 'ffffffff')
     self:addButton({app.width - 145, buttonTop, 140, 50}, 'Geri', function() mainScreen:activate() end, Color 'ffffffff')
+    self.renderList:add(clockRenderList)
 end
 
 function Calendar:setDate(year, month)
@@ -140,21 +159,18 @@ function Calendar:buildTextTextures()
 end
 
 function Calendar:today()
-    wt(self)
     self:setDate()
     self:calcAppointments()
     self:build()
 end
 
 function Calendar:previous()
-    wt(self)
     self:setDate(self.year, self.month - 1)
     self:calcAppointments()
     self:build()
 end
 
 function Calendar:next()
-    wt(self)
     self:setDate(self.year, self.month + 1)
     self:calcAppointments()
     self:build()
@@ -164,24 +180,9 @@ function Calendar:build()
 
     self.calendarRenderList:clear()
 
-    local titleTex <close> = Texture(self.font, text.calendar, Color 'fff')
-    local title <close> = Rectangle(titleTex, (app.width // 2) - (titleTex.width // 2), 5 )
-    self.calendarRenderList:add(title)
-
     local titleTex <close> = Texture(self.font2, text.months[self.month] .. ' ' .. self.year, Color 'fff')
-    local title <close> = Rectangle(titleTex, (app.width // 4) - (titleTex.width // 2), 64 )
+    local title <close> = Rectangle(titleTex, (app.width // 4) - (titleTex.width // 2), 34 )
     self.calendarRenderList:add(title)
-
-    local titleTex <close> = Texture(self.font2, text.appointments, Color 'fff')
-    local title <close> = Rectangle(titleTex, (3 * app.width // 4) - (titleTex.width // 2), 64 )
-    self.calendarRenderList:add(title)
-
-    local x = 20
-    for _,v in pairs(self.text.weekdaysShort) do
-        local rectangle <close> = Rectangle(self.textures[v], x, 104)
-        self.calendarRenderList:add(rectangle)
-        x = x + 50
-    end
 
     self:buildMonthDays()
     self:buildAppointments()
@@ -197,7 +198,7 @@ function Calendar:buildMonthDays()
     end
 
     local renderList <close> = RenderList()
-    local y = 140
+    local y = 110
     local margin = 40
     local weekDay = self.firstWeekday
 
@@ -228,7 +229,8 @@ end
 function Calendar:buildAppointments()
     local start = os.time { year = self.year, month = self.month, day = 1 }
     local limit = start + 60*60*24*60 -- 60 days
-    local y=104
+    local y=74
+    local max = 4
 
     for _, appointment in pairs(self.appointments) do
         if appointment.timestamp > start and appointment.timestamp < limit then
@@ -252,8 +254,9 @@ function Calendar:buildAppointments()
             local rectangle <close> = Rectangle(texture, app.width // 2 + 20, y)
             self.calendarRenderList:add(rectangle)
             y = y + self.font3.lineHeight + 5
+            max = max - 1
         end
-        if y > app.height - 100 then
+        if max == 0 then
             break
         end
     end
@@ -287,4 +290,32 @@ function Calendar:isLeapYear()
     return self.year % 4 == 0 and (self.year % 100 ~= 0 or self.year % 400 == 0)
 end
 
+function Calendar:swipe(direction)
+	if direction == Swipe.Right then
+		self:previous()
+	end
+	if direction == Swipe.Left then
+        self:next()
+	end
+	if direction == Swipe.Down then
+		console:setEnabled(true)
+	end
+	if direction == Swipe.Up then
+		console:setEnabled(false)
+	end
+end
+
 calendar = Calendar()
+
+addTask(
+    function()
+        while wait(60000) ~= 'killed' do
+            if calendar.month == calendar.currentMonth and calendar.year == calendar.currentYear then
+                if calendar.currentDay ~= os.date('*t').day then
+                    calendar:today()
+                end
+            end
+        end
+    end,
+    'calendar'
+)

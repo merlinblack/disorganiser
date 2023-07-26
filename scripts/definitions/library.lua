@@ -198,6 +198,7 @@ Button = {}
 Screen = {}
 
 ---@class HoverText : Widget
+---@overload fun(rect:table, text:string, textColor:Color, color?:Color, font?:Font, backgroundColor?:Color)
 HoverText = {}
 
 ---@class Calendar : Screen

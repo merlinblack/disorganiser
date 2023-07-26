@@ -2,7 +2,7 @@ require 'gui/widget'
 
 class 'HoverText' (Widget)
 
-function HoverText:init(rect, text, textcolor, color, font)
+function HoverText:init(rect, text, textcolor, color, font, backgroundColor)
 	Widget.init(self, rect)
 	--- @type RenderList
 	self.hoverRenderList = RenderList()
@@ -10,6 +10,8 @@ function HoverText:init(rect, text, textcolor, color, font)
 	self.renderList = RenderList()
 	--- @type Font
 	self.font = font or Font('media/mono.ttf',24)
+	--- @type Color|nil
+	self.backgroundColor = backgroundColor
 
 	addTask(function()
 		self:setText(text, textcolor)
@@ -21,20 +23,26 @@ function HoverText:init(rect, text, textcolor, color, font)
 end
 
 function HoverText:setText(text, color)
+	local frameSize = 5
 	if text == '' then
 		text = ' '
 	end
 	self.hoverRenderList:clear()
-	--- @type Texture
 	local texture <close> = Texture(self.font, text, color)
-	local left = math.max(0, self.left - texture.width // 2)
-	if left + texture.width > app.width then
-		left = app.width - texture.width
+	local left = math.max(frameSize, self.left - texture.width // 2 - frameSize)
+	if left + texture.width + frameSize*2 > app.width then
+		left = app.width - texture.width - frameSize*2
 	end
-	local top = math.max(0, self.top - texture.height)
-	--- @type Rectangle
-	local rect <close> = Rectangle(texture, left, top)
-	self.hoverRenderList:add(rect)
+	local top = math.max(0, self.top - texture.height - frameSize)
+	if self.backgroundColor then
+		local rect = growRect({ left, top, texture.width, texture.height }, frameSize)
+		local background <close> = Rectangle(self.backgroundColor, true, rect)
+		self.hoverRenderList:add(background)
+		local frame <close> = Rectangle(color, false, rect)
+		self.hoverRenderList:add(frame)
+	end
+	local textRect <close> = Rectangle(texture, left, top)
+	self.hoverRenderList:add(textRect)
 end
 
 function HoverText:setColor(color)

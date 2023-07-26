@@ -134,7 +134,7 @@ end
 
 function growRect(rect, amount)
 	amount = amount or 1
-	return { rect[1] - amount, rect[2] - amount, rect[3] + amount, rect[4] + amount}
+	return { rect[1] - amount, rect[2] - amount, rect[3] + 2*amount, rect[4] + 2*amount}
 end
 
 function shrinkRect(rect, amount)
