@@ -192,6 +192,9 @@ function killTask(name) end
 Widget = {}
 
 ---@class Button : Widget 
+---@field renderList RenderList
+---@field normalRenderList RenderList
+---@field pressedRenderList RenderList
 Button = {}
 
 ---@class Screen : Widget

@@ -73,7 +73,7 @@ function getCompletions( where, str )
             end
         end
         if g.__luaclass then
-            for k, v in pairs( getLuaClassInfo( g ) ) do
+            for k, v in pairs( getLuaClassMembers( g ) ) do
                 if string.find( v, str ) == 1 then
                     table.insert( ret, prefix .. dottype .. v )
                 end
@@ -149,16 +149,14 @@ function getClassInfo( cls )
     return ret
 end
 
-function getLuaClassInfo( cls )
+function getLuaClassMembers( cls )
     local ret = {}
-    local mt = getmetatable( cls )
-    if mt then
-        if mt.__index then
-            for k, v in pairs( mt.__index ) do
-                if string.sub( k, 1, 1 ) ~= '_' then
-                    table.insert( ret, k )
-                end
-            end
+    if cls.__base then
+        ret = getLuaClassMembers(cls.__base)
+    end
+    for k, _ in pairs( cls ) do
+        if string.sub( k, 1, 1 ) ~= '_' then
+            table.insertOnce( ret, k )
         end
     end
     return ret

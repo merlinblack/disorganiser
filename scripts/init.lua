@@ -23,9 +23,9 @@ require 'systemupdate'
 require 'screensaver'
 require 'console'
 require 'calendar'
+require 'ledtouch'
 
 mainScreen:activate()
---calendar:activate()
 
 print('Version: ' .. app.version)
 
@@ -143,9 +143,9 @@ function citizenship()
 	}
 	local dateTS = os.time(date)
 	local now = os.time()
-	local diff = os.difftime(dateTS,now)
+	local diff = os.difftime(now,dateTS)
 
-	write('Time to citizenship:')
+	write('Time since citizenship:')
 	write('Secs:\t' .. string.format('%.0d', diff))
 	write('Days:\t'  .. string.format('%.2f', diff / (24*60*60)))
 	write('Weeks:\t' .. string.format('%.1f', diff / (24*60*60*7)))

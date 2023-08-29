@@ -29,6 +29,10 @@ function Screen:build()
 end
 
 function Screen:activate()
+	if self == getCurrentScreen() then
+		print( 'Screen Already activated: ', self.__type)
+		return
+	end
 	print('Activating Screen: ', self.__type)
 	self.previousScreen = setCurrentScreen(self)
 	app.renderList = self.renderList

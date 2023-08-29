@@ -36,6 +36,13 @@ function table.getIndex(tbl, element)
 	return 0
 end
 
+function table.insertOnce(tbl, element)
+	if table.getIndex(tbl, element) ~= 0 then
+		return
+	end
+	table.insert(tbl, element)
+end
+
 -- String routines from https://gist.github.com/kgriffs/124aae3ac80eefe57199451b823c24ec
 function string:contains(sub)
 	return self:find(sub, 1, true) ~= nil
