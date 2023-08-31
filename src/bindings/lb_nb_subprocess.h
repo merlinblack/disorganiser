@@ -33,7 +33,8 @@ struct SubProcessBinding : ManualBind::Binding<SubProcessBinding, NonBlockingPro
 	static int open(lua_State* L)
 	{
 		NonBlockingProcessPtr nbpr = fromStack(L,1);
-		lua_pushboolean(L, nbpr->open());
+		bool openWriteChannel = luaL_opt(L, lua_toboolean, 2, false);
+		lua_pushboolean(L, nbpr->open(openWriteChannel));
 		return 1;
 	}
 
