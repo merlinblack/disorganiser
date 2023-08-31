@@ -55,16 +55,20 @@ bool NonBlockingProcess::open(bool openWriteChannel)
 			// close read end of the read pipe
 			::close(p_read[0]);
 			// Send stdout into writable end
-			dup2(p_read[1], 1);
+			dup2(p_read[1], STDOUT_FILENO);
 			// Send stderr into writable end
-			dup2(p_read[1], 2);
+			dup2(p_read[1], STDERR_FILENO);
+			// Child does not need this fd now dup is done.
+			::close(p_read[1]);
 
 			if (openWriteChannel)
 			{
+				// Attach stdin into readable end
+				dup2(p_write[0], STDIN_FILENO);
+				// Child does not need this now that the dup is done.
+				::close(p_write[0]);
 				// close write end of the write pipe
 				::close(p_write[1]);
-				// Attach stdin into readable end
-				dup2(p_write[0], 0);
 			}
 
 			// Run program
