@@ -159,6 +159,15 @@ void NonBlockingProcess::close()
 	}
 }
 
+void NonBlockingProcess::closeWriteChannel()
+{
+	if (fd_write >= 0)
+	{
+		::close(fd_write);
+		fd_write = -1;
+	}
+}
+
 #ifdef __APPLE__
 int NonBlockingProcessRead::pipe2(int fds[2], int flags)
 {

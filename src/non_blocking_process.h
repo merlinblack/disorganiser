@@ -29,6 +29,7 @@ class NonBlockingProcess
 	/** \return true on error */
 	bool write(std::string& buffer);	
 	void close();
+	void closeWriteChannel();
 #ifdef __APPLE__
     int pipe2( int fds[2], int flags);
 #endif

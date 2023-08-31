@@ -18,6 +18,7 @@ struct SubProcessBinding : ManualBind::Binding<SubProcessBinding, NonBlockingPro
 			{ "clear", clear },
 			{ "read", read },
 			{ "write", write },
+			{ "closeWrite", closeWrite },
 			{ nullptr, nullptr }
 		};
 		return members;
@@ -84,6 +85,13 @@ struct SubProcessBinding : ManualBind::Binding<SubProcessBinding, NonBlockingPro
 
 		lua_pushboolean(L, nbptr->write(buffer));
 		return 1;
+	}
+
+	static int closeWrite(lua_State* L)
+	{
+		NonBlockingProcessPtr nbpr = fromStack(L,1);
+		nbpr->closeWriteChannel();
+		return 0;
 	}
 };
 
