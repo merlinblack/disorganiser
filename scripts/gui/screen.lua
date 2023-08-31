@@ -29,7 +29,7 @@ function Screen:build()
 end
 
 function Screen:activate()
-	if self == getCurrentScreen() then
+	if self:isActive() then
 		print( 'Screen Already activated: ', self.__type)
 		return
 	end

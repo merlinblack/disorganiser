@@ -41,7 +41,7 @@ function Widget:mouseMoved( time, x, y, button )
     if self:intersects( x, y ) then
         self.hasMouse = true
         for _,child in pairs(self.children) do
-            if child.mouseMoved then child:mouseMoved( time, x, y, button ) end
+            child:mouseMoved( time, x, y, button )
         end
     else
         if self.hasMouse then
@@ -53,11 +53,9 @@ end
 function Widget:mouseClick( time, x, y, button )
     if self:intersects( x, y ) then
         for _,child in pairs(self.children) do
-            if child.mouseMoved then
-                local handled = child:mouseClick( time, x, y, button )
-                if handled then
-                    return true
-                end
+            local handled = child:mouseClick( time, x, y, button )
+            if handled then
+                return true
             end
         end
     end
@@ -66,7 +64,7 @@ end
 function Widget:mouseDown( time, x, y, button )
     if self:intersects( x, y ) then
         for _,child in pairs(self.children) do
-            if child.mouseMoved then child:mouseDown( time, x, y, button ) end
+            child:mouseDown( time, x, y, button )
         end
     end
 end
@@ -74,7 +72,7 @@ end
 function Widget:mouseUp( time, x, y, button )
     if self:intersects( x, y ) then
         for _,child in pairs(self.children) do
-            if child.mouseMoved then child:mouseUp( time, x, y, button ) end
+            child:mouseUp( time, x, y, button )
         end
     end
 end
@@ -86,6 +84,9 @@ function Widget:keyPressed( keyCode, codepoint )
 end
 
 function Widget:addChild( widget )
+    if instanceOf(widget, Widget) ~= true then
+        error('Trying to add non widget as child')
+    end
     widget.parent = self
     table.insert(self.children, widget)
 end
