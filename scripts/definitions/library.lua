@@ -83,25 +83,25 @@ LineList = {}
 ---@param y integer
 function LineList:addPoint(x, y) end
 
----@class ProcessReader 
----@overload fun():ProcessReader
-ProcessReader = {}
+---@class SubProcess
+---@overload fun():SubProcess
+SubProcess = {}
 ---Open the process for reading
 ---@return boolean Success
-function ProcessReader:open() end
+function SubProcess:open() end
 ---Close the process
-function ProcessReader:close() end
+function SubProcess:close() end
 ---Add a command line argument
 ---@param argument string
-function ProcessReader:add(argument) end
+function SubProcess:add(argument) end
 ---Set the executable file path
 ---@param executable string
-function ProcessReader:set(executable) end
+function SubProcess:set(executable) end
 ---Clear all arguments
-function ProcessReader:clear() end
+function SubProcess:clear() end
 ---Read from process
 ---@return boolean moreToCome, string data
-function ProcessReader:read() end
+function SubProcess:read() end
 
 ---@class Rectangle : Renderable
 ---@field texture Texture
@@ -158,6 +158,7 @@ Texture = {}
 
 ---Application instance
 ---@type Application
+---@diagnostic disable-next-line: missing-fields
 app = {}
 
 ---Add a task to the task list.

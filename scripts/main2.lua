@@ -213,7 +213,7 @@ function MainScreen2:runTask(host, command)
 
 		self.renderList:add(renderList)
 
-		local proc <close> = ProcessReader()
+		local proc <close> = SubProcess()
 
 		if host ~= 'localhost' then
 			proc:set('ssh')

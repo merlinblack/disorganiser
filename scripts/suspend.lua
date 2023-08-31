@@ -41,7 +41,7 @@ function Suspend:deactivate()
 end
 
 function Suspend:setDisplayPower(value)
-	local proc <close> = ProcessReader()
+	local proc <close> = SubProcess()
 
 	proc:set('xrandr')
 	proc:add('--output')

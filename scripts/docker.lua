@@ -42,17 +42,17 @@ function Docker:build()
 end
 
 function Docker:durdur()
-	self:runOnVader('durdur 2>&1')
+	self:runOnVader('durdur')
 end
 
 function Docker:start(what)
-	prog = 'durdur 2>&1;başlat ' .. what .. ' 2>&1'
+	prog = 'durdur;başlat ' .. what
 	self:runOnVader(prog)
 end
 
 function Docker:runOnVader(prog)
 	if self.alreadyRunning then return end
-	
+
 	self.alreadyRunning = true
 
 	function task()
@@ -72,7 +72,7 @@ function Docker:runOnVader(prog)
 
 		self.renderList:add(renderList)
 
-		local proc <close> = ProcessReader()
+		local proc <close> = SubProcess()
 		proc:set('ssh')
 		proc:add('vader.local')
 		proc:add(prog)

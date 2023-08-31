@@ -1,6 +1,6 @@
 
 function ping(address)
-	local proc <close> = ProcessReader()
+	local proc <close> = SubProcess()
 	proc:set('scripts/alive.sh')
 	proc:add(address)
 	proc:open()

@@ -81,7 +81,7 @@ end
 
 function LedTouch:sshModelB(command)
 	write ('ModelB command: ' .. command)
-	local proc <close> = ProcessReader()
+	local proc <close> = SubProcess()
 
 	proc:set('ssh')
 	proc:add('modelb.local')

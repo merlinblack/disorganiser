@@ -94,7 +94,7 @@ function animate()
 end
 
 function lc(command)
-	local proc <close> = ProcessReader()
+	local proc <close> = SubProcess()
 
 	proc:set('bash')
 	proc:add('-c')
@@ -153,7 +153,7 @@ function citizenship()
 end
 
 function octavoDropboxStatus()
-	local proc <close> = ProcessReader()
+	local proc <close> = SubProcess()
 	proc:set('ssh')
 	proc:add('octavo.local')
 	proc:add('dropbox')

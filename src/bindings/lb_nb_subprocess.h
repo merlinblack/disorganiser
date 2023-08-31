@@ -1,12 +1,12 @@
-#ifndef __LB_NB_PROCESS_READER_H
-#define __LB_NB_PROCESS_READER_H
+#ifndef __LB_NB_SUBPROCESS__H
+#define __LB_NB_SUBPROCESS__H
 
 #include "LuaBinding.h"
-#include "non_blocking_process_read.h"
+#include "non_blocking_process.h"
 
-struct ProcessReaderBinding : ManualBind::Binding<ProcessReaderBinding, NonBlockingProcessRead>
+struct SubProcessBinding : ManualBind::Binding<SubProcessBinding, NonBlockingProcess>
 {
-	static constexpr const char* class_name = "ProcessReader";
+	static constexpr const char* class_name = "SubProcess";
 
 	static luaL_Reg* members()
 	{
@@ -17,6 +17,7 @@ struct ProcessReaderBinding : ManualBind::Binding<ProcessReaderBinding, NonBlock
 			{ "set", set },
 			{ "clear", clear },
 			{ "read", read },
+			{ "write", write },
 			{ nullptr, nullptr }
 		};
 		return members;
@@ -24,28 +25,28 @@ struct ProcessReaderBinding : ManualBind::Binding<ProcessReaderBinding, NonBlock
 
 	static int create(lua_State *L)
 	{
-		NonBlockingProcessReadPtr nbpr = std::make_shared<NonBlockingProcessRead>();
+		NonBlockingProcessPtr nbpr = std::make_shared<NonBlockingProcess>();
 		push( L, nbpr );
 		return 1;
 	}
 
 	static int open(lua_State* L)
 	{
-		NonBlockingProcessReadPtr nbpr = fromStack(L,1);
+		NonBlockingProcessPtr nbpr = fromStack(L,1);
 		lua_pushboolean(L, nbpr->open());
 		return 1;
 	}
 
 	static int close(lua_State* L)
 	{
-		NonBlockingProcessReadPtr nbpr = fromStack(L,1);
+		NonBlockingProcessPtr nbpr = fromStack(L,1);
 		nbpr->close();
 		return 0;
 	}
 
 	static int add(lua_State* L)
 	{
-		NonBlockingProcessReadPtr nbpr = fromStack(L,1);
+		NonBlockingProcessPtr nbpr = fromStack(L,1);
 		std::string arg( luaL_checkstring(L, 2));
 		nbpr->addArgument(arg);
 		return 0;
@@ -53,7 +54,7 @@ struct ProcessReaderBinding : ManualBind::Binding<ProcessReaderBinding, NonBlock
 
 	static int set(lua_State* L)
 	{
-		NonBlockingProcessReadPtr nbpr = fromStack(L,1);
+		NonBlockingProcessPtr nbpr = fromStack(L,1);
 		std::string program( luaL_checkstring(L, 2));
 		nbpr->setProgram(program);
 		return 0;
@@ -61,19 +62,28 @@ struct ProcessReaderBinding : ManualBind::Binding<ProcessReaderBinding, NonBlock
 
 	static int clear(lua_State* L)
 	{
-		NonBlockingProcessReadPtr nbpr = fromStack(L,1);
+		NonBlockingProcessPtr nbpr = fromStack(L,1);
 		nbpr->clearArgs();
 		return 0;
 	}
 
 	static int read(lua_State* L)
 	{
-		NonBlockingProcessReadPtr nbpr = fromStack(L,1);
+		NonBlockingProcessPtr nbptr = fromStack(L,1);
 		std::string buffer;
-		lua_pushboolean(L, nbpr->read(buffer));
+		lua_pushboolean(L, nbptr->read(buffer));
 		lua_pushstring(L, buffer.c_str());
 		return 2;
 	}
+
+	static int write(lua_State* L)
+	{
+		NonBlockingProcessPtr nbptr = fromStack(L,1);
+		std::string buffer = lua_tostring(L, 2);
+
+		lua_pushboolean(L, nbptr->write(buffer));
+		return 1;
+	}
 };
 
-#endif // __LB_NB_PROCESS_READER_H
+#endif // __LB_NB_SUBPROCESS_H
