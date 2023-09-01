@@ -51,6 +51,8 @@ target_link_libraries(disorganiser
 
 set_property(TARGET disorganiser PROPERTY CXX_STANDARD 17)
 set_property(TARGET disorganiser PROPERTY CXX_STANDARD_REQUIRED ON)
+# So dlopen'd Lua libs can find lusopen_package
+set_property(TARGET disorganiser PROPERTY ENABLE_EXPORTS ON)
 
 add_custom_target(data-target ALL DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/media" "${CMAKE_CURRENT_BINARY_DIR}/scripts")
 

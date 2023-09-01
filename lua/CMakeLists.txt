@@ -26,11 +26,12 @@ list(REMOVE_ITEM Lua_LIB_SRCS ${Lua_Interpreter} ${Lua_Compiler})
 set (Lua_INCLUDE_DIRS lua/${LUA_DIRECTORY}/src PARENT_SCOPE )
 
 # create the library
-add_library (lua ${Lua_LIB_SRCS})
+add_library (lua STATIC ${Lua_LIB_SRCS})
 
 # create the lua executable and link it to the lib
 add_executable (luaexec ${Lua_Interpreter})
 target_link_libraries (luaexec ${Lua_LIBRARIES} ${Lua_EXEC_LIBRARIES})
+set_property(TARGET luaexec PROPERTY ENABLE_EXPORTS ON)
 
 # name the executable lua just like the library
 set_target_properties(luaexec PROPERTIES OUTPUT_NAME lua)
@@ -38,3 +39,4 @@ set_target_properties(luaexec PROPERTIES OUTPUT_NAME lua)
 # create the luac
 add_executable (luac ${Lua_Compiler})
 target_link_libraries (luac ${Lua_LIBRARIES} ${Lua_EXEC_LIBRARIES})
+set_property(TARGET luac PROPERTY ENABLE_EXPORTS ON)
