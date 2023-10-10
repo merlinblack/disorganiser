@@ -19,13 +19,18 @@ require 'garbage'
 require 'vader'
 require 'main'
 require 'main2'
+require 'minimenu'
 require 'systemupdate'
 require 'screensaver'
 require 'console'
 require 'calendar'
 require 'ledtouch'
 
-mainScreen:activate()
+if app.onMacMini then
+	miniMenu:activate()
+else
+	mainScreen:activate()
+end
 
 print('Version: ' .. app.version)
 

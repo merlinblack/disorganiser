@@ -19,29 +19,35 @@ function MainScreen:build()
 	local rectangle <close> = Rectangle(texture, dest, src)
 	self.renderList:add(rectangle)
 
-	local btn = { 30, 300, 150, 110 }
 	local textcolor = Color 'f30a4a'
 	local backcolor = textcolor:clone()
 	backcolor.a = 0x20
+
+	local btn = { 30, 160, 150, 110 }
+
+	function nextPos(btn)
+		btn[1] = btn[1] + 180
+		if btn[1] + btn[3] > app.width then
+			btn[1] = 30
+			btn[2] = btn[2] + 140
+		end
+		return btn
+	end
+
+	self:addButton(btn, 'Hava', function() weatherTrends:activate() end, textcolor, nil, backcolor)
+	btn = nextPos(btn)
+	self:addButton(btn, 'Takvim', function() calendar:activate() end, textcolor, nil, backcolor)
+	btn = nextPos(btn)
+	self:addButton(btn, 'Docker', function() docker:activate() end, textcolor, nil, backcolor)
+	btn = nextPos(btn)
+	self:addButton(btn, 'Sistem', function() mainScreen2:activate() end, textcolor, nil, backcolor)
+	btn = nextPos(btn)
+	self:addButton(btn, 'Kilidini\naç', function() unlock:activate() end, textcolor, nil, backcolor)
+	btn = nextPos(btn)
+	self:addButton(btn, 'Tekrar\nBaşlat', function() restart() end, textcolor, nil, backcolor)
+	btn = nextPos(btn)
 	self:addButton(btn, 'Çikiş', function() quit() end, textcolor, nil, backcolor)
 
-	btn[2] = btn[2] - 140
-	self:addButton(btn, 'Docker', function() docker:activate() end, textcolor, nil, backcolor)
-
-	btn[1] = btn[1] + 180
-	self:addButton(btn, 'Kilidini\naç', function() unlock:activate() end, textcolor, nil, backcolor)
-
-	btn[2] = btn[2] + 140
-	self:addButton(btn, 'Tekrar\nBaşlat', function() restart() end, textcolor, nil, backcolor)
-
-	btn[1] = btn[1] + 180
-	self:addButton(btn, 'Hava', function() weatherTrends:activate() end, textcolor, nil, backcolor)
-
-	btn[2] = btn[2] - 140
-	self:addButton(btn, 'Takvim', function() calendar:activate() end, textcolor, nil, backcolor)
-
-	btn[1] = btn[1] + 180
-	self:addButton(btn, 'Sistem', function() mainScreen2:activate() end, textcolor, nil, backcolor)
 
 	local weatherRect = { 20, 5, 260, 130 }
 	local weatherbox <close> = Rectangle(backcolor, true, weatherRect)

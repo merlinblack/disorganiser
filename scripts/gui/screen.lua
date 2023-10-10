@@ -44,6 +44,12 @@ function Screen:deactivate()
 	self.previousScreen = nil
 end
 
+function Screen:activatePrevious()
+	if self.previousScreen then
+		self.previousScreen:activate()
+	end
+end
+
 function Screen:isActive()
 	return getCurrentScreen() == self
 end

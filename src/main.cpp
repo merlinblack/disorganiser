@@ -88,14 +88,14 @@ void Logging(void *userdata, int category, SDL_LogPriority priority, const char*
 
 int main(int argc, char *argv[])
 {
-    bool onRaspberry = false;
+    bool fullscreen = false;
     bool restartWanted = false;
 
     if (argc > 1)
     {
-        if (std::string(argv[1]) == "rpi")
+        if (std::string(argv[1]) == "fullscreen")
         {
-            onRaspberry = true;
+            fullscreen = true;
         }
     }
 
@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
 
         app->initLuaApp(app);
 
-        app->init(onRaspberry);
+        app->init(fullscreen);
 
         app->eventLoop();
 

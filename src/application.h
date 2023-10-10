@@ -12,16 +12,19 @@
 
 class Application;
 
-//#define BUYUK
+#define MACMINI
+//#define RASPBERRYPI
 
-#ifdef NOBUYUK	// Defined by deploy scripts
-#undef BUYUK	// Make sure 'big' is turned off
+#ifdef MACMINI
+#define WINDOW_WIDTH 600
+#define WINDOW_HEIGHT 1024
 #endif
-
-#ifndef BUYUK
+#ifdef RASPBERRYPI
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 480
-#else
+#endif
+
+#ifndef WINDOW_WIDTH
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1200
 #endif
@@ -32,6 +35,8 @@ class Application
 {
 	SDLptr sdl;
 	bool onRaspberry;
+	bool onMacMini;
+	bool isFullscreen;
 	bool shouldStop;
 	bool shouldRestart;
 
@@ -47,9 +52,9 @@ class Application
 	virtual ~Application();
 
 	/**
-	 * \param onRaspbberry_ configure for my Raspberry Pi with touchscreen
+	 * \param fullscreen run fullscreen
 	 */
-	bool init(bool onRaspberry_);
+	bool init(bool fullscreen);
 	void shutdown();
 
 	void handleTextInput(const SDL_Event &event);
@@ -65,7 +70,24 @@ class Application
 	/**
 	 * Allow Lua to get/set these
 	 */
-	bool getOnRaspberry() { return onRaspberry; }
+	bool getOnRaspberry()
+	{
+#ifdef RASPBERRYPI
+		return true;
+#else
+		return false;
+#endif
+	}
+
+	bool getOnMacMini()
+	{
+#ifdef MACMINI
+		return true;
+#else
+		return false;
+#endif
+	}
+
 	bool getShouldStop() { return shouldStop; }
 	void setShouldStop(bool val) { shouldStop = val; }
 	bool getShouldRestart() { return shouldRestart; }

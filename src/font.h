@@ -18,12 +18,12 @@ class Font
 	public:
 	Font(const std::string& path, int size);
 
-	~Font() { TTF_CloseFont(font); SDL_Log("~Font %lx\n", (unsigned long)this); }
+	~Font() { if (font) { TTF_CloseFont(font); } SDL_Log("~Font %lx\n", (unsigned long)this); }
 
 	bool hasFailed() { return failed; }
 	const std::string& getLastErrorMessage() { return lastErrorMessage; }
 	
-	int lineHeight() { return TTF_FontLineSkip(font); }
+	int lineHeight() { return font ? TTF_FontLineSkip(font) : 0; }
 
 	std::pair<int,int> sizeText(const std::string& text);
 	TexturePtr renderTextQuick(const SDL_Renderer* renderer, const std::string& text, SDL_Color color);

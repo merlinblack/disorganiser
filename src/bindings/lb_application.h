@@ -19,6 +19,7 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 			{ "shouldRestart", get, setRestartFlag },
 			{ "ticks", get, nullptr },
 			{ "onRaspberry", get, nullptr },
+			{ "onMacMini", get, nullptr },
 			{ "renderer", get, nullptr },
 			{ "width", get, nullptr },
 			{ "height", get, nullptr },
@@ -91,6 +92,12 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 		if (field == "onRaspberry")
 		{
 			lua_pushboolean(L, app->getOnRaspberry());
+			return 1;
+		}
+
+		if (field == "onMacMini")
+		{
+			lua_pushboolean(L, app->getOnMacMini());
 			return 1;
 		}
 

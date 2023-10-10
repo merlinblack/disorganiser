@@ -25,12 +25,12 @@ Application::~Application()
 {
 }
 
-bool Application::init(bool onRaspberry_ = false)
+bool Application::init(bool fullscreen)
 {
-	onRaspberry = onRaspberry_;
+	isFullscreen = fullscreen;
 
 	bool failed;
-	if (onRaspberry)
+	if (isFullscreen)
 		sdl->withFullscreenDesktop();
 
 	failed = sdl

@@ -21,11 +21,22 @@ function ScreenSaver:setTime(secs)
 end
 
 function ScreenSaver:setPicture(filename)
-	local width = app.width
-	local height = app.height - clockHeight
-	print('Setting',filename)
 	self.renderList:clear()
 	self.renderList:shouldRender()
+
+	local width = app.width
+	local height = app.height
+
+	if app.onRaspberry then
+		height = height - clockHeight
+	end
+
+	if app.onMacMini then
+		local rectangle <close> = Rectangle(Color 'fff', true, {0,0,app.width,app.height})
+		self.renderList:add(rectangle)
+	end
+
+	print('Setting',filename)
 	local texture <close> = Texture(filename)
 	local src = { 0, 0, texture.width, texture.height}
 	-- Zoom
@@ -44,12 +55,14 @@ function ScreenSaver:setPicture(filename)
 	local rectangle = Rectangle(texture, dest, src);
 	self.renderList:add(rectangle)
 
-	local texture <close> = Texture(self.font, weather.temperature .. '°', Color('bbb'))
-	local yjitter = math.random(5, app.height - 25 - texture.height)
-	local rectangle = Rectangle(texture, {app.width - texture.width - 25, yjitter, 0, 0})
-	self.renderList:add(rectangle)
+	if app.onRaspberry then
+		local texture <close> = Texture(self.font, weather.temperature .. '°', Color('bbb'))
+		local yjitter = math.random(5, app.height - 25 - texture.height)
+		local rectangle = Rectangle(texture, {app.width - texture.width - 25, yjitter, 0, 0})
+		self.renderList:add(rectangle)
 
-	self.renderList:add(clockRenderList)
+		self.renderList:add(clockRenderList)
+	end
 end
 
 function ScreenSaver:mouseClick(time, x, y, button)
@@ -98,7 +111,7 @@ function screenSaveTask()
 end
 
 function startScreenSave()
-	screenSaver:setDirectory('media/alara/')
+	screenSaver:setDirectory('media/family/')
 	addTask(screenSaveTask, 'screensaver')
 end
 

@@ -104,6 +104,8 @@ function readLocalWeatherSummary(hours)
 
 	if status == 200 then
 		weatherSummaryData = json.decode(data)
+		-- Deal with odd behavour on macmini
+		weatherSummaryData.__array = nil
 	else
 		weatherSummaryData = nil
 	end

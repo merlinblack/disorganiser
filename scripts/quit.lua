@@ -24,3 +24,26 @@ function restart()
 		'quit'
 	)
 end
+
+function poweroff()
+	quiting = true
+	addTask(
+		function()
+			if confirm('Gerçekten güç kapalı?') then
+				print 'Turning the power off'
+				local process = SubProcess()
+				process:set('sudo')
+				process:add('poweroff')
+				process:open()
+				local more = true, output
+				while more do
+					more, output = process:read()
+					print(output)
+				end
+				process:close()
+			end
+			quitting = nil
+		end,
+		'poweroff'
+	)
+end

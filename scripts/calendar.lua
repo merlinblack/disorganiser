@@ -66,21 +66,27 @@ function Calendar:init()
     self.font2 = Font('media/mono.ttf', 24)
     self.font3 = Font('media/font.ttf', 18)
     self.text = text
+    self.portrait = app.width < app.height
     self:buildTextTextures()
     self:calcAppointments()
 
     self.calendarRenderList = RenderList()
-
     Screen.init(self)
 
     self.renderList:add(self.calendarRenderList)
+
 
     local titleTex <close> = Texture(self.font, text.calendar, Color 'fff')
     local title <close> = Rectangle(titleTex, (app.width // 2) - (titleTex.width // 2), 5 )
     self.renderList:add(title)
 
     local titleTex <close> = Texture(self.font2, text.appointments, Color 'fff')
-    local title <close> = Rectangle(titleTex, (3 * app.width // 4) - (titleTex.width // 2), 34 )
+    local x, y = (3 * app.width // 4) - (titleTex.width // 2), 34
+    if self.portrait then
+        x = 20
+        y = (app.height // 2) - 35
+    end
+    local title <close> = Rectangle(titleTex, x, y )
     self.renderList:add(title)
 
     local x = 20
@@ -95,9 +101,9 @@ function Calendar:init()
 
     local buttonTop = app.height - 50 - clockHeight
     self:addButton({  0, buttonTop, 140, 50}, text.previous, function() self:previous() end, Color 'ffffffff')
-    self:addButton({150, buttonTop, 150, 50}, text.today, function() self:today() end, Color 'ffffffff')
-    self:addButton({310, buttonTop, 165, 50}, text.next, function() self:next() end, Color 'ffffffff')
-    self:addButton({app.width - 145, buttonTop, 140, 50}, 'Geri', function() mainScreen:activate() end, Color 'ffffffff')
+    self:addButton({145, buttonTop, 150, 50}, text.today, function() self:today() end, Color 'ffffffff')
+    self:addButton({300, buttonTop, 165, 50}, text.next, function() self:next() end, Color 'ffffffff')
+    self:addButton({app.width - 120, buttonTop, 115, 50}, 'Geri', function() self:activatePrevious() end, Color 'ffffffff')
     self.renderList:add(clockRenderList)
 end
 
@@ -229,7 +235,14 @@ end
 function Calendar:buildAppointments()
     local start = os.time { year = self.year, month = self.month, day = 1 }
     local limit = start + 60*60*24*60 -- 60 days
-    local y=74
+    local x = (app.width // 2) + 20
+    local y = 74
+    local right_column = x
+    if self.portrait then 
+        x = 20
+        y = app.height // 2
+        right_column = app.width // 2
+    end
     local max = 4
 
     for _, appointment in pairs(self.appointments) do
@@ -238,9 +251,11 @@ function Calendar:buildAppointments()
             local wday = os.date('*t', appointment.timestamp).wday
             
             local texture <close> = Texture(self.font3, appointment.title, Color(appointment.color))
-            local rectangle <close> = Rectangle(texture, app.width // 2 + 20, y)
+            local rectangle <close> = Rectangle(texture, x, y)
             self.calendarRenderList:add(rectangle)
-            y = y + self.font3.lineHeight + 1
+            if not self.portrait then
+                y = y + self.font3.lineHeight + 1
+            end
             
             local texture <close> = Texture(self.font3, 
                 string.format('%s %d%s %s', 
@@ -251,7 +266,7 @@ function Calendar:buildAppointments()
                 ),
                 Color(appointment.color)
             )
-            local rectangle <close> = Rectangle(texture, app.width // 2 + 20, y)
+            local rectangle <close> = Rectangle(texture, right_column, y)
             self.calendarRenderList:add(rectangle)
             y = y + self.font3.lineHeight + 5
             max = max - 1

@@ -14,6 +14,7 @@ Font::Font(const std::string &path, int size) : font(nullptr), failed(false)
 
 std::pair<int,int> Font::sizeText(const std::string &text)
 {
+	SDL_assert(font != nullptr);
 	int width, height;
 	if (TTF_SizeUTF8(font, text.c_str(), &width, &height))
 	{

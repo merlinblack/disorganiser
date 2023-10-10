@@ -15,6 +15,7 @@
 ---@field width integer Application window width in pixels.
 ---@field height integer Application window height in pixels.
 ---@field onRaspberry boolean Is the application running on my raspberry pi.
+---@field onMacMini boolean Is the application running on our Fedora running MacMini picture frame
 ---@field version string Version string
 
 ---@class Atlas
