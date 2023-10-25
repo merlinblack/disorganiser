@@ -5,23 +5,37 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "(lldb) Launch",
-			"type": "cppdbg",
-			"request": "launch",
-			"program": "${command:cmake.launchTargetPath}",
-			"args": [],
-			"stopAtEntry": false,
-			"cwd": "${command:cmake.getLaunchTargetDirectory}",
-			"environment": [],
-			"externalConsole": false,
-			"MIMode": "lldb"
-		},
-		{
-			"name": "(gdb) Launch",
+			"name": "Launch (default config)",
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${command:cmake.launchTargetPath}",
 			"args": [
+			],
+			"stopAtEntry": false,
+			"cwd": "${command:cmake.getLaunchTargetDirectory}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				},
+				{
+					"description": "Follow the 'parent' or 'child' after fork",
+					"text": "-gdb-set follow-fork-mode parent"
+				}
+			]
+		},
+		{
+			"name": "Launch (picture frame config)",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${command:cmake.launchTargetPath}",
+			"args": [
+				"--config",
+				"../picture-frame-config.lua"
 			],
 			"stopAtEntry": false,
 			"cwd": "${command:cmake.getLaunchTargetDirectory}",

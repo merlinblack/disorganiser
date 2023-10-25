@@ -46,7 +46,7 @@ class Application
 	 */
 	bool initSDL(bool fullscreen);
 	void initLuaAppPtr(ApplicationPtr app);
-	void loadConfig();
+	void loadConfig(std::string configPath);
 	void initSystem();
 	void shutdown();
 
