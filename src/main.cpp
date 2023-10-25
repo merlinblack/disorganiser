@@ -89,6 +89,7 @@ void Logging(void *userdata, int category, SDL_LogPriority priority, const char*
 
 int main(int argc, char *argv[])
 {
+    bool shouldQuit = false;
     bool fullscreen = false;
     std::string configPath = "";
 
@@ -111,11 +112,15 @@ int main(int argc, char *argv[])
             case 'c':
                 configPath = optarg;
                 break;
+            case '?':
+                shouldQuit = true;
+                break;
         }
     }
 
     bool restartWanted = false;
 
+    if (!shouldQuit)
     {
         SDL_LogSetOutputFunction(Logging, nullptr);
 
