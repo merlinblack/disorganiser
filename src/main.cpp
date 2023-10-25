@@ -104,9 +104,13 @@ int main(int argc, char *argv[])
 
         ApplicationPtr app = std::make_shared<Application>();
 
-        app->initLuaApp(app);
+        app->initLuaAppPtr(app);
 
-        app->init(fullscreen);
+        app->loadConfig();
+
+        app->initSDL(fullscreen);
+
+        app->initSystem();
 
         app->eventLoop();
 

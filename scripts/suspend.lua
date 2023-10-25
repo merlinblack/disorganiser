@@ -19,7 +19,7 @@ function Suspend:activate()
 	function wakeup()
 		self:setDisplayPower('--off')
 		print('Screen power off')
-	
+
 		while not self.shouldWake and not vaderAlive do
 			yield()
 		end
@@ -43,9 +43,13 @@ end
 function Suspend:setDisplayPower(value)
 	local proc <close> = SubProcess()
 
+	if displayNameForXrandr == nil then
+		displayNameForXrandr = 'HDMI-1'
+	end
+
 	proc:set('xrandr')
 	proc:add('--output')
-	proc:add('DSI-1')
+	proc:add(displayNameForXrandr)
 	proc:add(value)
 	proc:open()
 	local more = true

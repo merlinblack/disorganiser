@@ -16,6 +16,8 @@
 ---@field height integer Application window height in pixels.
 ---@field onRaspberry boolean Is the application running on my raspberry pi.
 ---@field onMacMini boolean Is the application running on our Fedora running MacMini picture frame
+---@field isPictureFrame boolean Is the application running as a picture frame
+---@field hasTouchScreen boolean Is the interface a touch screen
 ---@field version string Version string
 
 ---@class Atlas

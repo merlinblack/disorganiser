@@ -7,12 +7,18 @@
 #include <stdio.h>
 #include <memory>
 #include <sstream>
+#include <unistd.h>
 
 using ManualBind::LuaRef;
 
 Application::Application() : 
 	onRaspberry(false),
-	shouldStop(false)
+	onMacMini(false),
+	isPictureFrame(false),
+	shouldStop(false),
+	width(800),
+	height(600),
+	sdlInitialised(false)
 {
 	sdl = std::make_shared<SDL>();
 	timer = std::make_shared<Timer>();
@@ -25,7 +31,7 @@ Application::~Application()
 {
 }
 
-bool Application::init(bool fullscreen)
+bool Application::initSDL(bool fullscreen)
 {
 	isFullscreen = fullscreen;
 
@@ -50,8 +56,8 @@ bool Application::init(bool fullscreen)
 		"Disorganiser",
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		WINDOW_WIDTH,
-		WINDOW_HEIGHT
+		width,
+		height
 		);
 
 	if (failed)
@@ -60,30 +66,47 @@ bool Application::init(bool fullscreen)
 		return true;
 	}
 
+	sdlInitialised = true;
+
 	sdl->clear();
 	sdl->present();
 
-	if (onRaspberry)
-	{
-		SDL_ShowCursor(SDL_DISABLE);
-	}
-
 	timer->withInterval(10)->start();
-
-	if (scripts->loadFromFile("scripts/init.lua"))
-	{
-		shouldStop = true;
-		return true;
-	}
 
 	return false;
 }
 
-void Application::initLuaApp(ApplicationPtr app)
+void Application::initLuaAppPtr(ApplicationPtr app)
 {
 	lua_State* L = scripts->getMainLuaState();
 	ApplicationBinding::push(L, app);
 	lua_setglobal(L, "app");
+}
+
+void Application::loadConfig()
+{
+	std::stringstream ss;
+
+	ss << getenv("HOME");
+	ss << "/.config/disorganiser/config.lua";
+
+	if (scripts->loadFromFile(ss.str()))
+	{
+		shouldStop = true;
+		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not load configuration.");
+		return;
+	}
+
+	// Run config file
+	scripts->resume();
+}
+
+void Application::initSystem()
+{
+	if (scripts->loadFromFile("scripts/init.lua"))
+	{
+		shouldStop = true;
+	}
 }
 
 void Application::shutdown()

@@ -18,11 +18,13 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 			{ "shouldStop", get, setStopFlag },
 			{ "shouldRestart", get, setRestartFlag },
 			{ "ticks", get, nullptr },
-			{ "onRaspberry", get, nullptr },
-			{ "onMacMini", get, nullptr },
+			{ "onRaspberry", get, set },
+			{ "onMacMini", get, set },
 			{ "renderer", get, nullptr },
-			{ "width", get, nullptr },
-			{ "height", get, nullptr },
+			{ "width", get, set },
+			{ "height", get, set },
+			{ "isPictureFrame", get, set },
+			{ "hasTouchScreen", get, set },
 			{ "version", get, nullptr },
 			{ "renderList", getRenderList, setRenderList },
 			{ "overlay", getOverlay, setOverlay },
@@ -61,13 +63,25 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 		
 		if (field == "width")
 		{
-			lua_pushinteger(L, WINDOW_WIDTH);
+			lua_pushinteger(L, app->getWidth());
 			return 1;
 		}
 
 		if (field == "height")
 		{
-			lua_pushinteger(L, WINDOW_HEIGHT);
+			lua_pushinteger(L, app->getHeight());
+			return 1;
+		}
+
+		if (field == "isPictureFrame")
+		{
+			lua_pushboolean(L, app->getIsPictureFrame());
+			return 1;
+		}
+
+		if (field == "hasTouchScreen")
+		{
+			lua_pushboolean(L, app->getHasTouchScreen());
 			return 1;
 		}
 
@@ -101,7 +115,51 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 			return 1;
 		}
 
-		return luaL_error(L, "Uknown field for Applicatrion: %s", field.c_str());
+		return luaL_error(L, "Uknown field for Application: %s", field.c_str());
+	}
+
+	static int set(lua_State* L)
+	{
+		ApplicationPtr app = fromStack(L, 1);
+		std::string field(lua_tostring(L, 2));
+
+		if (field == "width")
+		{
+			app->setWidth(lua_tointeger(L, 3));
+			return 0;
+		}
+	
+		if (field == "height")
+		{
+			app->setHeight(lua_tointeger(L, 3));
+			return 0;
+		}
+	
+		if (field == "isPictureFrame")
+		{
+			app->setIsPictureFrame(lua_toboolean(L, 3));
+			return 0;
+		}
+	
+		if (field == "hasTouchScreen")
+		{
+			app->setHasTouchScreen(lua_toboolean(L, 3));
+			return 0;
+		}
+	
+		if (field == "onRaspberry")
+		{
+			app->setOnRaspberry(lua_toboolean(L, 3));
+			return 0;
+		}
+
+		if (field == "onMacMini")
+		{
+			app->setOnMacMini(lua_toboolean(L, 3));
+			return 0;
+		}
+
+		return luaL_error(L, "Uknown field for Application: %s", field.c_str());
 	}
 
 	static int setStopFlag(lua_State* L)

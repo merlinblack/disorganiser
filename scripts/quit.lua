@@ -35,7 +35,8 @@ function poweroff()
 				process:set('sudo')
 				process:add('poweroff')
 				process:open()
-				local more = true, output
+				local more = true
+				local output
 				while more do
 					more, output = process:read()
 					print(output)

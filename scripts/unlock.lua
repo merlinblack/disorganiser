@@ -28,7 +28,7 @@ function Unlock:build()
 	btn = { app.width-105, app.height-clockHeight-70, 100, 60}
 	self:addButton(btn, 'G', function() mainScreen:activate() end, textcolor, nil, backcolor)
 
-	self.animation = Rectangle(app.emptyTexture, {app.width/8,5,0,0})
+	self.animation = Rectangle(app.emptyTexture, {app.width//8,5,0,0})
 	self.renderList:add(self.animation)
 end
 
