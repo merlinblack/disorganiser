@@ -83,12 +83,17 @@ void Application::initLuaAppPtr(ApplicationPtr app)
 	lua_setglobal(L, "app");
 }
 
-void Application::loadConfig()
+void Application::loadConfig(std::string configPath)
 {
 	std::stringstream ss;
 
-	ss << getenv("HOME");
-	ss << "/.config/disorganiser/config.lua";
+	if (configPath.empty()) {
+		ss << getenv("HOME");
+		ss << "/.config/disorganiser/config.lua";
+	}
+	else {
+		ss << configPath;
+	}
 
 	if (scripts->loadFromFile(ss.str()))
 	{

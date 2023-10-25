@@ -1,8 +1,9 @@
 #include "application.h"
 #include "sdl.h"
+#include "script_manager.h"
 #include <memory>
 #include <iostream>
-#include "script_manager.h"
+#include <getopt.h>
 
 
 void PrintEvent(const SDL_Event * event)
@@ -89,15 +90,31 @@ void Logging(void *userdata, int category, SDL_LogPriority priority, const char*
 int main(int argc, char *argv[])
 {
     bool fullscreen = false;
-    bool restartWanted = false;
+    std::string configPath = "";
 
-    if (argc > 1)
-    {
-        if (std::string(argv[1]) == "fullscreen")
-        {
-            fullscreen = true;
+    option longOptions[] = {
+        { "fullscreen", no_argument, nullptr, 'f'},
+        { "config", required_argument, nullptr, 'c'},
+        {0}
+    };
+
+    while(true) {
+        const int opt = getopt_long(argc, argv, "fc:", longOptions, 0 );
+
+        if (opt == -1)
+            break;
+
+        switch (opt) {
+            case 'f':
+                fullscreen = true;
+                break;
+            case 'c':
+                configPath = optarg;
+                break;
         }
     }
+
+    bool restartWanted = false;
 
     {
         SDL_LogSetOutputFunction(Logging, nullptr);
@@ -106,7 +123,7 @@ int main(int argc, char *argv[])
 
         app->initLuaAppPtr(app);
 
-        app->loadConfig();
+        app->loadConfig(configPath);
 
         app->initSDL(fullscreen);
 
