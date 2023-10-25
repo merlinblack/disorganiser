@@ -12,23 +12,6 @@
 
 class Application;
 
-#define MACMINI
-//#define RASPBERRYPI
-
-#ifdef MACMINI
-#define WINDOW_WIDTH 600
-#define WINDOW_HEIGHT 1024
-#endif
-#ifdef RASPBERRYPI
-#define WINDOW_WIDTH 800
-#define WINDOW_HEIGHT 480
-#endif
-
-#ifndef WINDOW_WIDTH
-#define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1200
-#endif
-
 using ApplicationPtr = std::shared_ptr<Application>;
 
 class Application
@@ -39,6 +22,13 @@ class Application
 	bool isFullscreen;
 	bool shouldStop;
 	bool shouldRestart;
+	bool isPictureFrame;
+	bool hasTouchScreen;
+
+	bool sdlInitialised;
+
+	int width;
+	int height;
 
 	TimerPtr timer;
 	ScriptManagerPtr scripts;
@@ -54,7 +44,10 @@ class Application
 	/**
 	 * \param fullscreen run fullscreen
 	 */
-	bool init(bool fullscreen);
+	bool initSDL(bool fullscreen);
+	void initLuaAppPtr(ApplicationPtr app);
+	void loadConfig();
+	void initSystem();
 	void shutdown();
 
 	void handleTextInput(const SDL_Event &event);
@@ -70,24 +63,18 @@ class Application
 	/**
 	 * Allow Lua to get/set these
 	 */
-	bool getOnRaspberry()
-	{
-#ifdef RASPBERRYPI
-		return true;
-#else
-		return false;
-#endif
-	}
-
-	bool getOnMacMini()
-	{
-#ifdef MACMINI
-		return true;
-#else
-		return false;
-#endif
-	}
-
+	bool getOnRaspberry() { return onRaspberry; }
+	void setOnRaspberry(bool val) { onRaspberry = val; }
+	bool getOnMacMini() { return onMacMini; }
+	void setOnMacMini(bool val) { onMacMini = val; }
+	bool getIsPictureFrame() { return isPictureFrame; }
+	void setIsPictureFrame(bool val) { isPictureFrame = val; }
+	bool getHasTouchScreen() { return hasTouchScreen; }
+	void setHasTouchScreen(bool val) { hasTouchScreen = val; }
+	int getWidth() { return width; }
+	void setWidth(int val) { if(!sdlInitialised) { width = val; } }
+	int getHeight() { return height; }
+	void setHeight(int val) { if(!sdlInitialised) { height = val; } }
 	bool getShouldStop() { return shouldStop; }
 	void setShouldStop(bool val) { shouldStop = val; }
 	bool getShouldRestart() { return shouldRestart; }
@@ -102,8 +89,6 @@ class Application
 	void setShowCursor(bool enable);
 
 	TexturePtr getEmptyTexture();
-
-	void initLuaApp(ApplicationPtr app);
 };
 
 #endif // __APPLICATION_H 

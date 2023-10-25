@@ -5,6 +5,9 @@ require 'ping'
 vaderAlive = true
 
 function checkVaderTask()
+	if app.isPictureFrame then
+		return
+	end
 	wait(10)
 	while true do
 		vaderAlive = ping(ipaddr.vader)

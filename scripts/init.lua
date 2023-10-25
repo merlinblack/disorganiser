@@ -1,15 +1,5 @@
-require 'misc'
-cfg = os.getenv('HOME')..'/.config/disorganiser/config.lua'
-if not fileReadable(cfg) then
-	app.shouldStop = true
-	print('Configuration file does not exist.')
-	return
-else
-	dofile (cfg)
-end
-
 lanes = require('lanes').configure()
-
+require 'misc'
 require 'tasks'
 require 'confirmdialog'
 require 'quit'
@@ -26,7 +16,7 @@ require 'console'
 require 'calendar'
 require 'ledtouch'
 
-if app.onMacMini then
+if app.isPictureFrame then
 	miniMenu:activate()
 else
 	mainScreen:activate()

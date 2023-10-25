@@ -27,13 +27,11 @@ function ScreenSaver:setPicture(filename)
 	local width = app.width
 	local height = app.height
 
-	if app.onRaspberry then
-		height = height - clockHeight
-	end
-
-	if app.onMacMini then
-		local rectangle <close> = Rectangle(Color 'fff', true, {0,0,app.width,app.height})
+	if app.isPictureFrame then
+		local rectangle <close> = Rectangle(Color '000', true, {0,0,app.width,app.height})
 		self.renderList:add(rectangle)
+	else
+		height = height - clockHeight
 	end
 
 	print('Setting',filename)
@@ -55,7 +53,7 @@ function ScreenSaver:setPicture(filename)
 	local rectangle = Rectangle(texture, dest, src);
 	self.renderList:add(rectangle)
 
-	if app.onRaspberry then
+	if not app.isPictureFrame then
 		local texture <close> = Texture(self.font, weather.temperature .. '°', Color('bbb'))
 		local yjitter = math.random(5, app.height - 25 - texture.height)
 		local rectangle = Rectangle(texture, {app.width - texture.width - 25, yjitter, 0, 0})
@@ -111,7 +109,11 @@ function screenSaveTask()
 end
 
 function startScreenSave()
-	screenSaver:setDirectory('media/family/')
+	if app.isPictureFrame then
+		screenSaver:setDirectory('media/picture-frame/')
+	else
+		screenSaver:setDirectory('media/family/')
+	end
 	addTask(screenSaveTask, 'screensaver')
 end
 
