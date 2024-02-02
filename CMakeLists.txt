@@ -10,6 +10,7 @@ add_subdirectory(lua)
 find_package( SDL2 REQUIRED )
 find_package( SDL2_image REQUIRED )
 find_package( SDL2_ttf REQUIRED )
+find_package( SDL2_gfx REQUIRED )
 
 file(GLOB SRCS src/*.cpp src/bindings/*.cpp manualbind/src/*.cpp)
 file(GLOB HDRS src/*.h src/bindings/*.h manualbind/src/*.h)
@@ -46,10 +47,10 @@ target_include_directories(disorganiser PRIVATE "${SDL2_INCLUDE_DIRS}/..")
 
 target_link_libraries(disorganiser
     ${Lua_LIBRARIES}
-    SDL2::Main SDL2::Image SDL2::TTF
+    SDL2::Main SDL2::Image SDL2::TTF SDL2::GFX
     )
 
-set_property(TARGET disorganiser PROPERTY CXX_STANDARD 17)
+set_property(TARGET disorganiser PROPERTY CXX_STANDARD 20)
 set_property(TARGET disorganiser PROPERTY CXX_STANDARD_REQUIRED ON)
 # So dlopen'd Lua libs can find lusopen_package
 set_property(TARGET disorganiser PROPERTY ENABLE_EXPORTS ON)
