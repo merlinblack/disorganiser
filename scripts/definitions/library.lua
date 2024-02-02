@@ -187,6 +187,10 @@ function wakeTask(name) end
 ---@param name string Name of the task to kill.
 function killTask(name) end
 
+---Send output to any connected telnet clients
+---@param text string Text to output
+function telnetOutput(text) end
+
 -- Lua defined classes
 ---@class Class 
 ---@field __type string Name of the class.

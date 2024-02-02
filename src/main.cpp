@@ -81,7 +81,7 @@ void PrintEvent(const SDL_Event * event)
 #define LOGLEVEL SDL_LOG_PRIORITY_INFO
 void Logging(void *userdata, int category, SDL_LogPriority priority, const char* message)
 {
-    if (priority > LOGLEVEL)
+    if (priority >= LOGLEVEL)
     {
         std::cerr << message << std::endl;
     }

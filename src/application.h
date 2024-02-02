@@ -8,6 +8,7 @@
 #include "renderlist.h"
 #include "rectangle.h"
 #include "script_manager.h"
+#include "telnet_console.h"
 #include <memory>
 
 class Application;
@@ -32,6 +33,7 @@ class Application
 
 	TimerPtr timer;
 	ScriptManagerPtr scripts;
+	TelnetConsolePtr telnet;
 
 	RenderListPtr renderList;
 	RenderListPtr overlayRenderList;

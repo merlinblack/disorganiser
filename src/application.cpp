@@ -23,6 +23,7 @@ Application::Application() :
 	sdl = std::make_shared<SDL>();
 	timer = std::make_shared<Timer>();
 	scripts = std::make_shared<ScriptManager>();
+	telnet = std::make_shared<TelnetConsole>(scripts->getMainLuaState());
 	renderList = std::make_shared<RenderList>();
 	overlayRenderList = std::make_shared<RenderList>();
 }
@@ -65,6 +66,8 @@ bool Application::initSDL(bool fullscreen)
 		SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Could not create window: %s", sdl->getLastErrorMessage().c_str());
 		return true;
 	}
+
+	SDL_GetRendererOutputSize(const_cast<SDL_Renderer *>(sdl->getRenderer()), &width, &height);
 
 	sdlInitialised = true;
 
@@ -116,6 +119,7 @@ void Application::initSystem()
 
 void Application::shutdown()
 {
+	telnet->shutdown();
 	scripts->shutdown();
 	timer->stop();
 	sdl->shutdown();
@@ -212,6 +216,11 @@ void Application::handleTimer(const SDL_Event& event)
 	 * Run next task coroutine
 	 */
 	scripts->resume();
+
+	/**
+	 * Process telnet connections
+	*/
+	telnet->process();
 }
 
 void Application::render()

@@ -4,6 +4,7 @@
 #include "lb_color.h"
 #include "lb_font.h"
 #include "lb_rectangle.h"
+#include "lb_rounded_rectangle.h"
 #include "lb_renderer.h"
 #include "lb_renderlist.h"
 #include "lb_texture.h"
@@ -24,6 +25,7 @@ void registerAllBindings(lua_State* L)
 	ColorBinding::register_class(L);
 	FontBinding::register_class(L);
 	RectangleBinding::register_class(L);
+	RoundedRectangleBinding::register_class(L);
 	RenderableBinding::register_class(L);
 	RenderListBinding::register_class(L);
 	RendererBinding::register_class(L);
@@ -35,15 +37,19 @@ void registerAllBindings(lua_State* L)
 
 static SDL_Rect getRectFromTable(lua_State* L, int index)
 {
+	int t;
 	using ManualBind::LuaRef;
 	SDL_Rect rect;
+	t = lua_gettop(L);
 	LuaRef rectTable = LuaRef::fromStack(L, index);
 
+	t = lua_gettop(L);
 	if (!rectTable.isTable())
 	{
 		luaL_error(L, "Parameter %d must be a table.", index);
 	}
 
+	t = lua_gettop(L);
 	/** Lua tables start at 1 :-) **/
 	for (int i = 1; i < 5; i++)
 	{
@@ -51,12 +57,13 @@ static SDL_Rect getRectFromTable(lua_State* L, int index)
 		{
 			luaL_error(L, "Parameter %d table must have four numbers (x,y,w,h).", index);
 		}
+	t = lua_gettop(L);
 	}
 
-	LuaRef x = rectTable[1];
-	LuaRef y = rectTable[2];
-	LuaRef w = rectTable[3];
-	LuaRef h = rectTable[4];
+	int x = rectTable[1];
+	int y = rectTable[2];
+	int w = rectTable[3];
+	int h = rectTable[4];
 
 	rect = {x, y, w, h};
 
