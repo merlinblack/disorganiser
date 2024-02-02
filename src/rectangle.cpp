@@ -63,7 +63,7 @@ void Rectangle::renderTexture(const SDL_Renderer* renderer)
 
 void Rectangle::renderRect(const SDL_Renderer* renderer)
 {
-	SDL_SetRenderDrawColor(const_cast<SDL_Renderer*>(renderer), color.r, color.g, color.b, color.a);
+	SDL_SetRenderDrawColor(const_cast<SDL_Renderer *>(renderer), color.r, color.g, color.b, color.a);
 	if (fill) 
 	{
 		SDL_RenderFillRect(const_cast<SDL_Renderer *>(renderer), &destination);
