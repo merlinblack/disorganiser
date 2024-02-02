@@ -25,6 +25,11 @@ function restart()
 	)
 end
 
+function remoterestart()
+	app.shouldRestart = true
+	app.shouldStop = true
+end
+
 function poweroff()
 	quiting = true
 	addTask(
