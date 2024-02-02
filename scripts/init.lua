@@ -1,4 +1,3 @@
-lanes = require('lanes').configure()
 require 'misc'
 require 'tasks'
 require 'confirmdialog'
@@ -12,9 +11,26 @@ require 'main2'
 require 'minimenu'
 require 'systemupdate'
 require 'screensaver'
-require 'console'
 require 'calendar'
 require 'ledtouch'
+
+plainprint = print
+function print(...)
+	plainprint(...)
+
+	if type(telnetOutput) == 'function' then
+		local args = table.pack(...)
+		for i = 1, args.n do
+			telnetOutput(tostring(args[i]))
+			if i < args.n then 
+				telnetOutput(' ')
+			end
+		end
+		telnetOutput('\n')
+	end
+end
+
+require 'console'
 
 if app.isPictureFrame then
 	miniMenu:activate()

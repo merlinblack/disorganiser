@@ -176,3 +176,5 @@ function fileReadable(name)
         return false
     end
 end
+
+function printf(...) print(string.format(...)) end

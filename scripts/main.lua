@@ -89,8 +89,10 @@ function MainScreen:build()
 		print 'Weather update stopped.'
 	end
 
-	addTask(updateWeather,'weather')
-	
+	if not app.isPictureFrame then
+		addTask(updateWeather,'weather')
+	end
+
 	self.renderList:add(clockRenderList)
 	self.renderList:shouldRender()
 end

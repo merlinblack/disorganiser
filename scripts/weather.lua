@@ -1,28 +1,51 @@
-json = require('json')
+json = require 'json'
+request = require 'http.request'
+cqueues = require 'cqueues'
 
 weatherRunningOperations = {}
 weather = { valid = false }
 
 function asyncHttpRequest(url)
-	print ('requesting ' .. url)
-	local start = app.ticks
-	local get = lanes.gen('package,string,math,table',
-		function(url)
-			http = require('socket.http')
-			return http.request(url)
-		end
-	)(url)
+	local queue = cqueues.new()
+	local body, statusCode
 
-	while get.status ~= "done" and get.status ~= "error" do
-		--print('waiting for ' .. url)
-		wait(250)
+	queue:wrap(function()
+		print ('requesting ' .. url)
+		local start = app.ticks
+
+		req = request.new_from_uri(url)
+		local headers, stream = req:go(10)
+
+		if headers == nil then
+			print( 'failed to retrieve ' .. url .. ' ' .. tostring(stream) )
+			body, statusCode = nil, '500'
+			return
+		end
+
+		local err
+		body, err = stream:get_body_as_string()
+
+		if not body and err then
+			print('failed to read response stream: ' .. tostring(err))
+			body, statusCode = nil, '500'
+			return
+		end
+
+		local duration = app.ticks - start
+
+		print( 'retrieved ' .. url .. ' in ' .. duration .. 'ms')
+		print(headers:get(':status') == '200')
+
+		statusCode = headers:get(':status')
+
+	end)
+
+	while not queue:empty() do
+		queue:step(0.1)
+		yield()
 	end
 
-	local duration = app.ticks - start
-
-	print( 'retrieved ' .. url .. ' in ' .. duration .. 'ms')
-
-	return get:join()
+	return body, statusCode
 end
 
 function readLocalWeather()
@@ -36,9 +59,9 @@ function readLocalWeather()
 
 	weatherRunningOperations.last20 = true
 
-	local data, status = asyncHttpRequest('http://octavo.local/api/weather')
+	local data, status = asyncHttpRequest('http://' .. ipaddr.octavo .. '/api/weather')
 
-	if status == 200 then
+	if status == '200' then
 		weatherData = json.decode(data)
 		weather = {
 			valid = true,
@@ -75,9 +98,9 @@ function readLocalWeatherTrends()
 
 	weatherRunningOperations.trends = true
 
-	local data, status = asyncHttpRequest('http://octavo.local/api/weathertrends')
+	local data, status = asyncHttpRequest('http://' .. ipaddr.octavo .. '/api/weathertrends')
 
-	if status == 200 then
+	if status == '200' then
 		weatherTrendsData = json.decode(data)
 	else
 		weatherTrendsData = nil
@@ -100,9 +123,9 @@ function readLocalWeatherSummary(hours)
 
 	weatherRunningOperations.summary = true
 
-	local data, status = asyncHttpRequest('http://octavo.local/api/weathersummary?hours=' .. hours)
+	local data, status = asyncHttpRequest('http://' .. ipaddr.octavo .. '/api/weathersummary?hours=' .. hours)
 
-	if status == 200 then
+	if status == '200' then
 		weatherSummaryData = json.decode(data)
 		-- Deal with odd behavour on macmini
 		weatherSummaryData.__array = nil

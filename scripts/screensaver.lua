@@ -23,12 +23,15 @@ end
 function ScreenSaver:setPicture(filename)
 	self.renderList:clear()
 	self.renderList:shouldRender()
+	yield()
+	self.renderList:shouldRender()
 
 	local width = app.width
 	local height = app.height
 
 	if app.isPictureFrame then
-		local rectangle <close> = Rectangle(Color '000', true, {0,0,app.width,app.height})
+		local color = Color '000'
+		local rectangle <close> = Rectangle(color, true, {0,0,app.width,app.height})
 		self.renderList:add(rectangle)
 	else
 		height = height - clockHeight
@@ -50,7 +53,8 @@ function ScreenSaver:setPicture(filename)
 		dest[2] = height//2 - dest[4]//2
 	end
 
-	local rectangle = Rectangle(texture, dest, src);
+	local rectangle = Rectangle(texture, dest, src)
+
 	self.renderList:add(rectangle)
 
 	if not app.isPictureFrame then
@@ -59,7 +63,20 @@ function ScreenSaver:setPicture(filename)
 		local rectangle = Rectangle(texture, {app.width - texture.width - 25, yjitter, 0, 0})
 		self.renderList:add(rectangle)
 
+
 		self.renderList:add(clockRenderList)
+	else
+		self:nightTimeDim()
+	end
+end
+
+function ScreenSaver:nightTimeDim()
+	local time = tonumber(os.date('%H%M'))
+
+	if time < 800 or time > 2230 then
+		print('Dimming: ', time)
+		local dimming = Rectangle(Color('A0000000'), true, { 0, 0, app.width, app.height })
+		self.renderList:add(dimming)
 	end
 end
 
@@ -68,6 +85,10 @@ function ScreenSaver:mouseClick(time, x, y, button)
 end
 
 function ScreenSaver:activate()
+	if self:isActive() then
+		print( 'Screen Already activated: ', self.__type)
+		return
+	end
 	print('Activating Screen: ', self.__type)
 	if self.previousScreen == nil then
 		self.previousScreen = setCurrentScreen(self)
@@ -114,7 +135,7 @@ function startScreenSave()
 	else
 		screenSaver:setDirectory('media/family/')
 	end
-	addTask(screenSaveTask, 'screensaver')
+	addUniqueTask(screenSaveTask, 'screensaver')
 end
 
 function checkForScreenSaveNeeded()
