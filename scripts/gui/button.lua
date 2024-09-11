@@ -11,17 +11,14 @@ function Button.create(rect, captionText, font, func, textColor, frameColor, bac
 	frameColor = frameColor or textColor
 	backgroundColor = backgroundColor or Color 'a0000000'
 
-	local rectangle <close> = Rectangle(backgroundColor, true, rect)
-	btnWidget.normalRenderList:add(rectangle)
-
-	local rectangle <close> = Rectangle( frameColor, false, rect )
+	local rectangle <close> = RoundedRectangle(frameColor, rect, 15, backgroundColor)
 	btnWidget.normalRenderList:add(rectangle)
 
 	btnWidget.normalRenderList:add(btnWidget.captionRenderList)
 
 	local fadeFrameColor = frameColor:clone()
 	fadeFrameColor.a = fadeFrameColor.a // 3
-	local rectangle <close> = Rectangle( fadeFrameColor, true, rect)
+	local rectangle <close> = RoundedRectangle(frameColor, rect, 15, fadeFrameColor)
 	btnWidget.pressedRenderList:add(rectangle)
 
 	btnWidget.renderList = RenderList()

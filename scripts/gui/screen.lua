@@ -28,20 +28,23 @@ end
 function Screen:build()
 end
 
-function Screen:activate()
+function Screen:activate(noUpdatePrevious)
 	if self:isActive() then
 		print( 'Screen Already activated: ', self.__type)
 		return
 	end
 	print('Activating Screen: ', self.__type)
-	self.previousScreen = setCurrentScreen(self)
+	if noUpdatePrevious and self.previousScreen then
+		setCurrentScreen(self)
+	else
+		self.previousScreen = setCurrentScreen(self)
+	end
 	app.renderList = self.renderList
 	self.renderList:shouldRender()
 end
 
 function Screen:deactivate()
 	print('Deactivating Screen: ', self.__type)
-	self.previousScreen = nil
 end
 
 function Screen:activatePrevious()

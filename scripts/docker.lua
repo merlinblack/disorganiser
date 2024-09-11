@@ -15,29 +15,28 @@ function Docker:build()
 	self.renderList:add(rectangle)
 
 	local btn = {app.width-180, 350, 160, 100}
-	local textcolor = Color 'ffff458a'
-	local backcolor = Color '30ff458a'
+	local textcolor = Color 'f30a4a'
+	local backcolor = textcolor:clone()
+	backcolor.a = 0x20
 
-	self:addButton(btn, 'geri', function() mainScreen:activate() end, textcolor, nil, backcolor)
+	self:addButton(btn, 'geri', function() self:activatePrevious() end, textcolor, nil, backcolor)
 	btn[2] = btn[2] - 120
 
 	self:addButton(btn, 'durdur', function() self:durdur() end, textcolor, nil, backcolor)
-	btn[2] = btn[2] - 104
+	btn[2] = btn[2] - 112
 
 	self:addButton(btn, 'products\n2', function() self:start('products2') end, textcolor, nil, backcolor)
-	btn[2] = btn[2] - 104
+	btn[2] = btn[2] - 112
 	
 	self:addButton(btn, 'orders', function() self:start('orders') end, textcolor, nil, backcolor)
-	btn[1] = btn[1] - 164
+	btn[1] = btn[1] - 170
 	
 	self:addButton(btn, 'auth', function() self:start('auth') end, textcolor, nil, backcolor)
-	btn[2] = btn[2] + 104
+	btn[2] = btn[2] + 112
 
 	self:addButton(btn, 'scrapbook', function() self:start('scrapbook') end, textcolor, nil, backcolor)
-	btn[2] = btn[2] + 104
+	btn[3] = btn[2] + 112
 
-	--self:addButton(btn, 'hq', function() self:start('hq') end, textcolor, nil, backcolor)
-	
 	self.renderList:add(clockRenderList)
 end
 

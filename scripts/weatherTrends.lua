@@ -44,10 +44,10 @@ function WeatherTrends:build()
 	}
 
 	local btn = { app.width-120, app.height-clockHeight-50, 100, 50}
-	self:addButton(btn, 'Geri', function() mainScreen:activate() end, textcolor, nil, backcolor)
+	self:addButton(btn, 'Geri', function() self:activatePrevious() end, textcolor, nil, backcolor)
 
 	local btn = { app.width-280, app.height-clockHeight-50, 140, 50}
-	self:addButton(btn, 'Grafikler', function() weatherGraphs:activate() end, textcolor, nil, backcolor)
+	self:addButton(btn, 'Grafikler', function() weatherGraphs.previousScreen = self.previousScreen weatherGraphs:activate(true) end, textcolor, nil, backcolor)
 
 	function updateTask()
 	
@@ -139,8 +139,8 @@ function WeatherTrends:swipe(direction)
 	weatherGraphs:activate()
 end
 
-function WeatherTrends:activate()
-	Screen.activate(self)
+function WeatherTrends:activate(noUpdatePrevious)
+	Screen.activate(self, noUpdatePrevious)
 	addTask(function() self:buildDataTable() end, 'activation weather data table build')
 end
 

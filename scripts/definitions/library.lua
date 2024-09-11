@@ -123,6 +123,16 @@ function Rectangle:setColor(color) end
 ---@param enable boolean Set if rectangle is filled with color
 function Rectangle:setFill(enable) end
 
+---@class RoundedRectangle : Renderable
+---@overload fun(color:Color, rect:table, radius:integer, fillColor?:Color)
+RoundedRectangle = {}
+---@param rect table Set destination rectangle {x,y,w,h}
+function RoundedRectangle:setDest(rect) end
+---@param color Color
+function Rectangle:setColor(color) end
+---@param fillColor Color
+function Rectangle:setFillColor(fillColor) end
+
 ---Base class for all classes that have a 'render' function can be put into a render list.
 ---@class Renderable 
 Renderable = {}

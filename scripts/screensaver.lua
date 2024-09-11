@@ -81,22 +81,7 @@ function ScreenSaver:nightTimeDim()
 end
 
 function ScreenSaver:mouseClick(time, x, y, button)
-	self.previousScreen:activate()
-end
-
-function ScreenSaver:activate()
-	if self:isActive() then
-		print( 'Screen Already activated: ', self.__type)
-		return
-	end
-	print('Activating Screen: ', self.__type)
-	if self.previousScreen == nil then
-		self.previousScreen = setCurrentScreen(self)
-	else
-		setCurrentScreen(self)
-	end
-	app.renderList = self.renderList
-	self.renderList:shouldRender()
+	self.previousScreen:activate(true)
 end
 
 function ScreenSaver:deactivate()
@@ -123,8 +108,13 @@ function screenSaveTask()
 			picture = screenSaver.pictureIter()
 		end
 
-		screenSaver:setPicture(picture)
-		wait(screenSaver.time or 30000)
+		if not picture then
+			print('There was a problem getting the picture filename')
+			screenSaver.stop = true
+		else
+			screenSaver:setPicture(picture)
+			wait(screenSaver.time or 30000)
+		end
 	end
 	clockJitter = false
 end

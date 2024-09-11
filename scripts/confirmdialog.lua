@@ -48,21 +48,22 @@ function ConfirmDialog:build()
 	self.textWidth = 480
 	self.buttonWidth = 200
 	self.centre = app.width // 2
-	self.dialogLeft = self.centre - self.dialogWidth//2
-	self.dialogRight = self.centre + self.dialogWidth//2
+	self.dialogLeft = self.centre - self.dialogWidth//2 + 15
+	self.dialogRight = self.centre + self.dialogWidth//2 - 15
 
 	self.frameColor = Color 'f30a4a'
 	self.backColor = self.frameColor:clone()
 	self.backColor.a = 0x10
 
-	local dialogBox <close> = Rectangle(self.backColor, true, {self.centre - self.dialogWidth//2, app.height//8, self.dialogWidth, self.dialogHeight})
-	self.renderList:add(dialogBox)
-
-	local dialogBox <close> = Rectangle(self.frameColor, false, {self.centre - self.dialogWidth//2, app.height//8, self.dialogWidth, self.dialogHeight})
+	local dialogBox <close> = RoundedRectangle(
+		self.frameColor,
+		{self.centre - self.dialogWidth//2, app.height//8, self.dialogWidth, self.dialogHeight},
+		15,
+		self.backColor)
 	self.renderList:add(dialogBox)
 
 	local btnHeight = 60
-	local btnY = app.height//8 + self.dialogHeight - btnHeight
+	local btnY = app.height//8 + self.dialogHeight - btnHeight - 20
 
 	self:addButton({self.dialogLeft, btnY, self.buttonWidth, btnHeight}, 'Tamam', function() self.result = 'ok' end, Color 'fff', self.frameColor, self.backColor)
 	self:addButton({self.dialogRight-self.buttonWidth, btnY, self.buttonWidth, btnHeight}, 'Iptal', function() self.result = 'cancel' end, Color 'fff', self.frameColor, self.backColor)

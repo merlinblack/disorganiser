@@ -17,14 +17,9 @@ function LedTouch:init()
 	self.indexToLines[6] = 25
 	self.indexToLines[7] = 4
 	self.indexState = {}
-	self.indexState[0] = false
-	self.indexState[1] = false
-	self.indexState[2] = false
-	self.indexState[3] = false
-	self.indexState[4] = false
-	self.indexState[5] = false
-	self.indexState[6] = false
-	self.indexState[7] = false
+	for i=0,7 do
+		self.indexState[i] = false
+	end
 	Screen.init(self)
 end
 

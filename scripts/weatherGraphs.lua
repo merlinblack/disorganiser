@@ -50,10 +50,10 @@ function WeatherGraphs:build()
 	self.renderList:add(self.humRange)
 
 	local btn = { app.width-120, app.height-clockHeight-50, 100, 50}
-	self:addButton(btn, 'Geri', function() mainScreen:activate() end, self.textcolor, nil, self.backcolor)
+	self:addButton(btn, 'Geri', function() self:activatePrevious() end, self.textcolor, nil, self.backcolor)
 
 	local btn = { app.width-280, app.height-clockHeight-50, 140, 50}
-	self:addButton(btn, 'Trendler', function() weatherTrends:activate() end, self.textcolor, nil, self.backcolor)
+	self:addButton(btn, 'Trendler', function() weatherTrends.previousScreen = self.previousScreen weatherTrends:activate(true) end, self.textcolor, nil, self.backcolor)
 
 	local frame <close> = LineList(self.linecolor)
 	frame:addPoint(self.graphLeft, self.graphTop)
@@ -212,8 +212,8 @@ function WeatherGraphs:swipe(direction)
 	weatherTrends:activate()
 end
 
-function WeatherGraphs:activate()
-	Screen.activate(self)
+function WeatherGraphs:activate(noUpdatePrevious)
+	Screen.activate(self, noUpdatePrevious)
 	addTask(function() weatherGraphs:buildGraphs() end, 'activation weather graph build')
 end
 
