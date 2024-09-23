@@ -136,7 +136,8 @@ function WeatherTrends:buildDataTable(force)
 end
 
 function WeatherTrends:swipe(direction)
-	weatherGraphs:activate()
+	weatherGraphs.previousScreen = self.previousScreen
+	weatherGraphs:activate(true)
 end
 
 function WeatherTrends:activate(noUpdatePrevious)

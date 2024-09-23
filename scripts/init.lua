@@ -141,7 +141,7 @@ function aslan()
 	write('Days:\t\t'  .. string.format('%.2f', diff / (24*60*60)))
 	write('Weeks:\t\t' .. string.format('%.1f', diff / (24*60*60*7)))
 
-	write('10,000,000 (10 million) seconds on: ' .. os.date('%c', birthdateTS+10000000))
+	write('20,000,000 (20 million) seconds on: ' .. os.date('%c', birthdateTS+20000000))
 end
 
 function citizenship()
