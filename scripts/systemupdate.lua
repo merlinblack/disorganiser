@@ -37,7 +37,7 @@ function SystemUpdate:build()
 	btn[2] = btn[2] + 80
 	self:addButton(btn, 'All', function() self:all() end, textcolor, nil, backcolor)
 
-	self:addButton({app.width-105, app.height-clockHeight-70, 100, 60}, 'Geri', function() mainScreen2:activate(true) end, textcolor, nil, backcolor)
+	self:addButton({app.width-105, app.height-clockHeight-70, 100, 60}, 'Geri', function() self:activatePrevious() end, textcolor, nil, backcolor)
 
 	self.titleTexture = Texture(self.fontCode, 'System Update', Color('0f0') )
 	self.title = Rectangle(self.titleTexture, {app.width-self.titleTexture.width-30, 5,0,0})
@@ -49,9 +49,10 @@ end
 
 function SystemUpdate:swipe(direction)
 	if direction == Swipe.Right then
-		unlock:activate()
+		unlock.previousScreen = self.previousScreen
+		unlock:activate(true)
 	end
-	if direction == Swipe.Left then
+	if direction == Swipe.Left and app.isPictureFrame == false then
 		mainScreen:activate()
 	end
 	if direction == Swipe.Down then

@@ -64,10 +64,12 @@ end
 
 function Unlock:swipe(direction)
 	if direction == Swipe.Left then
-		systemUpdate:activate()
+		systemUpdate.previousScreen = self.previousScreen
+		systemUpdate:activate(true)
 	end
 	if direction == Swipe.Right then
-		mainScreen2:activate()
+		mainScreen2.previousScreen = self.previousScreen
+		mainScreen2:activate(true)
 	end
 	if direction == Swipe.Down then
 		console:setEnabled(true)

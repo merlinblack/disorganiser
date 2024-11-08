@@ -164,11 +164,12 @@ function MainScreen2:update()
 end
 
 function MainScreen2:swipe(direction)
-	if direction == Swipe.Right then
+	if direction == Swipe.Right and app.isPictureFrame == false then
 		mainScreen:activate()
 	end
 	if direction == Swipe.Left then
-		unlock:activate()
+		unlock.previousScreen = self.previousScreen
+		unlock:activate(true)
 	end
 	if direction == Swipe.Down then
 		console:setEnabled(true)
