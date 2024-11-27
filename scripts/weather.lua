@@ -4,6 +4,7 @@ cqueues = require 'cqueues'
 
 weatherRunningOperations = {}
 weather = { valid = false }
+weatherServerAlive = false
 
 function asyncHttpRequest(url)
 	local queue = cqueues.new()
@@ -48,18 +49,36 @@ function asyncHttpRequest(url)
 	return body, statusCode
 end
 
-function readLocalWeather()
-
-	if weatherRunningOperations.last20 ~= nil then
-		while weatherRunningOperations.last20 ~= nil do
+function pingWeatherServer()
+	if weatherRunningOperations.ping ~= nil then
+		while weatherRunningOperations.ping ~= nil do
 			wait(100)
 		end
 		return
 	end
 
-	weatherRunningOperations.last20 = true
+	local data, status = asyncHttpRequest('http://octavo.local/weather/ping')
 
-	local data, status = asyncHttpRequest('http://' .. ipaddr.octavo .. '/api/weather')
+	if status == '200' then
+		weatherServerAlive = true
+	else
+		weatherServerAlive = false
+	end
+
+end
+
+function readLocalWeather()
+
+	if weatherRunningOperations.last ~= nil then
+		while weatherRunningOperations.last ~= nil do
+			wait(100)
+		end
+		return
+	end
+
+	weatherRunningOperations.last = true
+
+	local data, status = asyncHttpRequest('http://octavo.local/weather/measurements?limit=1')
 
 	if status == '200' then
 		weatherData = json.decode(data)
@@ -83,7 +102,7 @@ function readLocalWeather()
 		end
 	end
 
-	weatherRunningOperations.last20 = nil
+	weatherRunningOperations.last = nil
 
 end
 
@@ -98,7 +117,7 @@ function readLocalWeatherTrends()
 
 	weatherRunningOperations.trends = true
 
-	local data, status = asyncHttpRequest('http://' .. ipaddr.octavo .. '/api/weathertrends')
+	local data, status = asyncHttpRequest('http://octavo.local/weather/trends')
 
 	if status == '200' then
 		weatherTrendsData = json.decode(data)
@@ -123,7 +142,7 @@ function readLocalWeatherSummary(hours)
 
 	weatherRunningOperations.summary = true
 
-	local data, status = asyncHttpRequest('http://' .. ipaddr.octavo .. '/api/weathersummary?hours=' .. hours)
+	local data, status = asyncHttpRequest('http://octavo.local/weather/summary?hours=' .. hours)
 
 	if status == '200' then
 		weatherSummaryData = json.decode(data)

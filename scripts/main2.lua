@@ -60,9 +60,9 @@ function MainScreen2:build()
 	self.renderList:add(self.octavoHttpdStatus)
 
 	function self:updateAction()
-		readLocalWeather()
+		pingWeatherServer()
 
-		if weather.valid == false then
+		if weatherServerAlive == false then
 			self.octavoHttpdStatus.texture = self.offlineTexture
 		else
 			self.octavoHttpdStatus.texture = self.onlineTexture
@@ -104,7 +104,7 @@ function MainScreen2:build()
 	function self.retryBtn:updateAction()
 		local enabled = false
 
-		if weather.valid == true then
+		if weatherServerAlive == true then
 			if fileExists('~/prog/MS8607/measurements.db') then
 				print('got measurements')
 				enabled = true
