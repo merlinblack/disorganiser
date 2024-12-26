@@ -40,7 +40,7 @@ addTask(
 
 function handleTouch(type, x, y, dx, dy)
 	lastEvent = app.ticks
-	-- looks Raspian is setup to send synthetic mouse events. So we can't turn them off.
+	-- looks like Raspian is setup to send synthetic mouse events. So we can't turn them off.
 	-- So turn the cursor back off here (mouse events come first)
 	app.showCursor = false
 	stopHideCursorTask = true

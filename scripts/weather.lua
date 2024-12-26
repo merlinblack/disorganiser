@@ -84,9 +84,9 @@ function readLocalWeather()
 		weatherData = json.decode(data)
 		weather = {
 			valid = true,
-			temperature = string.format("%.2f", weatherData[1].temperature),
-			pressure =    string.format("%.2f", weatherData[1].pressure),
-			humidity =    string.format("%.2f", weatherData[1].humidity)
+			temperature = string.format("%.1f", weatherData[1].temperature),
+			pressure =    string.format("%.1f", weatherData[1].pressure),
+			humidity =    string.format("%.1f", weatherData[1].humidity)
 		}
 	else
 		if fileReadable('/tmp/weather.lua') then

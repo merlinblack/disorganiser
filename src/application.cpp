@@ -290,9 +290,9 @@ void Application::eventLoop()
 				{
 					dispatchEvent(event);
 				}
-				catch (ManualBind::LuaException& mooned)
+				catch (ManualBind::LuaException& gotMooned)
 				{
-					SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", mooned.what());
+					SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "%s", gotMooned.what());
 				}
 			} 
 			while (SDL_PollEvent(&event));

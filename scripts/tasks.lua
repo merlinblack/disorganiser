@@ -15,6 +15,16 @@ function wait(ticks)
 	return status
 end
 
+function yieldEveryN(count, N)
+	count = count + 1
+	if count >= N then
+		yield()
+		return 0
+	end
+
+	return count
+end
+
 function waitForTask(taskName)
 	if getCurrentTaskName() == taskName then
 		error('Task can not wait for itself.')

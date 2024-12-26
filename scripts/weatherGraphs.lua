@@ -6,12 +6,15 @@ require 'clock'
 class 'WeatherGraphs' (Screen)
 
 function WeatherGraphs:build()
+	self.updateInterval = 60000
 	self.hoverText = {}
 	self.nextBuild = 0
 	self.titleFont = Font('media/pirulen.otf',22)
 	self.font = Font('media/mono.ttf',24)
 
-	self.dataRenderList = RenderList()
+	self.dataRenderListA = RenderList()
+	self.dataRenderListB = RenderList()
+	self.dataRenderList = self.dataRenderListA
 
 	self.textcolor = Color 'fff'
 	self.backcolor = Color '00207f'
@@ -69,16 +72,37 @@ function WeatherGraphs:build()
 			if self:isActive() then
 				self:buildGraphs()
 			end
-			wait(60000)
+			wait(1000)
 		end
 
 	end
 
 	addTask(updateTask,'weatherGraphs')
-	addTask(function() wait(100) self:buildGraphs(true) end, 'initial graph build')
+	addTask(function() wait(10) self:buildGraphs(true) end, 'initial graph build')
 	
 	self.renderList:add(clockRenderList)
 
+end
+
+function WeatherGraphs:swapDataRenderList()
+
+	self.renderList:remove(self.dataRenderList)
+
+	if self.dataRenderList == self.dataRenderListA then
+		self.dataRenderList = self.dataRenderListB
+	else
+		self.dataRenderList = self.dataRenderListA
+	end
+
+	self.renderList:add(self.dataRenderList)
+end
+
+function WeatherGraphs:getOffscreenDataRenderList()
+	if self.dataRenderList == self.dataRenderListA then
+		return self.dataRenderListB
+	end
+
+	return self.dataRenderListA
 end
 
 function WeatherGraphs:buildGraphs(force)
@@ -87,6 +111,11 @@ function WeatherGraphs:buildGraphs(force)
 	local showHoverText = showHoverText or true
 
 	if not force then
+		if self.buildingGraphs == true then
+			print('Already building graphs')
+			return
+		end
+
 		if not self:isActive() then
 			return
 		end
@@ -96,14 +125,14 @@ function WeatherGraphs:buildGraphs(force)
 		end
 	end
 
+	self.buildingGraphs = true
+
 	readLocalWeatherSummary(hours)
 
+	local rl = self:getOffscreenDataRenderList()
+	rl:clear();
+
 	print 'Building graphs'
-	self.dataRenderList:clear()
-	for _,hoverText in pairs(self.hoverText) do
-		hoverText:removeFromScreen(self)
-	end
-	self.hoverText = {}
 
 	if weatherSummaryData == nil then
 		return
@@ -137,7 +166,6 @@ function WeatherGraphs:buildGraphs(force)
 		end
 	end
 
-	--print('Max',maxTemp,'Min',minTemp)
 	self.tempRange.texture = Texture(self.font, minTemp .. '-' .. maxTemp, self.tempColor)
 	self.presRange.texture = Texture(self.font, minPres .. '-' .. maxPres, self.presColor)
 	self.humRange.texture = Texture(self.font, minHum .. '-' .. maxHum, self.humColor)
@@ -164,48 +192,62 @@ function WeatherGraphs:buildGraphs(force)
 	local humidity <close> = LineList(self.humColor)
 	local pressure <close> = LineList(self.presColor)
 
-	self.dataRenderList:add(temperature)
-	self.dataRenderList:add(humidity)
-	self.dataRenderList:add(pressure)
+	rl:add(temperature)
+	rl:add(humidity)
+	rl:add(pressure)
 
 	local x = self.graphLeft
 
+	local newHoverText = {}
+	local yieldcount = 0
+
 	for _,record in pairs(weatherSummaryData) do
+		yieldcount = yieldEveryN(yieldcount, 4)
+
 		y = math.floor(self.graphBot - (record.temperature-tempBottom) * tempScaleY)
 		temperature:addPoint(x, y)
 		if showHoverText then
-			table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.temperature, self.tempColor, self.tempColor, self.font))
+			table.insert(newHoverText,HoverText({x-3, y-3, 6, 6}, record.temperature, self.tempColor, self.tempColor, self.font))
 		end
 
 		y = math.floor(self.graphBot - (record.humidity-humBottom) * humScaleY)
 		humidity:addPoint(x, y)
 		if showHoverText then
-			table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.humidity, self.humColor, self.humColor, self.font))
+			table.insert(newHoverText,HoverText({x-3, y-3, 6, 6}, record.humidity, self.humColor, self.humColor, self.font))
 		end
 
 		y = math.floor(self.graphBot - (record.pressure-presBottom) * presScaleY)
 		pressure:addPoint(x, y)
 		if showHoverText then
-			table.insert(self.hoverText,HoverText({x-3, y-3, 6, 6}, record.pressure, self.presColor, self.presColor, self.font))
+			table.insert(newHoverText,HoverText({x-3, y-3, 6, 6}, record.pressure, self.presColor, self.presColor, self.font))
 		end
 
 		local tick <close> = LineList(self.linecolor)
 		tick:addPoint(x, self.graphBot - 10)
 		tick:addPoint(x, self.graphBot)
 		if showHoverText then
-			table.insert(self.hoverText,HoverText({x-2, self.graphBot-12, 4, 4}, record.time, white, white, self.font))
+			table.insert(newHoverText,HoverText({x-2, self.graphBot-12, 4, 4}, record.time, white, white, self.font))
 		end
-		self.dataRenderList:add(tick)
+		rl:add(tick)
 
 		x = x + scaleX
 	end
 
-	for _, hoverText in pairs(self.hoverText) do
+	for _,hoverText in pairs(self.hoverText) do
+		hoverText:removeFromScreen(self)
+	end
+
+	self.hoverText = newHoverText
+
+	for _, hoverText in pairs(newHoverText) do
 		hoverText:addToScreen(self)
 	end
 
-	self.dataRenderList:shouldRender(true)
-	self.nextBuild = app.ticks + 60000
+	print('Finshed graph build')
+	rl:shouldRender(true)
+	self:swapDataRenderList()
+	self.nextBuild = app.ticks + self.updateInterval
+	self.buildingGraphs = false
 end
 
 function WeatherGraphs:swipe(direction)

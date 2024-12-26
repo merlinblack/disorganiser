@@ -5,6 +5,12 @@
 #include <iostream>
 #include <getopt.h>
 
+// So we can have a static Application, but also give Lua a shared ptr
+struct app_null_deleter {
+    void operator()(void const *) const
+    {
+    }
+};
 
 void PrintEvent(const SDL_Event * event)
 {
@@ -124,21 +130,24 @@ int main(int argc, char *argv[])
     {
         SDL_LogSetOutputFunction(Logging, nullptr);
 
-        ApplicationPtr app = std::make_shared<Application>();
+        Application app;
 
-        app->initLuaAppPtr(app);
+        // So we can have a static Application, but also give Lua a shared ptr
+        ApplicationPtr appPtr = std::shared_ptr<Application>(&app, app_null_deleter());
 
-        app->loadConfig(configPath);
+        app.initLuaAppPtr(appPtr);
 
-        app->initSDL(fullscreen);
+        app.loadConfig(configPath);
 
-        app->initSystem();
+        app.initSDL(fullscreen);
 
-        app->eventLoop();
+        app.initSystem();
 
-        app->shutdown();
+        app.eventLoop();
 
-        restartWanted = app->getShouldRestart();
+        app.shutdown();
+
+        restartWanted = app.getShouldRestart();
     }
 
     if (restartWanted)
