@@ -18,4 +18,6 @@ function checkVaderTask()
 	end
 end
 
-addTask(checkVaderTask,'vaderCheck')
+if app.hostname == 'vimes' then
+    addTask(checkVaderTask,'vaderCheck')
+end
