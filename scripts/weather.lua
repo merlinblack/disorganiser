@@ -57,7 +57,7 @@ function pingWeatherServer()
 		return
 	end
 
-	local data, status = asyncHttpRequest('http://octavo.local/weather/ping')
+	local data, status = asyncHttpRequest('https://atkinson.kiwi.nz/weather/ping')
 
 	if status == '200' then
 		weatherServerAlive = true
@@ -78,7 +78,7 @@ function readLocalWeather()
 
 	weatherRunningOperations.last = true
 
-	local data, status = asyncHttpRequest('http://octavo.local/weather/measurements?limit=1')
+	local data, status = asyncHttpRequest('https://atkinson.kiwi.nz/weather/measurements?limit=1')
 
 	if status == '200' then
 		weatherData = json.decode(data)
@@ -117,7 +117,7 @@ function readLocalWeatherTrends()
 
 	weatherRunningOperations.trends = true
 
-	local data, status = asyncHttpRequest('http://octavo.local/weather/trends')
+	local data, status = asyncHttpRequest('https://atkinson.kiwi.nz/weather/trends')
 
 	if status == '200' then
 		weatherTrendsData = json.decode(data)
@@ -142,7 +142,7 @@ function readLocalWeatherSummary(hours)
 
 	weatherRunningOperations.summary = true
 
-	local data, status = asyncHttpRequest('http://octavo.local/weather/summary?hours=' .. hours)
+	local data, status = asyncHttpRequest('https://atkinson.kiwi.nz/weather/summary?hours=' .. hours)
 
 	if status == '200' then
 		weatherSummaryData = json.decode(data)

@@ -3,6 +3,7 @@ function quit()
 	addTask(
 		function()
 			if confirm('Disorganiserden çık?') then
+                app.shouldRestart = false
 				app.shouldStop = true
 			end
 			quitting = nil

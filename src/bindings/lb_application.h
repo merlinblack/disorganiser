@@ -1,6 +1,8 @@
 #ifndef __LB_APPLICATION_H
 #define __LB_APPLICATION_H
 
+#include <unistd.h>
+
 #include "LuaBinding.h"
 #include "application.h"
 #include "lb_renderlist.h"
@@ -31,6 +33,7 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 			{ "emptyTexture", get, nullptr },
 			{ "textInputMode", getTextInputMode, setTextInputMode },
 			{ "showCursor", nullptr, setShowCursor },
+            { "hostname", getHostname, nullptr },
 			{ nullptr, nullptr, nullptr }
 		};
 		return properties;
@@ -226,6 +229,21 @@ struct ApplicationBinding : public ManualBind::Binding<ApplicationBinding,Applic
 		app->setTextInputMode(enable);
 		return 0;
 	}
+
+#define HOSTNAMESIZE 256
+    static int getHostname(lua_State* L)
+    {
+        char buffer[HOSTNAMESIZE];
+
+        if( gethostname(buffer, HOSTNAMESIZE) )
+        {
+            return luaL_error(L, "Error getting hostname.");
+        }
+
+        lua_pushstring(L, buffer);
+
+        return 1;
+    }
 };
 
 #endif //__LB_APPLICATION_H
