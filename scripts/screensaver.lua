@@ -23,8 +23,11 @@ end
 function ScreenSaver:setPicture(filename)
 	self.renderList:clear()
 	self.renderList:shouldRender()
-	yield()
-	self.renderList:shouldRender()
+    -- Quirk of threepio, it needs to show a blank screen for a moment in order to not show artifacts from previous picture.
+    if app.hostname == 'threepio' then
+	    yield()
+	    self.renderList:shouldRender()
+    end
 
 	local width = app.width
 	local height = app.height
@@ -66,7 +69,7 @@ function ScreenSaver:setPicture(filename)
 
 		self.renderList:add(clockRenderList)
 	else
-		self:nightTimeDim()
+        self:nightTimeDim()
 	end
 end
 
@@ -74,9 +77,12 @@ function ScreenSaver:nightTimeDim()
 	local time = tonumber(os.date('%H%M'))
 
 	if time < 800 or time > 2230 then
-		print('Dimming: ', time)
-		local dimming = Rectangle(Color('A0000000'), true, { 0, 0, app.width, app.height })
-		self.renderList:add(dimming)
+
+        if app.hostname == 'threepio' then
+            print('Dimming: ', time)
+            local dimming = Rectangle(Color('A0000000'), true, { 0, 0, app.width, app.height })
+            self.renderList:add(dimming)
+        end
 	end
 end
 

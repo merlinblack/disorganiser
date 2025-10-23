@@ -4,7 +4,7 @@ yield = coroutine.yield
 function wait(ticks)
 	local finish = app.ticks + ticks
 	local status = 'sleeping'
-	while app.ticks < finish and status ~= 'wakeup' do
+	while app.ticks < finish and status ~= 'wakeup' and status ~= 'killed' do
 		status = yield()
 	end
 	local over = app.ticks - finish
@@ -13,6 +13,15 @@ function wait(ticks)
 		pt(getTasks())
 	end
 	return status
+end
+
+function waitSeconds(seconds)
+        local finish = os.time() + seconds
+        local status = "sleeping"
+        while os.time() < finish and status ~= "wakeup" and status ~= "killed" do
+                status = yield()
+        end
+        return status
 end
 
 function yieldEveryN(count, N)

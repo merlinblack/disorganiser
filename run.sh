@@ -11,6 +11,9 @@ fi
 if [ -z "${DISPLAY}" ]; then
   export DISPLAY=:0
 fi
+if [ -z "${WAYLAND_DISPLAY}" ]; then
+  export WAYLAND_DISPLAY=wayland-0
+fi
 
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 

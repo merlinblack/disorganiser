@@ -19,6 +19,7 @@ function Suspend:activate()
 	function wakeup()
 		self:setDisplayPower('--off')
 		print('Screen power off')
+		vaderAlive = false
 
 		while not self.shouldWake and not vaderAlive do
 			yield()
@@ -26,7 +27,7 @@ function Suspend:activate()
 
 		print ('Wakey wakey')
 
-		mainScreen:activate()
+		self:activatePrevious()
 	end
 	addTask(wakeup,'alarm clock')
 end
@@ -34,7 +35,7 @@ end
 function Suspend:deactivate()
 	Screen.deactivate(self)
 	function powerOn()
-		self:setDisplayPower('--auto')
+		self:setDisplayPower('--on')
 		app.renderList:shouldRender()
 	end
 	addTask(powerOn,'display on')
@@ -43,13 +44,18 @@ end
 function Suspend:setDisplayPower(value)
 	local proc <close> = SubProcess()
 
-	if displayNameForXrandr == nil then
-		displayNameForXrandr = 'HDMI-1'
+	if app.displayName == nil then
+		app.displayName = 'HDMI-1'
 	end
 
-	proc:set('xrandr')
+	local program = 'xrandr'
+	if app.displayType == 'wayland' then
+		program = 'wlr-randr'
+	end
+
+	proc:set(program)
 	proc:add('--output')
-	proc:add(displayNameForXrandr)
+	proc:add(app.displayName)
 	proc:add(value)
 	proc:open()
 	local more = true

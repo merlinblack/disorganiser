@@ -10,7 +10,7 @@ sudo dnf install \
   SDL2_gfx-devel \
   SDL2_image-devel \
   SDL2_ttf-devel \
-  SDL2_ttf-devel \
+  SDL2_mixer-devel \
   sdl2-compat-devel
 
 
