@@ -126,11 +126,13 @@ function screenSaveTask()
 end
 
 function startScreenSave()
-	if app.isPictureFrame then
-		screenSaver:setDirectory('media/picture-frame/')
-	else
-		screenSaver:setDirectory('media/family/')
-	end
+    machines = {
+        vimes     = 'media/family/',
+        threepio  = 'media/picture-frame/',
+        quatro    = 'media/my-pictures/',
+        twoflower = 'media/my-pictures/',
+    }
+    screenSaver:setDirectory(machines[app.hostname])
 	addUniqueTask(screenSaveTask, 'screensaver')
 end
 
