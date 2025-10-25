@@ -57,14 +57,17 @@ function Screen:isActive()
 	return getCurrentScreen() == self
 end
 
-function Screen:addButton(rect, captionText, func, textColor, frameColor, backgroundColor)
+function Screen:addButton(rect, captionText, func, textColor, frameColor, backgroundColor, renderList)
+    if not renderList then
+        renderList = self.renderList
+    end
 	if not self.font then
 	    self:setStandardFont()
 	end
 
 	local button = Button.create(rect, captionText, self.font, func, textColor, frameColor, backgroundColor)
 
-	button:addToRender(self.renderList)
+	button:addToRender(renderList)
 	self:addChild(button)
 
 	return button
