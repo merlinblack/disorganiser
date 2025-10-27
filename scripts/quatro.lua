@@ -20,7 +20,7 @@ function QuatroDisplay:build()
 	self.clockColor = Color 'ff7f7f7f'
 	local backgroundColor = Color 'ff202020'
 
-	self.font = Font('media/mono.ttf', 32)
+	self.font = Font('media/mono.ttf', 42)
 	self.clockFont = Font('media/digital7.ttf', 256 + 64)
 
 	local background <close> = Rectangle(backgroundColor, true, { 0, 0, app.width, app.height })
