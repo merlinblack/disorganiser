@@ -11,6 +11,7 @@ class 'MainScreen' (Screen)
 function MainScreen:build()
 	Screen.build(self)
 
+    self:setStandardFont()
 	self.fontCode = Font('media/Aurek-Besh.ttf', 18)
 
 	local texture <close> = Texture('media/vader.jpg')

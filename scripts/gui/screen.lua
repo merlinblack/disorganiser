@@ -58,19 +58,7 @@ function Screen:isActive()
 end
 
 function Screen:addButton(rect, captionText, func, textColor, frameColor, backgroundColor, renderList)
-    if not renderList then
-        renderList = self.renderList
-    end
-	if not self.font then
-	    self:setStandardFont()
-	end
-
-	local button = Button.create(rect, captionText, self.font, func, textColor, frameColor, backgroundColor)
-
-	button:addToRender(renderList)
-	self:addChild(button)
-
-	return button
+	return addButton(self, rect, captionText, func, textColor, frameColor, backgroundColor, renderList)
 end
 
 function Screen:swipe(direction)

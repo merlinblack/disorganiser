@@ -1,7 +1,8 @@
-require("gui/screen")
+require "gui/screen"
+require "gui/inputgroup"
 local json = require("json")
 
-class("QuatroDisplay")(Screen)
+class "QuatroDisplay" (Screen)
 
 function QuatroDisplay:build()
 	Screen.build(self)
@@ -52,15 +53,21 @@ function QuatroDisplay:buildPageTwo()
 
     local backcolor = Color("ff404040")
 
-	self:addButton(btn, 'Photos', function() startScreenSave() end, textcolor, framecolor, backcolor, self.pages[2])
+    self.pageTwoInput = InputGroup( { btn[1], btn[2], width, (height+spacing) * 5 } )
+    self.pageTwoInput.font = self.font
+
+	self.pageTwoInput:addButton(btn, 'Photos', function() startScreenSave() end, textcolor, framecolor, backcolor, self.pages[2])
     btn[2] = btn[2] + spacing
-	self:addButton(btn, 'Suspend', function() suspend:activate() end, textcolor, framecolor, backcolor, self.pages[2])
+	self.pageTwoInput:addButton(btn, 'Suspend', function() suspend:activate() end, textcolor, framecolor, backcolor, self.pages[2])
     btn[2] = btn[2] + spacing
-	self:addButton(btn, 'Quit', function() quit() end, textcolor, framecolor, backcolor, self.pages[2])
+	self.pageTwoInput:addButton(btn, 'Quit', function() quit() end, textcolor, framecolor, backcolor, self.pages[2])
     btn[2] = btn[2] + spacing
-	self:addButton(btn, 'Restart', function() restart() end, textcolor, framecolor, backcolor, self.pages[2])
+	self.pageTwoInput:addButton(btn, 'Restart', function() restart() end, textcolor, framecolor, backcolor, self.pages[2])
     btn[2] = btn[2] + spacing
-	self:addButton(btn, 'Power off', function() poweroff() end, textcolor, framecolor, backcolor, self.pages[2])
+	self.pageTwoInput:addButton(btn, 'Power off', function() poweroff() end, textcolor, framecolor, backcolor, self.pages[2])
+
+    self:addChild(self.pageTwoInput)
+    self.pageTwoInput:enable(false)
 end
 
 function QuatroDisplay:buildDataDisplay()
@@ -105,6 +112,8 @@ function QuatroDisplay:swipe(direction)
     self.currentPage:clear()
     self.currentPage:add(self.pages[self.currentPageNumber])
     self.currentPage:shouldRender()
+
+    self.pageTwoInput:enable( self.currentPageNumber == 2 )
 end
 
 function QuatroDisplay:updateClock()
@@ -123,10 +132,10 @@ function QuatroDisplay:getClockText()
 end
 
 function QuatroDisplay:updateView()
-	self.temperatureRect.texture = Texture(self.font, "Temp: " .. self.temperature .. " °C", textcolor)
-    self.humidityRect.texture = Texture(self.font, "Hum: " .. self.humidity .. " RH", textcolor)
-	self.tvocRect.texture = Texture(self.font, "TVOC: " .. self.tvoc .. " ppb", textcolor)
-	self.pressureRect.texture = Texture(self.font, "Pres: " .. self.pressure .. " mbar", textcolor)
+	self.temperatureRect.texture = Texture(self.font, ("Temp: %.2f °C"):format(self.temperature), textcolor)
+    self.humidityRect.texture = Texture(self.font, ("Hum: %.2f RH"):format(self.humidity), textcolor)
+	self.tvocRect.texture = Texture(self.font, ("TVOC: %d ppb"):format(self.tvoc), textcolor)
+	self.pressureRect.texture = Texture(self.font, ("Pres: %.2f mbar"):format(self.pressure), textcolor)
 	self.renderList:shouldRender()
 end
 
@@ -157,7 +166,7 @@ end
 function QuatroDisplay:run(program)
 	local proc <close> = SubProcess()
 
-	write(program)
+	print(program)
 
 	proc:set("ssh")
 	proc:add("quatro.local")
@@ -175,7 +184,7 @@ function QuatroDisplay:run(program)
 		yield()
 	end
 
-	write(results)
+	print(results)
 
 	return results
 end

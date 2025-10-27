@@ -1,5 +1,6 @@
 require 'misc'
 require 'tasks'
+require 'gui/gui'
 require 'confirmdialog'
 require 'quit'
 require 'weatherGraphs'

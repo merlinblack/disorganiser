@@ -24,6 +24,8 @@ function LedTouch:init()
 end
 
 function LedTouch:build()
+    self:setStandardFont()
+
 	local textColor = Color 'FFE3EE0A'
 	local frameColor = Color 'FF058598'
 	local backgroundColor = Color '11a5a5a5'
