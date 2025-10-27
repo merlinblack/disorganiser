@@ -22,62 +22,49 @@
 -- print( d.xyz, d.abc )
 --
 
+function class(name)
+	_G[name] = {
+		__type = name,
+		__luaclass = true,
+	}
 
-function class( name )
-    _G[name] = {
-        __type = name,
-        __luaclass = true
-    }
+	local newclass = _G[name]
 
-    local newclass = _G[name]
+	local metatable = {
+		__call = function(...)
+			local obj = {}
 
-    local metatable =
-    {
-        __call = function(...)
-            local obj = {}
+			setmetatable(obj, {
+				__index = newclass,
+				__gc = function(self)
+					if self.destroy then self:destroy() end
+				end,
+			})
 
-            setmetatable( obj,
-            {
-                __index = newclass,
-                __gc = function( self )
-                    if self.destroy then
-                        self:destroy()
-                    end
-                end
-            } )
+			if obj.init ~= nil then obj:init(select(2, ...)) end
 
-            if obj.init ~= nil then
-                obj:init( select(2, ...) )
-            end
+			return obj
+		end,
+	}
 
-            return obj
-        end
-    }
+	setmetatable(newclass, metatable)
 
-    setmetatable( newclass, metatable )
-
-    return function( base ) metatable['__index'] = base newclass['__base'] = base end
+	return function(base)
+		metatable['__index'] = base
+		newclass['__base'] = base
+	end
 end
-
 
 --- Return true if the 'instance' is of type 'cls' or a base is of type 'cls'
 function instanceOf(instance, cls)
+	if type(cls) == 'table' then
+		cls = cls.__type
+		if cls == nil then error 'Invalid class given to instanceOf' end
+	end
 
-    if type(cls) == 'table' then
-        cls = cls.__type
-        if cls == nil then
-            error('Invalid class given to instanceOf')
-        end
-    end
+	if instance.__type == cls then return true end
 
-    if instance.__type == cls then
-        return true
-    end
+	if instance.__base then return instanceOf(instance.__base, cls) end
 
-    if instance.__base then
-        return instanceOf(instance.__base, cls)
-    end
-
-    return false
-
+	return false
 end

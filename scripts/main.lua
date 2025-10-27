@@ -6,15 +6,15 @@ require 'unlock'
 require 'gui/screen'
 require 'main2'
 
-class 'MainScreen' (Screen)
+class 'MainScreen'(Screen)
 
 function MainScreen:build()
 	Screen.build(self)
 
-    self:setStandardFont()
+	self:setStandardFont()
 	self.fontCode = Font('media/Aurek-Besh.ttf', 18)
 
-	local texture <close> = Texture('media/vader.jpg')
+	local texture <close> = Texture 'media/vader.jpg'
 	local src = { 0, 0, texture.width, texture.height }
 	local dest = { 0, 0, app.width, app.height }
 	local rectangle <close> = Rectangle(texture, dest, src)
@@ -49,13 +49,12 @@ function MainScreen:build()
 	btn = nextPos(btn)
 	self:addButton(btn, 'Çikiş', function() quit() end, textcolor, nil, backcolor)
 
-
 	local weatherRect = { 20, 5, 260, 130 }
 	local weatherbox <close> = Rectangle(backcolor, true, weatherRect)
 	local weatherBtn = Button(weatherRect)
 	weatherBtn.renderList = RenderList()
 	weatherBtn.pressedRenderList = weatherBtn.renderList
-	weatherBtn:setAction( function() weatherTrends:activate() end)
+	weatherBtn:setAction(function() weatherTrends:activate() end)
 	self:addChild(weatherBtn)
 	self.renderList:add(weatherbox)
 	local temperature = Rectangle(app.emptyTexture, { 30, 15, 0, 0 })
@@ -65,12 +64,12 @@ function MainScreen:build()
 	local humidity = Rectangle(app.emptyTexture, { 30, 95, 0, 0 })
 	self.renderList:add(humidity)
 
-	local static = Rectangle(Texture(self.fontCode, '<3 Alara', textcolor ), { 300, 5, 0, 0 })
+	local static = Rectangle(Texture(self.fontCode, '<3 Alara', textcolor), { 300, 5, 0, 0 })
 	self.renderList:add(static)
 
 	self.stopWeatherUpdate = false
 	function updateWeather()
-		local font <close> = Font('media/mono.ttf',24)
+		local font <close> = Font('media/mono.ttf', 24)
 		local color = Color 'FF00FF2F'
 		while not self.stopWeatherUpdate do
 			readLocalWeather()
@@ -85,32 +84,22 @@ function MainScreen:build()
 				humidity.texture = app.emptyTexture
 			end
 			self.renderList:shouldRender()
-			wait(60*1000)
+			wait(60 * 1000)
 		end
 		print 'Weather update stopped.'
 	end
 
-	if not app.isPictureFrame then
-		addTask(updateWeather,'weather')
-	end
+	if not app.isPictureFrame then addTask(updateWeather, 'weather') end
 
 	self.renderList:add(clockRenderList)
 	self.renderList:shouldRender()
 end
 
 function MainScreen:swipe(direction)
-	if direction == Swipe.Left then
-		mainScreen2:activate()
-	end
-	if direction == Swipe.Right then
-		systemUpdate:activate()
-	end
-	if direction == Swipe.Down then
-		console:setEnabled(true)
-	end
-	if direction == Swipe.Up then
-		console:setEnabled(false)
-	end
+	if direction == Swipe.Left then mainScreen2:activate() end
+	if direction == Swipe.Right then systemUpdate:activate() end
+	if direction == Swipe.Down then console:setEnabled(true) end
+	if direction == Swipe.Up then console:setEnabled(false) end
 end
 
 mainScreen = MainScreen()

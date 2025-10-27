@@ -1,7 +1,6 @@
-
 function ping(address)
 	local proc <close> = SubProcess()
-	proc:set('scripts/alive.sh')
+	proc:set 'scripts/alive.sh'
 	proc:add(address)
 	proc:open()
 	local more = true
@@ -10,9 +9,7 @@ function ping(address)
 		more, results = proc:read()
 		results = string.gsub(results, '^%s*(.-)%s*$', '%1')
 		if results ~= '' then
-			if results == 'alive' then
-				return true
-			end
+			if results == 'alive' then return true end
 		end
 		yield()
 	end

@@ -15,10 +15,7 @@ function Run:reset()
 end
 
 function Run:insertLine(line)
-
-	if line:startsWith '=' and self.firstLine then
-		line = 'return ' .. line:sub(2)
-	end
+	if line:startsWith '=' and self.firstLine then line = 'return ' .. line:sub(2) end
 
 	self.firstLine = false
 
@@ -47,9 +44,7 @@ function Run:insertLine(line)
 
 	self:reset()
 
-	addTask(func,'run')
+	addTask(func, 'run')
 end
 
-function Run:getPrompt()
-	return self.prompt
-end
+function Run:getPrompt() return self.prompt end

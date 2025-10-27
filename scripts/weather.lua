@@ -11,14 +11,14 @@ function asyncHttpRequest(url)
 	local body, statusCode
 
 	queue:wrap(function()
-		print ('requesting ' .. url)
+		print('requesting ' .. url)
 		local start = app.ticks
 
 		req = request.new_from_uri(url)
 		local headers, stream = req:go(10)
 
 		if headers == nil then
-			print( 'failed to retrieve ' .. url .. ' ' .. tostring(stream) )
+			print('failed to retrieve ' .. url .. ' ' .. tostring(stream))
 			body, statusCode = nil, '500'
 			return
 		end
@@ -34,11 +34,10 @@ function asyncHttpRequest(url)
 
 		local duration = app.ticks - start
 
-		print( 'retrieved ' .. url .. ' in ' .. duration .. 'ms')
-		print(headers:get(':status') == '200')
+		print('retrieved ' .. url .. ' in ' .. duration .. 'ms')
+		print(headers:get ':status' == '200')
 
-		statusCode = headers:get(':status')
-
+		statusCode = headers:get ':status'
 	end)
 
 	while not queue:empty() do
@@ -57,18 +56,16 @@ function pingWeatherServer()
 		return
 	end
 
-	local data, status = asyncHttpRequest('https://atkinson.kiwi.nz/weather/ping')
+	local data, status = asyncHttpRequest 'https://atkinson.kiwi.nz/weather/ping'
 
 	if status == '200' then
 		weatherServerAlive = true
 	else
 		weatherServerAlive = false
 	end
-
 end
 
 function readLocalWeather()
-
 	if weatherRunningOperations.last ~= nil then
 		while weatherRunningOperations.last ~= nil do
 			wait(100)
@@ -78,36 +75,34 @@ function readLocalWeather()
 
 	weatherRunningOperations.last = true
 
-	local data, status = asyncHttpRequest('https://atkinson.kiwi.nz/weather/measurements?limit=1')
+	local data, status = asyncHttpRequest 'https://atkinson.kiwi.nz/weather/measurements?limit=1'
 
 	if status == '200' then
 		weatherData = json.decode(data)
 		weather = {
 			valid = true,
-			temperature = string.format("%.1f", weatherData[1].temperature),
-			pressure =    string.format("%.1f", weatherData[1].pressure),
-			humidity =    string.format("%.1f", weatherData[1].humidity)
+			temperature = string.format('%.1f', weatherData[1].temperature),
+			pressure = string.format('%.1f', weatherData[1].pressure),
+			humidity = string.format('%.1f', weatherData[1].humidity),
 		}
 	else
-		if fileReadable('/tmp/weather.lua') then
-			dofile('/tmp/weather.lua')
+		if fileReadable '/tmp/weather.lua' then
+			dofile '/tmp/weather.lua'
 			weather.valid = false
 		else
 			weather = {
 				valid = false,
 				temperature = '',
 				pressure = '',
-				humidity = ''
+				humidity = '',
 			}
 		end
 	end
 
 	weatherRunningOperations.last = nil
-
 end
 
 function readLocalWeatherTrends()
-
 	if weatherRunningOperations.trends ~= nil then
 		while weatherRunningOperations.trends ~= nil do
 			wait(100)
@@ -117,7 +112,7 @@ function readLocalWeatherTrends()
 
 	weatherRunningOperations.trends = true
 
-	local data, status = asyncHttpRequest('https://atkinson.kiwi.nz/weather/trends')
+	local data, status = asyncHttpRequest 'https://atkinson.kiwi.nz/weather/trends'
 
 	if status == '200' then
 		weatherTrendsData = json.decode(data)
@@ -126,11 +121,9 @@ function readLocalWeatherTrends()
 	end
 
 	weatherRunningOperations.trends = nil
-
 end
 
 function readLocalWeatherSummary(hours)
-
 	local hours = hours or 24
 
 	if weatherRunningOperations.summary ~= nil then
@@ -153,5 +146,4 @@ function readLocalWeatherSummary(hours)
 	end
 
 	weatherRunningOperations.summary = nil
-
 end

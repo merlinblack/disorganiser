@@ -24,11 +24,9 @@ function print(...)
 		local args = table.pack(...)
 		for i = 1, args.n do
 			telnetOutput(tostring(args[i]))
-			if i < args.n then 
-				telnetOutput(' ')
-			end
+			if i < args.n then telnetOutput ' ' end
 		end
-		telnetOutput('\n')
+		telnetOutput '\n'
 	end
 end
 
@@ -36,22 +34,18 @@ require 'console'
 
 print('Version: ' .. app.version)
 
-write("Disorganiser ver: " .. app.version)
-write("Welcome to the konsole!")
+write('Disorganiser ver: ' .. app.version)
+write 'Welcome to the konsole!'
 
 pt(getTasks())
 
 machines = {
-    vimes = function() 
-        mainMenu:activate()
-    end,
-    threepio = function()
-        miniMenu:activate()
-    end,
-    quatro = function()
-        quatroDisplay:activate()
-        addTask(quatroUpdateTask, 'quatroUpdate')
-    end,
+	vimes = function() mainMenu:activate() end,
+	threepio = function() miniMenu:activate() end,
+	quatro = function()
+		quatroDisplay:activate()
+		addTask(quatroUpdateTask, 'quatroUpdate')
+	end,
 }
 
 -- For testing
@@ -59,4 +53,4 @@ machines[app.hostname] = machines['quatro']
 
 machines[app.hostname]()
 
-print('init.lua loaded.')
+print 'init.lua loaded.'

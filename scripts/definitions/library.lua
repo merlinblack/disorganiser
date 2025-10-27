@@ -35,7 +35,7 @@ Color = {}
 ---@return Color deepcopy
 function Color:clone() end
 
----@class EditString 
+---@class EditString
 ---@overload fun():EditString
 EditString = {}
 ---Retrieve the edited string
@@ -67,14 +67,14 @@ function EditString:insert(characters) end
 ---Remove the character at the cursor position
 function EditString:erase() end
 
----@class Font 
+---@class Font
 ---@field lineHeight integer Height in pixels of the font
 ---@field cacheStats table
 ---@overload fun(path:string, pointSize:integer):Font
 Font = {}
 ---Return rendered text size for Font
 ---@return integer width, integer height
----@param text string 
+---@param text string
 function Font:sizeText(text) end
 
 ---@class LineList : Renderable
@@ -134,10 +134,10 @@ function Rectangle:setColor(color) end
 function Rectangle:setFillColor(fillColor) end
 
 ---Base class for all classes that have a 'render' function can be put into a render list.
----@class Renderable 
+---@class Renderable
 Renderable = {}
 
----@class Renderer 
+---@class Renderer
 Renderer = {}
 
 ---@class RenderList : Renderable
@@ -160,7 +160,7 @@ function RenderList:clear() end
 ---Sort render list by renderable's order
 function RenderList:sort() end
 
----@class Texture 
+---@class Texture
 ---@field width number
 ---@field height number
 ---@overload fun(path:string):Texture
@@ -202,14 +202,14 @@ function killTask(name) end
 function telnetOutput(text) end
 
 -- Lua defined classes
----@class Class 
+---@class Class
 ---@field __type string Name of the class.
 
 ---@class Widget : Class
 ---@field updateAction function If set, action to take on update.
 Widget = {}
 
----@class Button : Widget 
+---@class Button : Widget
 ---@field renderList RenderList
 ---@field normalRenderList RenderList
 ---@field pressedRenderList RenderList

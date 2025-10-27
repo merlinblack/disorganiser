@@ -1,6 +1,6 @@
 require 'gui/widget'
 
-class 'Button' (Widget)
+class 'Button'(Widget)
 
 -- Should be called on class, rather than instance.
 function Button.create(rect, captionText, font, func, textColor, frameColor, backgroundColor)
@@ -32,7 +32,7 @@ function Button.create(rect, captionText, font, func, textColor, frameColor, bac
 	return btnWidget
 end
 
-function Button:init( rect )
+function Button:init(rect)
 	Widget.init(self, rect)
 	self.pressed = false
 	self.usingPressedRenderList = false
@@ -42,40 +42,34 @@ function Button:init( rect )
 end
 
 function Button:setCaption(captionText, textColor, font)
-
 	self.captionRenderList:clear()
 
-	if font == nil then
-		font = self.font
-	end
+	if font == nil then font = self.font end
 
-	if textColor == nil then
-		textColor = self.textColor
-	end
+	if textColor == nil then textColor = self.textColor end
 
-	if captionText:find('\n') then
-		local position  = captionText:find('\n')
-		local topLine = captionText:sub(1,position-1)
-		local bottomLine = captionText:sub(position+1)
+	if captionText:find '\n' then
+		local position = captionText:find '\n'
+		local topLine = captionText:sub(1, position - 1)
+		local bottomLine = captionText:sub(position + 1)
 
-		local thirdHeight = self.height//3
+		local thirdHeight = self.height // 3
 
 		local text <close> = Texture(font, topLine, textColor)
 		local rectangle <close> = Rectangle(
 			text,
-			self.left+((self.width//2)-(text.width//2)),
-			self.top+((thirdHeight)-(text.height//2))
+			self.left + ((self.width // 2) - (text.width // 2)),
+			self.top + (thirdHeight - (text.height // 2))
 		)
 		self.captionRenderList:add(rectangle)
 
 		local text <close> = Texture(font, bottomLine, textColor)
 		local rectangle <close> = Rectangle(
 			text,
-			self.left+((self.width//2)-(text.width//2)),
-			self.top+((thirdHeight*2)-(text.height//2))
+			self.left + ((self.width // 2) - (text.width // 2)),
+			self.top + ((thirdHeight * 2) - (text.height // 2))
 		)
 		self.captionRenderList:add(rectangle)
-
 	else
 		if captionText == '' then
 			captionText = ' '
@@ -85,45 +79,37 @@ function Button:setCaption(captionText, textColor, font)
 		local text <close> = Texture(font, captionText, textColor)
 		local rectangle <close> = Rectangle(
 			text,
-			self.left+((self.width//2)-(text.width//2)),
-			self.top+((self.height//2)-(text.height//2))
+			self.left + ((self.width // 2) - (text.width // 2)),
+			self.top + ((self.height // 2) - (text.height // 2))
 		)
 		self.captionRenderList:add(rectangle)
 	end
 end
 
-function Button:mouseClick( time, x, y, button )
-	if self:intersects( x, y ) and self.pressed then
-		self:callAction(time, x, y, button)
-	end
+function Button:mouseClick(time, x, y, button)
+	if self:intersects(x, y) and self.pressed then self:callAction(time, x, y, button) end
 end
 
-function Button:mouseDown( time, x, y, button )
-	if self:intersects( x, y ) then
-		self.pressed = true
-	end
+function Button:mouseDown(time, x, y, button)
+	if self:intersects(x, y) then self.pressed = true end
 	self:updateRenderList()
 end
 
-function Button:mouseUp( time, x, y, button )
+function Button:mouseUp(time, x, y, button)
 	self.pressed = false
 	self:updateRenderList()
 end
 
-function Button:mouseMoved( time, x, y, button )
-	if self:intersects( x, y ) then
+function Button:mouseMoved(time, x, y, button)
+	if self:intersects(x, y) then
 		self.hasMouse = true
 	else
-		if self.hasMouse then
-			self:lostMouse()
-		end
+		if self.hasMouse then self:lostMouse() end
 	end
 	self:updateRenderList()
 end
 
-function Button:lostMouse()
-	self.hasMouse = false
-end
+function Button:lostMouse() self.hasMouse = false end
 
 function Button:updateRenderList()
 	if self.hasMouse then
@@ -141,18 +127,12 @@ function Button:updateRenderList()
 end
 
 function Button:setAction(func)
-	if type(func) ~= 'function' then
-		error('Button:setAction called with non-function argument')
-	end
+	if type(func) ~= 'function' then error 'Button:setAction called with non-function argument' end
 	self.action = func
 end
 
 function Button:callAction(time, x, y, button)
-	if type(self.action) == 'function' then
-		addTask(function()	self:action( time, x, y, button ) end, 'buttonHandler')
-	end
+	if type(self.action) == 'function' then addTask(function() self:action(time, x, y, button) end, 'buttonHandler') end
 end
 
-function Button:addToRender(renderList)
-	renderList:add(self.renderList)
-end
+function Button:addToRender(renderList) renderList:add(self.renderList) end

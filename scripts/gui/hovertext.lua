@@ -1,6 +1,6 @@
 require 'gui/widget'
 
-class 'HoverText' (Widget)
+class 'HoverText'(Widget)
 
 function HoverText:init(rect, text, textcolor, color, font, backgroundColor)
 	Widget.init(self, rect)
@@ -9,30 +9,22 @@ function HoverText:init(rect, text, textcolor, color, font, backgroundColor)
 	--- @type RenderList
 	self.renderList = RenderList()
 	--- @type Font
-	self.font = font or Font('media/mono.ttf',24)
+	self.font = font or Font('media/mono.ttf', 24)
 	--- @type Color|nil
 	self.backgroundColor = backgroundColor
 
-	addTask(function()
-		self:setText(text, textcolor)
-	end, 'HoverText')
+	addTask(function() self:setText(text, textcolor) end, 'HoverText')
 
-	if color ~= nil then
-		self:setColor(color)
-	end
+	if color ~= nil then self:setColor(color) end
 end
 
 function HoverText:setText(text, color)
 	local frameSize = 5
-	if text == '' then
-		text = ' '
-	end
+	if text == '' then text = ' ' end
 	self.hoverRenderList:clear()
 	local texture <close> = Texture(self.font, text, color)
 	local left = math.max(frameSize, self.left - texture.width // 2 - frameSize)
-	if left + texture.width + frameSize*2 > app.width then
-		left = app.width - texture.width - frameSize*2
-	end
+	if left + texture.width + frameSize * 2 > app.width then left = app.width - texture.width - frameSize * 2 end
 	local top = math.max(0, self.top - texture.height - frameSize)
 	if self.backgroundColor then
 		local rect = growRect({ left, top, texture.width, texture.height }, frameSize)
@@ -68,16 +60,16 @@ function HoverText:removeFromScreen(screen)
 	screen:removeChild(self)
 end
 
-function HoverText:mouseMoved( time, x, y, button )
-    if self:intersects( x, y ) then
-        self.hasMouse = true
+function HoverText:mouseMoved(time, x, y, button)
+	if self:intersects(x, y) then
+		self.hasMouse = true
 		app.renderList:add(self.hoverRenderList)
 		app.renderList:shouldRender()
-    else
-        if self.hasMouse then
+	else
+		if self.hasMouse then
 			app.renderList:remove(self.hoverRenderList)
 			app.renderList:shouldRender()
-            self:lostMouse()
-        end
-    end
+			self:lostMouse()
+		end
+	end
 end

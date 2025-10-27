@@ -5,19 +5,13 @@ require 'ping'
 vaderAlive = true
 
 function checkVaderTask()
-	if app.isPictureFrame then
-		return
-	end
+	if app.isPictureFrame then return end
 	wait(10)
 	while true do
 		vaderAlive = ping(ipaddr.vader)
-		if not vaderAlive then
-			suspend:activate()
-		end
-		wait(5*60000)
+		if not vaderAlive then suspend:activate() end
+		wait(5 * 60000)
 	end
 end
 
-if app.hostname == 'vimes' then
-    addTask(checkVaderTask,'vaderCheck')
-end
+if app.hostname == 'vimes' then addTask(checkVaderTask, 'vaderCheck') end

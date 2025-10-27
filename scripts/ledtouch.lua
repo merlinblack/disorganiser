@@ -1,10 +1,9 @@
 require 'gui/screen'
 
-
 ---@class LedTouch : Screen
-LedTouch={}
+LedTouch = {}
 
-class 'LedTouch' (Screen)
+class 'LedTouch'(Screen)
 
 function LedTouch:init()
 	self.indexToLines = {}
@@ -17,14 +16,14 @@ function LedTouch:init()
 	self.indexToLines[6] = 25
 	self.indexToLines[7] = 4
 	self.indexState = {}
-	for i=0,7 do
+	for i = 0, 7 do
 		self.indexState[i] = false
 	end
 	Screen.init(self)
 end
 
 function LedTouch:build()
-    self:setStandardFont()
+	self:setStandardFont()
 
 	local textColor = Color 'FFE3EE0A'
 	local frameColor = Color 'FF058598'
@@ -36,18 +35,24 @@ function LedTouch:build()
 	local buttonHeight = 75
 	local buttonGap = (app.width - (8 * buttonWidth) - (2 * margin)) // 8
 
-	local buttonTop = app.height//2 - buttonHeight //2
+	local buttonTop = app.height // 2 - buttonHeight // 2
 
 	local x = margin
-	for led = 0,7 do
-		local rect = {x, buttonTop, buttonWidth, buttonHeight}
-		self:addButton(rect, ''..led, self:getBtnPressedClosure(led), textColor, frameColor, backgroundColor)
+	for led = 0, 7 do
+		local rect = { x, buttonTop, buttonWidth, buttonHeight }
+		self:addButton(rect, '' .. led, self:getBtnPressedClosure(led), textColor, frameColor, backgroundColor)
 		x = x + buttonGap + buttonWidth
 	end
-	local rect = {0, 0, 150, buttonHeight}
+	local rect = { 0, 0, 150, buttonHeight }
 	self:addButton(rect, 'Reset', function(self) self.parent:reset() end, textColor, frameColor, backgroundColor)
-	self:addButton({app.width-105, app.height-clockHeight-70, 100, 60}, 'Geri', function() mainScreen:activate() end, textColor, frameColor, backgroundColor)
-
+	self:addButton(
+		{ app.width - 105, app.height - clockHeight - 70, 100, 60 },
+		'Geri',
+		function() mainScreen:activate() end,
+		textColor,
+		frameColor,
+		backgroundColor
+	)
 end
 
 function LedTouch:getBtnPressedClosure(ledIndex)
@@ -59,9 +64,7 @@ function LedTouch:toggleLED(index)
 	write('Toggle led: ' .. index)
 	self.indexState[index] = not self.indexState[index]
 	local value = 0
-	if self.indexState[index] then
-		value = 1
-	end
+	if self.indexState[index] then value = 1 end
 	local line = self.indexToLines[index]
 	self:sshModelB('gpioset gpiochip0 ' .. line .. '=' .. value)
 end
@@ -77,11 +80,11 @@ function LedTouch:reset()
 end
 
 function LedTouch:sshModelB(command)
-	write ('ModelB command: ' .. command)
+	write('ModelB command: ' .. command)
 	local proc <close> = SubProcess()
 
-	proc:set('ssh')
-	proc:add('modelb.local')
+	proc:set 'ssh'
+	proc:add 'modelb.local'
 	proc:add(command)
 	proc:open()
 
@@ -91,9 +94,7 @@ function LedTouch:sshModelB(command)
 		more, results = proc:read()
 		results = string.gsub(results, '^%s*(.-)%s*$', '%1')
 
-		if results ~= '' then
-			write(results)
-		end
+		if results ~= '' then write(results) end
 		yield()
 	end
 end

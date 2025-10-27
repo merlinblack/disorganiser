@@ -11,5 +11,5 @@ Swipe = {
 	Down = 'Down',
 	Left = 'Left',
 	Right = 'Right',
-	None = 'None'
+	None = 'None',
 }

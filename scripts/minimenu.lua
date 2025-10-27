@@ -1,6 +1,6 @@
 require 'gui/screen'
 
-class 'MiniMenu' (Screen)
+class 'MiniMenu'(Screen)
 
 function MiniMenu:init()
 	self.fontBig = Font('media/pirulen.otf', 48)
@@ -14,16 +14,16 @@ function MiniMenu:build()
 	local framecolor = Color '333'
 	local backcolor = Color 'fff'
 
-	local background <close> = Rectangle(Color 'fff', true, {0,0,app.width,app.height})
+	local background <close> = Rectangle(Color 'fff', true, { 0, 0, app.width, app.height })
 	self.renderList:add(background)
 
 	local title <close> = Texture(self.fontBig, 'Our Pictures', textcolor)
-	local titleRect <close> = Rectangle(title, app.width//2 - title.width//2, 50)
+	local titleRect <close> = Rectangle(title, app.width // 2 - title.width // 2, 50)
 	self.renderList:add(titleRect)
 
 	local width = 300
 	local height = 80
-	local btn = { app.width//2 - width //2, 150, width, height }
+	local btn = { app.width // 2 - width // 2, 150, width, height }
 
 	function nextPos(btn)
 		btn[2] = btn[2] + 120

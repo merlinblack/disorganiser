@@ -10,28 +10,23 @@ end
 
 function History:insert(line)
 	-- Check if line is already there, and remove if so...
-	for index,value in ipairs(self.lines) do
-		if value == line then 
+	for index, value in ipairs(self.lines) do
+		if value == line then
 			table.remove(self.lines, index)
 			break -- there will only ever be one at most
 		end
 	end
-	
+
 	table.insert(self.lines, line)
 
 	-- enforce max lines
-	if #self.lines > self.max then
-		table.remove(self.lines, 1)
-	end
+	if #self.lines > self.max then table.remove(self.lines, 1) end
 
 	self.current = 0
-
 end
 
 function History:getPrevious()
-	if #self.lines == 0 then
-		return ''
-	end
+	if #self.lines == 0 then return '' end
 
 	if self.current > 1 then
 		self.current = self.current - 1
@@ -43,9 +38,7 @@ function History:getPrevious()
 end
 
 function History:getNext()
-	if #self.lines == 0 then
-		return ''
-	end
+	if #self.lines == 0 then return '' end
 
 	if self.current == #self.lines or self.current == 0 then
 		self.current = 1

@@ -4,10 +4,10 @@ require 'run'
 require 'history'
 require 'autocomplete'
 
-class 'Console' (Widget)
+class 'Console'(Widget)
 
 function Console:init()
-	Widget.init(self,  {0, 0, app.width, app.height})
+	Widget.init(self, { 0, 0, app.width, app.height })
 	self.renderList = RenderList()
 	self.font = Font('media/mono.ttf', 24)
 	self.enabled = false
@@ -35,37 +35,30 @@ function Console:build()
 	local rectangle <close> = Rectangle(backgroundColor, true, self:getRect())
 	self.renderList:add(rectangle)
 
-	local rectangle <close> = Rectangle(frameColor, false, shrinkRect(self:getRect(),1))
+	local rectangle <close> = Rectangle(frameColor, false, shrinkRect(self:getRect(), 1))
 	self.renderList:add(rectangle)
 
 	self.emptyline = app.emptyTexture
 	self.lineHeight = self.font.lineHeight + 1
-	self.charWidth,self.charHeight = self.font:sizeText('X')
-	self.charWidth = self.charWidth -1
+	self.charWidth, self.charHeight = self.font:sizeText 'X'
+	self.charWidth = self.charWidth - 1
 	self.lineRectangles = {}
 	self.nlines = (self.height - self.topMargin - self.bottomMargin) // self.lineHeight
 
 	for i = 1, self.nlines do
-		r = Rectangle(
-			self.emptyline,
-			self.leftMargin, self.topMargin + (i-1) * self.lineHeight
-		)
-		r:setClip({0,0,self.width-(self.leftMargin+self.rightMargin),self.lineHeight})
-		self.lineRectangles[i]  = r
+		r = Rectangle(self.emptyline, self.leftMargin, self.topMargin + (i - 1) * self.lineHeight)
+		r:setClip { 0, 0, self.width - (self.leftMargin + self.rightMargin), self.lineHeight }
+		self.lineRectangles[i] = r
 		self.renderList:add(r)
 	end
 
-	self.cursorRectangle = Rectangle(cursorColor, true, {0,0,0,0})
+	self.cursorRectangle = Rectangle(cursorColor, true, { 0, 0, 0, 0 })
 	self.renderList:add(self.cursorRectangle)
 end
 
-function Console:isEnabled()
-	return self.enabled
-end
+function Console:isEnabled() return self.enabled end
 
-function Console:toggleEnabled()
-	self:setEnabled(not self.enabled)
-end
+function Console:toggleEnabled() self:setEnabled(not self.enabled) end
 
 function Console:setEnabled(enabled)
 	self.enabled = enabled
@@ -150,15 +143,13 @@ function Console:keyUp(code, sym)
 end
 
 function Console:write(text)
-
 	lines = splitByNewline(text)
-	for _,line in pairs(lines) do
+	for _, line in pairs(lines) do
 		self:addLine(line)
 	end
 end
 
 function Console:addLine(text)
-
 	if text == '' then
 		self.lineRectangles[self.currentLine].texture = self.emptyline
 		self:scroll()
@@ -169,32 +160,26 @@ function Console:addLine(text)
 
 		text = text:tabsToSpaces()
 
-		while text:find('\v',1,true) do
-			if self.currentLine > 1 then
-				self.currentLine = self.currentLine - 1
-			end
-			text = text:replaceFirst('\v','')
+		while text:find('\v', 1, true) do
+			if self.currentLine > 1 then self.currentLine = self.currentLine - 1 end
+			text = text:replaceFirst('\v', '')
 		end
 
 		while true do
-			local splitChar = text:sub(splitPosition,splitPosition)
-			if splitChar == '' or splitChar == ' ' or splitPosition == min then
-				break
-			end
+			local splitChar = text:sub(splitPosition, splitPosition)
+			if splitChar == '' or splitChar == ' ' or splitPosition == min then break end
 			splitPosition = splitPosition - 1
 		end
 
-		local remainder = text:sub(splitPosition+1)
+		local remainder = text:sub(splitPosition + 1)
 
-		text = text:sub(1,splitPosition)
+		text = text:sub(1, splitPosition)
 		local newTexture <close> = Texture(self.font, text, self.textColor)
 		self.lineRectangles[self.currentLine].texture = newTexture
 
 		self:scroll()
 
-		if remainder ~= '' then
-			self:addLine(remainder)
-		end
+		if remainder ~= '' then self:addLine(remainder) end
 	end
 
 	self.renderList:shouldRender()
@@ -202,8 +187,8 @@ end
 
 function Console:scroll()
 	if self.currentLine == self.nlines then
-		for i = 1, self.nlines-1 do
-			self.lineRectangles[i].texture = self.lineRectangles[i+1].texture
+		for i = 1, self.nlines - 1 do
+			self.lineRectangles[i].texture = self.lineRectangles[i + 1].texture
 		end
 		self.currentLine = self.currentLine - 1
 	end
@@ -212,9 +197,7 @@ function Console:scroll()
 end
 
 function Console:updateInputDisplay()
-	if self.doInputUpdateFlag == false then
-		return
-	end
+	if self.doInputUpdateFlag == false then return end
 
 	text = self.run:getPrompt() .. self.edit:getString()
 	--print( 'InputLine: ['.. text ..']')
@@ -230,7 +213,12 @@ function Console:updateInputDisplay()
 	end
 
 	local pos = self.edit:index() + #self.run:getPrompt()
-	self.cursorRectangle:setDest({self.leftMargin + pos * self.charWidth, self.topMargin + (line-1)*self.lineHeight, self.charWidth, self.lineHeight})
+	self.cursorRectangle:setDest {
+		self.leftMargin + pos * self.charWidth,
+		self.topMargin + (line - 1) * self.lineHeight,
+		self.charWidth,
+		self.lineHeight,
+	}
 
 	self.renderList:shouldRender()
 end
@@ -245,23 +233,19 @@ end
 
 function Console:watch(fn, delay)
 	local delay = delay or 2000
-	addTask(
-		function()
-			while wait(delay) ~= 'killed' do
-				local line = self.currentLine
-				self.doInputUpdateFlag = false
-				self.currentLine = 1
+	addTask(function()
+		while wait(delay) ~= 'killed' do
+			local line = self.currentLine
+			self.doInputUpdateFlag = false
+			self.currentLine = 1
 
-				fn()
+			fn()
 
-				if self.currentLine < line then
-					self.currentLine = line
-				end
-				self.doInputUpdateFlag = true
-				self:updateInputDisplay()
-			end
-		end, 'console-watch'
-	)
+			if self.currentLine < line then self.currentLine = line end
+			self.doInputUpdateFlag = true
+			self:updateInputDisplay()
+		end
+	end, 'console-watch')
 end
 
 function Console:showHistory()
@@ -294,16 +278,10 @@ function write(...)
 	console:updateInputDisplay()
 end
 
-function clear()
-	console:clear()
-end
+function clear() console:clear() end
 
-function watch(fn, delay)
-	console:watch(fn, delay)
-end
+function watch(fn, delay) console:watch(fn, delay) end
 
-function killWatch()
-	killTask 'console-watch'
-end
+function killWatch() killTask 'console-watch' end
 
-addTask(function() console:blinkCursor() end, "console cursor blink")
+addTask(function() console:blinkCursor() end, 'console cursor blink')

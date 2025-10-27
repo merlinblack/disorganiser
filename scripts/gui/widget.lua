@@ -2,140 +2,120 @@ require 'class'
 
 class 'Widget'
 
-function Widget:init( rect )
-    self.children = {}
-    self.left   = rect[1]
-    self.top    = rect[2]
-    self.width  = rect[3]
-    self.height = rect[4]
+function Widget:init(rect)
+	self.children = {}
+	self.left = rect[1]
+	self.top = rect[2]
+	self.width = rect[3]
+	self.height = rect[4]
 end
 
 -- Can be called, directly or by garbage collection
 -- if garbage collection runs it, it must not error!!
 function Widget:destroy()
-    if type(self.children) == 'table' then
-        for _,child in pairs(self.children) do
-            child:destroy()
-        end
-    end
+	if type(self.children) == 'table' then
+		for _, child in pairs(self.children) do
+			child:destroy()
+		end
+	end
 end
 
-function Widget:intersects( x, y )
-    --print('intersects', x, y, self.left, self.top, self.width, self.height)
-    if x < self.left then
-        return false
-    end
-    if y < self.top then
-        return false
-    end
-    if x > self.left + self.width then
-        return false
-    end
-    if y > self.top + self.height then
-        return false
-    end
-    return true
+function Widget:intersects(x, y)
+	--print('intersects', x, y, self.left, self.top, self.width, self.height)
+	if x < self.left then return false end
+	if y < self.top then return false end
+	if x > self.left + self.width then return false end
+	if y > self.top + self.height then return false end
+	return true
 end
 
-function Widget:mouseMoved( time, x, y, button )
-    if self:intersects( x, y ) then
-        self.hasMouse = true
-        for _,child in pairs(self.children) do
-            child:mouseMoved( time, x, y, button )
-        end
-    else
-        if self.hasMouse then
-            self:lostMouse()
-        end
-    end
+function Widget:mouseMoved(time, x, y, button)
+	if self:intersects(x, y) then
+		self.hasMouse = true
+		for _, child in pairs(self.children) do
+			child:mouseMoved(time, x, y, button)
+		end
+	else
+		if self.hasMouse then self:lostMouse() end
+	end
 end
 
-function Widget:mouseClick( time, x, y, button )
-    if self:intersects( x, y ) then
-        for _,child in pairs(self.children) do
-            local handled = child:mouseClick( time, x, y, button )
-            if handled then
-                return true
-            end
-        end
-    end
+function Widget:mouseClick(time, x, y, button)
+	if self:intersects(x, y) then
+		for _, child in pairs(self.children) do
+			local handled = child:mouseClick(time, x, y, button)
+			if handled then return true end
+		end
+	end
 end
 
-function Widget:mouseDown( time, x, y, button )
-    if self:intersects( x, y ) then
-        for _,child in pairs(self.children) do
-            child:mouseDown( time, x, y, button )
-        end
-    end
+function Widget:mouseDown(time, x, y, button)
+	if self:intersects(x, y) then
+		for _, child in pairs(self.children) do
+			child:mouseDown(time, x, y, button)
+		end
+	end
 end
 
-function Widget:mouseUp( time, x, y, button )
-    if self:intersects( x, y ) then
-        for _,child in pairs(self.children) do
-            child:mouseUp( time, x, y, button )
-        end
-    end
+function Widget:mouseUp(time, x, y, button)
+	if self:intersects(x, y) then
+		for _, child in pairs(self.children) do
+			child:mouseUp(time, x, y, button)
+		end
+	end
 end
 
-function Widget:keyPressed( keyCode, codepoint )
-    for _,child in pairs(self.children) do
-        child:keyPressed( keyCode, codepoint )
-    end
+function Widget:keyPressed(keyCode, codepoint)
+	for _, child in pairs(self.children) do
+		child:keyPressed(keyCode, codepoint)
+	end
 end
 
-function Widget:addChild( widget )
-    if instanceOf(widget, Widget) ~= true then
-        error('Trying to add non widget as child')
-    end
-    widget.parent = self
-    table.insert(self.children, widget)
+function Widget:addChild(widget)
+	if instanceOf(widget, Widget) ~= true then error 'Trying to add non widget as child' end
+	widget.parent = self
+	table.insert(self.children, widget)
 end
 
-function Widget:removeChild( widget )
-    local index = table.getIndex(self.children, widget)
-    if index > 0 then
-        table.remove(self.children, index)
-        widget.parent = nil
-    end
+function Widget:removeChild(widget)
+	local index = table.getIndex(self.children, widget)
+	if index > 0 then
+		table.remove(self.children, index)
+		widget.parent = nil
+	end
 end
 
 -- Return true to cancel move, when it would move off view
-function Widget:move( x, y )
-    local left = self.left
-    local top = self.top
-    local width = self.width
-    local height = self.height
+function Widget:move(x, y)
+	local left = self.left
+	local top = self.top
+	local width = self.width
+	local height = self.height
 
-    if left + x < 0 or top + y < 0 then return true end
-    if left + width + x > app.width or top + height + y > app.height then
-        return true
-    end
+	if left + x < 0 or top + y < 0 then return true end
+	if left + width + x > app.width or top + height + y > app.height then return true end
 
-    self.left = self.left + x
-    self.top = self.top + y
+	self.left = self.left + x
+	self.top = self.top + y
 
-    for _,child in pairs( self.children ) do
-        if child.move then child:move( x, y ) end
-    end
+	for _, child in pairs(self.children) do
+		if child.move then child:move(x, y) end
+	end
 end
 
 function Widget:lostMouse()
-    self.hasMouse = false
-    for _,child in pairs( self.children ) do
-        if child.lostMouse then child:lostMouse() end
-    end
+	self.hasMouse = false
+	for _, child in pairs(self.children) do
+		if child.lostMouse then child:lostMouse() end
+	end
 end
 
-function Widget:getRect()
-    return {self.left, self.top, self.width, self.height}
-end
+function Widget:getRect() return { self.left, self.top, self.width, self.height } end
 
 function Widget:update()
-    if type(self.updateAction) == 'function' then
-        self:updateAction()
-    end
+	if type(self.updateAction) == 'function' then self:updateAction() end
 
-    for _,child in pairs( self.children ) do
-        child:update()
-    end
+	for _, child in pairs(self.children) do
+		child:update()
+	end
 end

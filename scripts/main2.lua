@@ -6,13 +6,13 @@ require 'ping'
 
 require 'gui/screen'
 
-class 'MainScreen2' (Screen)
+class 'MainScreen2'(Screen)
 
 function MainScreen2:build()
 	Screen.build(self)
 
 	self.lastOctavoCheck = -math.huge
-	 
+
 	local offline = Color 'fe0a4a'
 	local online = Color '0f0'
 	local grey = Color '777'
@@ -23,13 +23,13 @@ function MainScreen2:build()
 	self.offlineTexture = Texture(self.font, 'Offline', offline)
 	self.onlineTexture = Texture(self.font, 'Online', online)
 
-	local texture <close> = Texture('media/vader.jpg')
-	local src = { 0, 0, texture.width, texture.height}
-	local dest = {0, 0, app.width, app.height}
+	local texture <close> = Texture 'media/vader.jpg'
+	local src = { 0, 0, texture.width, texture.height }
+	local dest = { 0, 0, app.width, app.height }
 	local rectangle <close> = Rectangle(texture, dest, src)
 	self.renderList:add(rectangle)
 
-	local btn = { 30, 150, 180, 110}
+	local btn = { 30, 150, 180, 110 }
 	local textcolor = Color 'fe0a4a'
 	local backcolor = textcolor:clone()
 	backcolor.a = 0x20
@@ -42,20 +42,34 @@ function MainScreen2:build()
 	self.wakeBtn = self:addButton(btn, 'Detecting\nStatus', function() end, grey, textcolor, backcolor)
 
 	btn[1] = btn[1] - 200
-	self.retryBtn = self:addButton(btn, 'Retry\nWeather', function(self) self.parent:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py') end, grey, textcolor, backcolor)
+	self.retryBtn = self:addButton(
+		btn,
+		'Retry\nWeather',
+		function(self) self.parent:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py') end,
+		grey,
+		textcolor,
+		backcolor
+	)
 
-	self:addButton({app.width-105, app.height-clockHeight-70, 100, 60}, 'Geri', function() self:activatePrevious() end, textcolor, nil, backcolor)
+	self:addButton(
+		{ app.width - 105, app.height - clockHeight - 70, 100, 60 },
+		'Geri',
+		function() self:activatePrevious() end,
+		textcolor,
+		nil,
+		backcolor
+	)
 
-	local static <close> = Rectangle(Texture(self.fontCode, 'Main Screen Two', textcolor ), { 30,5,0,0})
+	local static <close> = Rectangle(Texture(self.fontCode, 'Main Screen Two', textcolor), { 30, 5, 0, 0 })
 	self.renderList:add(static)
 
-	local static <close> = Rectangle(Texture(self.font, 'Octavo Status', textcolor ), { 30,50,0,0})
+	local static <close> = Rectangle(Texture(self.font, 'Octavo Status', textcolor), { 30, 50, 0, 0 })
 	self.renderList:add(static)
-	local static <close> = Rectangle(Texture(self.font, 'PING:               HTTPD:', textcolor ), { 30, 80,0,0})
+	local static <close> = Rectangle(Texture(self.font, 'PING:               HTTPD:', textcolor), { 30, 80, 0, 0 })
 	self.renderList:add(static)
 
-	self.octavoPingStatus = Rectangle(self.offlineTexture, { 120,80,0,0})
-	self.octavoHttpdStatus = Rectangle(self.offlineTexture, { 390,80,0,0})
+	self.octavoPingStatus = Rectangle(self.offlineTexture, { 120, 80, 0, 0 })
+	self.octavoHttpdStatus = Rectangle(self.offlineTexture, { 390, 80, 0, 0 })
 	self.renderList:add(self.octavoPingStatus)
 	self.renderList:add(self.octavoHttpdStatus)
 
@@ -68,9 +82,7 @@ function MainScreen2:build()
 			self.octavoHttpdStatus.texture = self.onlineTexture
 		end
 
-		if self.lastOctavoCheck + 1000 < app.ticks then
-			self.octavoPing = ping(ipaddr.octavo)
-		end
+		if self.lastOctavoCheck + 1000 < app.ticks then self.octavoPing = ping(ipaddr.octavo) end
 
 		if self.octavoPing then
 			self.octavoPingStatus.texture = self.onlineTexture
@@ -84,33 +96,30 @@ function MainScreen2:build()
 	function self.wakeBtn:updateAction()
 		local enabled = false
 
-		if self.parent.octavoPing == false then
-			enabled = true
-		end
+		if self.parent.octavoPing == false then enabled = true end
 
 		if self.prev ~= enabled then
 			self.prev = enabled
 			if enabled then
 				self:setCaption('Wake up\nOctavo', online)
-				self:setAction(function() self.parent:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63') end)
+				self:setAction(function() self.parent:runTask('localhost', 'wakeonlan f8:0f:41:ba:c1:63') end)
 			else
 				self:setCaption('Poweroff\nOctavo', textcolor)
 				self:setAction(function() self.parent:runTask('octavo.local', 'sudo poweroff') end)
 			end
 		end
-
 	end
 
 	function self.retryBtn:updateAction()
 		local enabled = false
 
 		if weatherServerAlive == true then
-			if fileExists('~/prog/MS8607/measurements.db') then
-				print('got measurements')
+			if fileExists '~/prog/MS8607/measurements.db' then
+				print 'got measurements'
 				enabled = true
 			end
-			if fileExists('~/prog/MS8607/retry.db') then
-				print('got retry db')
+			if fileExists '~/prog/MS8607/retry.db' then
+				print 'got retry db'
 				enabled = true
 			end
 		end
@@ -123,7 +132,6 @@ function MainScreen2:build()
 				self:setCaption('Retry\nWeather', grey)
 			end
 		end
-
 	end
 
 	function self.wakeNBakeBtn:updateAction()
@@ -149,7 +157,7 @@ function MainScreen2:build()
 			end
 		end
 	end
-	
+
 	self.renderList:add(clockRenderList)
 	self.renderList:shouldRender()
 end
@@ -164,29 +172,27 @@ function MainScreen2:update()
 end
 
 function MainScreen2:swipe(direction)
-	if direction == Swipe.Right and app.isPictureFrame == false then
-		mainScreen:activate()
-	end
+	if direction == Swipe.Right and app.isPictureFrame == false then mainScreen:activate() end
 	if direction == Swipe.Left then
 		unlock.previousScreen = self.previousScreen
 		unlock:activate(true)
 	end
-	if direction == Swipe.Down then
-		console:setEnabled(true)
-	end
-	if direction == Swipe.Up then
-		console:setEnabled(false)
-	end
+	if direction == Swipe.Down then console:setEnabled(true) end
+	if direction == Swipe.Up then console:setEnabled(false) end
 end
 
 function MainScreen2:wakeNBake()
 	local offline = Color 'fe0a4a'
 	self.waitingForOctavo = true
-	waitForTask(self:runTask('localhost','wakeonlan f8:0f:41:ba:c1:63'))
+	waitForTask(self:runTask('localhost', 'wakeonlan f8:0f:41:ba:c1:63'))
 	self.wakeNBakeBtn:setCaption('Waiting...', offline)
 	self.wakeNBakeBtn:setAction(function() end)
 	self.renderList:shouldRender()
-	waitForTask(addTask(function() while weather.valid == false do wait(200) end end))
+	waitForTask(addTask(function()
+		while weather.valid == false do
+			wait(200)
+		end
+	end))
 	self:runTask('localhost', 'cd ~/prog/MS8607/ && pwd && ./retry_api.py')
 	self.waitingForOctavo = false
 	self.wakeNBakeBtn.prev = nil
@@ -194,21 +200,15 @@ end
 
 function MainScreen2:runTask(host, command)
 	if self.alreadyRunning then return end
-	
+
 	self.alreadyRunning = true
 
 	function task()
 		local renderList = RenderList()
-		local font <close> = Font('media/mono.ttf',18)
-		local tl = TextLog(
-			renderList, 
-			420, 150,
-			Color '400f',
-			Color '0ff',
-			font, 
-			app.width - 420 - 10, 250)
+		local font <close> = Font('media/mono.ttf', 18)
+		local tl = TextLog(renderList, 420, 150, Color '400f', Color '0ff', font, app.width - 420 - 10, 250)
 
-		local frame <close> = Rectangle(Color('00f'), false, growRect(tl.bounds))
+		local frame <close> = Rectangle(Color '00f', false, growRect(tl.bounds))
 
 		renderList:add(frame)
 
@@ -217,11 +217,11 @@ function MainScreen2:runTask(host, command)
 		local proc <close> = SubProcess()
 
 		if host ~= 'localhost' then
-			proc:set('ssh')
+			proc:set 'ssh'
 			proc:add(host)
 		else
-			proc:set('bash')
-			proc:add('-c')
+			proc:set 'bash'
+			proc:add '-c'
 		end
 		proc:add(command)
 		proc:open()
@@ -237,14 +237,14 @@ function MainScreen2:runTask(host, command)
 
 			if results ~= '' then
 				split = splitByNewline(results)
-				for i,v in ipairs(split) do
+				for i, v in ipairs(split) do
 					tl:add(v)
 				end
 			end
 			yield()
 		end
-		tl:add('')
-		tl:add('FINISHED')
+		tl:add ''
+		tl:add 'FINISHED'
 		wait(2500)
 		tl:destroy()
 		self.renderList:remove(renderList)
