@@ -15,7 +15,6 @@ function QuatroDisplay:build()
 	self.currentPage = RenderList()
 	self.currentPageNumber = 1
 	self.pages = { RenderList(), RenderList() }
-	self.currentPage:add(self.pages[1])
 
 	self.clockColor = Color 'ff7f7f7f'
 	local backgroundColor = Color 'ff202020'
@@ -30,6 +29,7 @@ function QuatroDisplay:build()
 	self:buildPageOne()
 	self:buildPageTwo()
 	self:buildDataDisplay()
+	self:setPage(1)
 end
 
 function QuatroDisplay:buildPageOne()
@@ -138,17 +138,29 @@ function QuatroDisplay:pill(left, top, frameColor, backColor)
 	return rect
 end
 
-function QuatroDisplay:swipe(direction)
-	if self.currentPageNumber < 2 then
-		self.currentPageNumber = self.currentPageNumber + 1
-	else
-		self.currentPageNumber = 1
-	end
+function QuatroDisplay:setPage(num)
+	self.currentPageNumber = num
 	self.currentPage:clear()
 	self.currentPage:add(self.pages[self.currentPageNumber])
 	self.currentPage:shouldRender()
 
 	self.pageTwoInput:enable(self.currentPageNumber == 2)
+end
+
+function QuatroDisplay:swipe(direction)
+	local num = self.currentPageNumber
+
+	if num < 2 then
+		num = num + 1
+	else
+		num = 1
+	end
+	self:setPage(num)
+end
+
+function QuatroDisplay:activate(noUpdatePrevious)
+	Screen.activate(self, noUpdatePrevious)
+	self:setPage(1)
 end
 
 function QuatroDisplay:updateClock()
