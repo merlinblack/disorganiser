@@ -48,8 +48,27 @@ end
 
 function Screen:isActive() return getCurrentScreen() == self end
 
-function Screen:addButton(rect, captionText, func, textColor, frameColor, backgroundColor, renderList)
-	return addButton(self, rect, captionText, func, textColor, frameColor, backgroundColor, renderList)
+function Screen:addButton(
+	rect,
+	captionText,
+	func,
+	textColor,
+	frameColor,
+	backgroundColor,
+	renderList,
+	shouldReverseFunc
+)
+	return addButton(
+		self,
+		rect,
+		captionText,
+		func,
+		textColor,
+		frameColor,
+		backgroundColor,
+		renderList,
+		shouldReverseFunc
+	)
 end
 
 function Screen:swipe(direction) print('Swipe: ' .. direction) end

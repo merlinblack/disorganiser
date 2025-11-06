@@ -27,7 +27,26 @@ function InputGroup:keyPressed(keyCode, codepoint)
 	if self.enabled then Widget.keyPressed(self, keyCode, codepoint) end
 end
 
-function InputGroup:addButton(rect, captionText, func, textColor, frameColor, backgroundColor, renderList)
+function InputGroup:addButton(
+	rect,
+	captionText,
+	func,
+	textColor,
+	frameColor,
+	backgroundColor,
+	renderList,
+	shouldReverseFunc
+)
 	print('InputGroup add button', captionText)
-	return addButton(self, rect, captionText, func, textColor, frameColor, backgroundColor, renderList)
+	return addButton(
+		self,
+		rect,
+		captionText,
+		func,
+		textColor,
+		frameColor,
+		backgroundColor,
+		renderList,
+		shouldReverseFunc
+	)
 end

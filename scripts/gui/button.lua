@@ -3,9 +3,10 @@ require 'gui/widget'
 class 'Button'(Widget)
 
 -- Should be called on class, rather than instance.
-function Button.create(rect, captionText, font, func, textColor, frameColor, backgroundColor)
+function Button.create(rect, captionText, font, func, textColor, frameColor, backgroundColor, shouldReverseFunc)
 	local btnWidget = Button(rect)
 	btnWidget:setAction(func)
+	btnWidget.shouldReverseFunc = shouldReverseFunc
 
 	textColor = textColor or Color 'FFF'
 	frameColor = frameColor or textColor
@@ -20,6 +21,7 @@ function Button.create(rect, captionText, font, func, textColor, frameColor, bac
 	fadeFrameColor.a = fadeFrameColor.a // 3
 	local rectangle <close> = RoundedRectangle(frameColor, rect, 15, fadeFrameColor)
 	btnWidget.pressedRenderList:add(rectangle)
+	btnWidget.pressedRenderList:add(btnWidget.captionRenderList)
 
 	btnWidget.renderList = RenderList()
 	btnWidget.renderList:add(btnWidget.normalRenderList)
@@ -112,16 +114,25 @@ end
 function Button:lostMouse() self.hasMouse = false end
 
 function Button:updateRenderList()
+	local pressed = self.pressedRenderList
+	local normal = self.normalRenderList
+
+	if self.shouldReverseFunc and self:shouldReverseFunc() then
+		normal, pressed = pressed, normal
+	end
+
 	if self.hasMouse then
 		if self.pressed and not self.usingPressedRenderList then
 			self.usingPressedRenderList = true
-			self.renderList:add(self.pressedRenderList)
+			self.renderList:clear()
+			self.renderList:add(pressed)
 			self.renderList:shouldRender()
 		end
 	end
 	if (not self.pressed or not self.hasMouse) and self.usingPressedRenderList then
 		self.usingPressedRenderList = false
-		self.renderList:remove(self.pressedRenderList)
+		self.renderList:clear()
+		self.renderList:add(normal)
 		self.renderList:shouldRender()
 	end
 end

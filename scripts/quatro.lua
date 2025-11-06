@@ -47,12 +47,15 @@ end
 function QuatroDisplay:buildPageTwo()
 	local width = 300
 	local height = 80
-	local btn = { app.width // 2 - width // 2, 150, width, height }
-	local spacing = 150
+	local left = app.width // 4
+	local top = 150
+	local btn = { left, top, width, height }
+	local vSpacing = 200
+	local hSpacing = width + width
 
 	local backcolor = Color 'ff404040'
 
-	self.pageTwoInput = InputGroup { btn[1], btn[2], width, (height + spacing) * 5 }
+	self.pageTwoInput = InputGroup { btn[1], btn[2], 2 * width + hSpacing, (height + vSpacing) * 5 }
 	self.pageTwoInput.font = self.font
 
 	self.pageTwoInput:addButton(
@@ -65,7 +68,7 @@ function QuatroDisplay:buildPageTwo()
 		self.pages[2]
 	)
 
-	btn[2] = btn[2] + spacing
+	btn[2] = btn[2] + vSpacing
 	self.pageTwoInput:addButton(
 		btn,
 		'Suspend',
@@ -76,10 +79,17 @@ function QuatroDisplay:buildPageTwo()
 		self.pages[2]
 	)
 
-	btn[2] = btn[2] + spacing
+	btn[2] = btn[2] + vSpacing
+	self.pageTwoInput:addButton(btn, 'Caffine', function()
+		caffine = not caffine
+		self:setPage(1)
+	end, textcolor, framecolor, backcolor, self.pages[2], function() return not caffine end)
+
+	btn[1] = btn[1] + hSpacing
+	btn[2] = top
 	self.pageTwoInput:addButton(btn, 'Quit', function() quit() end, textcolor, framecolor, backcolor, self.pages[2])
 
-	btn[2] = btn[2] + spacing
+	btn[2] = btn[2] + vSpacing
 	self.pageTwoInput:addButton(
 		btn,
 		'Restart',
@@ -90,7 +100,7 @@ function QuatroDisplay:buildPageTwo()
 		self.pages[2]
 	)
 
-	btn[2] = btn[2] + spacing
+	btn[2] = btn[2] + vSpacing
 	self.pageTwoInput:addButton(
 		btn,
 		'Power off',
