@@ -2,6 +2,8 @@ require 'gui/screen'
 require 'clock'
 require 'suspend'
 
+screenSaverTimeoutMinutes = 5
+
 class 'ScreenSaver'(Screen)
 
 function ScreenSaver:build()
@@ -127,7 +129,7 @@ end
 function checkForScreenSaveNeeded()
 	while true do
 		if caffine ~= true and getCurrentScreen() ~= screenSaver and getCurrentScreen() ~= suspend then
-			if lastEvent + 10 * 60000 < app.ticks then startScreenSave() end
+			if lastEvent + screenSaverTimeoutMinutes * 60000 < app.ticks then startScreenSave() end
 		end
 		wait(1000)
 	end
