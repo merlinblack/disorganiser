@@ -207,7 +207,7 @@ function QuatroDisplay:updateData()
 	self.humidity = data.humidity
 	yield()
 
-	local jsonStr = self:run 'ags10_simple'
+	local jsonStr = self:run 'ags10'
 	local data = json.decode(jsonStr)
 	self.tvoc = data.tvoc
 	yield()
@@ -252,6 +252,7 @@ function quatroUpdateTask()
 	local clock = 0
 	local nextDataTime = 0
 
+	stopQuatro = false
 	while not stopQuatro do
 		if clock < os.time() then
 			quatroDisplay:updateClock()

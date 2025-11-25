@@ -222,6 +222,9 @@ Screen = {}
 ---@overload fun(rect:table, text:string, textColor:Color, color?:Color, font?:Font, backgroundColor?:Color)
 HoverText = {}
 
+---@class InputGroup : Widget
+InputGroup = {}
+
 ---@class Calendar : Screen
 Calendar = {}
 ---@class ConfirmDialog : Screen
@@ -253,6 +256,8 @@ Unlock = {}
 WeatherGraphs = {}
 ---@class WeatherTrends : Screen
 WeatherTrends = {}
+---@class QuatroDisplay : Screen
+QuatroDisplay = {}
 
 -- Globals defined in .config/disorganiser/config.lua
 ---@table
