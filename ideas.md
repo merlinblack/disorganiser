@@ -1,5 +1,7 @@
 # Some ideas
 
+- On the weather graph - show where 12am is
+
 - Email notification
 - Detect swipe gestures - DONE
 - Download METAR for various places
