@@ -7,3 +7,4 @@ media
 picture-frame-config.lua
 xc_home
 build_arm64
+.cache
