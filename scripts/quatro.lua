@@ -7,10 +7,10 @@ class 'QuatroDisplay'(Screen)
 function QuatroDisplay:build()
 	Screen.build(self)
 
-	self.temperature = 20.0
-	self.humidity = 50
-	self.tvoc = 100
-	self.pressure = 1020.0
+	self.temperature = 0.0
+	self.humidity = 0
+	self.tvoc = 0
+	self.pressure = 0.0
 
 	self.currentPage = RenderList()
 	self.currentPageNumber = 1
@@ -54,6 +54,7 @@ function QuatroDisplay:buildPageTwo()
 	local hSpacing = width + width
 
 	local backcolor = Color 'ff404040'
+	local framecolor = Color 'ffffffff'
 
 	self.pageTwoInput = InputGroup { btn[1], btn[2], 2 * width + hSpacing, (height + vSpacing) * 5 }
 	self.pageTwoInput.font = self.font
@@ -160,12 +161,16 @@ end
 function QuatroDisplay:swipe(direction)
 	local num = self.currentPageNumber
 
-	if num < 2 then
-		num = num + 1
-	else
-		num = 1
+	if direction == Swipe.Left or direction == Swipe.Right then
+		if num < 2 then
+			num = num + 1
+		else
+			num = 1
+		end
+		self:setPage(num)
 	end
-	self:setPage(num)
+	if direction == Swipe.Down then console:setEnabled(true) end
+	if direction == Swipe.Up then console:setEnabled(false) end
 end
 
 function QuatroDisplay:activate(noUpdatePrevious)
