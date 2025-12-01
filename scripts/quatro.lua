@@ -202,6 +202,8 @@ function QuatroDisplay:updateView()
 end
 
 function QuatroDisplay:updateData()
+	if not self:isActive() then return end
+
 	local jsonStr = self:run 'mcp9808'
 	local data = json.decode(jsonStr)
 	self.temperature = data.temperature
