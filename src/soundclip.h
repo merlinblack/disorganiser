@@ -2,6 +2,7 @@
 #define __SOUNDCLIP_H
 
 #include <SDL2/SDL_mixer.h>
+#include <memory>
 
 class SoundClip {
   Mix_Chunk* chunk;
@@ -12,8 +13,10 @@ class SoundClip {
   SoundClip(const char* filename);
   ~SoundClip();
 
-  void play();
+  void play(int loop);
   void stop();
 };
+
+using SoundClipPtr = std::shared_ptr<SoundClip>;
 
 #endif  // __SOUNDCLIP_H

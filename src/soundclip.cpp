@@ -17,9 +17,9 @@ SoundClip::~SoundClip()
   Mix_FreeChunk(chunk);
 }
 
-void SoundClip::play()
+void SoundClip::play(int loop)
 {
-  channel = Mix_PlayChannel(-1, chunk, 0);
+  channel = Mix_PlayChannel(-1, chunk, loop);
 }
 
 void SoundClip::stop()

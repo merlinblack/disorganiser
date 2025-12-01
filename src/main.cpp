@@ -3,8 +3,6 @@
 #include <memory>
 #include "application.h"
 
-#include "soundclip.h"
-
 // So we can have a static Application, but also give Lua a shared ptr
 struct app_null_deleter {
   void operator()(void const*) const {}
@@ -135,12 +133,8 @@ int main(int argc, char* argv[])
 
     app.initSystem();
 
-    SoundClip* clip = new SoundClip("media/alarm.mp3");
-    clip->play();
-
     app.eventLoop();
 
-    delete clip;
     app.shutdown();
 
     restartWanted = app.getShouldRestart();
