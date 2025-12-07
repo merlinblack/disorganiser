@@ -1,49 +1,39 @@
 #ifndef __RENDERLIST_H
 #define __RENDERLIST_H
 
-#include <list>
-#include <algorithm>
-#include <memory>
 #include <SDL2/SDL.h>
+#include <algorithm>
+#include <list>
+#include <memory>
 
 /**
  * Renderable interface.
  * \brief Anything that can be rendered, implements this interface.
  */
-class Renderable
-{
-	int order;
-	public:
+class Renderable {
+  int order;
 
-	Renderable() : order(0)
-	{}
+ public:
+  Renderable() : order(0) {}
 
-	virtual ~Renderable() = default;
+  virtual ~Renderable() = default;
 
-	virtual void render(const SDL_Renderer* renderer) = 0;
+  virtual void render(const SDL_Renderer* renderer) = 0;
 
-	virtual bool shouldRender() { return false; }
+  virtual bool shouldRender() { return false; }
 
-	inline void setOrder( int newOrder )
-	{
-		order = newOrder;
-	}
+  inline void setOrder(int newOrder) { order = newOrder; }
 
-	inline int getOrder() {
-		return order;
-	}
+  inline int getOrder() { return order; }
 
-	// For sorting.
-	inline bool operator< ( const Renderable& rhs ) const
-	{
-		return order < rhs.order;
-	}
-	
-	// For removing.
-	inline bool operator== ( const Renderable& rhs ) const
-	{
-		return this == &rhs;
-	}
+  // For sorting.
+  inline bool operator<(const Renderable& rhs) const
+  {
+    return order < rhs.order;
+  }
+
+  // For removing.
+  inline bool operator==(const Renderable& rhs) const { return this == &rhs; }
 };
 
 using RenderablePtr = std::shared_ptr<Renderable>;
@@ -51,89 +41,79 @@ using RenderablePtr = std::shared_ptr<Renderable>;
 /**
  * \brief List of renderables to render.
  */
-class RenderList : public Renderable
-{
-	std::list<RenderablePtr> list;
-	bool flagShouldRender;
+class RenderList : public Renderable {
+  std::list<RenderablePtr> list;
+  bool flagShouldRender;
 
-	public:
-	RenderList() : flagShouldRender(false) {}
-	virtual ~RenderList() { SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "~RenderList %lx\n", (unsigned long)this); }
+ public:
+  RenderList() : flagShouldRender(false) {}
+  virtual ~RenderList()
+  {
+    SDL_LogDebug(SDL_LOG_CATEGORY_APPLICATION, "~RenderList %lx\n",
+                 (unsigned long)this);
+  }
 
-	inline void sort()
-	{
-		list.sort(
-			[](const RenderablePtr &lhs, const RenderablePtr &rhs)
-			{ return lhs->getOrder() < rhs->getOrder(); });
-	}
-	
-	// Adds item according to it's sort order.
-	inline void insert( RenderablePtr&& item )
-	{
-		list.emplace_back( std::move( item ) );
-		sort();
-	}
+  inline void sort()
+  {
+    list.sort([](const RenderablePtr& lhs, const RenderablePtr& rhs) {
+      return lhs->getOrder() < rhs->getOrder();
+    });
+  }
 
-	inline void remove( const RenderablePtr& item )
-	{
-		list.remove( item );
-	}
+  // Adds item according to it's sort order.
+  inline void insert(RenderablePtr&& item)
+  {
+    list.emplace_back(std::move(item));
+    sort();
+  }
 
-	inline void clear()
-	{
-		list.clear();
-	}
+  inline void remove(const RenderablePtr& item) { list.remove(item); }
 
-	// Adds item at the end and adjusts it's sort order
-	inline void add( RenderablePtr&& item )
-	{
-		if ( list.empty() ) {
-			item->setOrder( 100 ); // Allow for inserting infront.
-			list.emplace_back( std::move( item ) );
-			return;
-		}
+  inline void clear() { list.clear(); }
 
-		int maxOrder = list.back()->getOrder();
+  // Adds item at the end and adjusts it's sort order
+  inline void add(RenderablePtr&& item)
+  {
+    if (list.empty()) {
+      item->setOrder(100);  // Allow for inserting infront.
+      list.emplace_back(std::move(item));
+      return;
+    }
 
-		maxOrder++;
+    int maxOrder = list.back()->getOrder();
 
-		item->setOrder( maxOrder );
+    maxOrder++;
 
-		list.emplace_back( std::move( item ) );
-	}
+    item->setOrder(maxOrder);
 
-	inline void render(const SDL_Renderer* renderer)
-	{
-		for ( auto& item : list )
-		{
-			item->render(renderer);
-		}
-		flagShouldRender = false;
-	}
+    list.emplace_back(std::move(item));
+  }
 
-	inline bool shouldRender()
-	{
-		if (flagShouldRender)
-		{
-			return true;
-		}
+  inline void render(const SDL_Renderer* renderer)
+  {
+    for (auto& item : list) {
+      item->render(renderer);
+    }
+    flagShouldRender = false;
+  }
 
-		for ( auto& item: list)
-		{
-			if (item->shouldRender())
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+  inline bool shouldRender()
+  {
+    if (flagShouldRender) {
+      return true;
+    }
 
-	inline void setShouldRender(bool flag)
-	{
-		flagShouldRender = flag;
-	}
+    for (auto& item : list) {
+      if (item->shouldRender()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  inline void setShouldRender(bool flag) { flagShouldRender = flag; }
 };
 
 using RenderListPtr = std::shared_ptr<RenderList>;
 
-#endif // __RENDERLIST_H
+#endif  // __RENDERLIST_H

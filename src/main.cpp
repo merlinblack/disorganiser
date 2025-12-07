@@ -91,9 +91,11 @@ int main(int argc, char* argv[])
   bool fullscreen = false;
   std::string configPath = "";
 
-  option longOptions[] = {{"fullscreen", no_argument, nullptr, 'f'},
-                          {"config", required_argument, nullptr, 'c'},
-                          {0}};
+  option longOptions[] = {
+      {"fullscreen", no_argument, nullptr, 'f'},
+      {"config", required_argument, nullptr, 'c'},
+      {0}
+  };
 
   while (true) {
     const int opt = getopt_long(argc, argv, "fc:", longOptions, 0);
