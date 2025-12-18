@@ -19,6 +19,7 @@
 ---@field isPictureFrame boolean Is the application running as a picture frame
 ---@field hasTouchScreen boolean Is the interface a touch screen
 ---@field version string Version string
+---@field hostname string Hostname of the machine we are running on
 
 ---@class Atlas
 Atlas = {}
@@ -167,7 +168,16 @@ function RenderList:sort() end
 ---@overload fun(font:Font, text:string, color:Color):Texture
 Texture = {}
 
----C++ defined instances and functions
+---@class Sound
+---@field playing boolean
+---@overload fun(path:string):Sound
+Sound = {}
+-- Play the sound loop times
+function Sound:play(loop) end
+-- Stop playback if playing
+function Sound:stop() end
+
+---C++ defined globals, global instances and functions
 
 ---Application instance
 ---@type Application
@@ -202,6 +212,8 @@ function killTask(name) end
 function telnetOutput(text) end
 
 -- Lua defined classes
+---
+
 ---@class Class
 ---@field __type string Name of the class.
 

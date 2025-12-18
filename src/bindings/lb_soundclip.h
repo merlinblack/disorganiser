@@ -2,11 +2,21 @@
 #define __SOUND_CLIP_BINDING_H
 
 #include "LuaBinding.h"
+#include "lua.h"
 #include "soundclip.h"
 
 struct SoundClipBinding
     : public ManualBind::Binding<SoundClipBinding, SoundClip> {
   static constexpr const char* class_name = "Sound";
+
+  static ManualBind::bind_properties* properties()
+  {
+    static ManualBind::bind_properties properties[] = {
+        {"playing", getIsPlaying, nullptr},
+        {nullptr,   nullptr,      nullptr}
+    };
+    return properties;
+  }
 
   static luaL_Reg* members()
   {
@@ -18,11 +28,25 @@ struct SoundClipBinding
     return members;
   }
 
+  static int getIsPlaying(lua_State* L)
+  {
+    SoundClipPtr sound = fromStack(L, 1);
+    lua_pushboolean(L, sound->isPlaying());
+
+    return 1;
+  }
+
   static int create(lua_State* L)
   {
     const char* filename = luaL_checkstring(L, -1);
     SoundClipPtr s = std::make_shared<SoundClip>(filename);
-    push(L, s);
+
+    if (s->isLoaded()) {
+      push(L, s);
+    }
+    else {
+      lua_pushnil(L);
+    }
     return 1;
   }
 
