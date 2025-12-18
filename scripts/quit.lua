@@ -2,6 +2,7 @@ function quit()
 	quitting = true
 	addTask(function()
 		if confirm 'Disorganiserden çık?' then
+			playOhNo()
 			app.shouldRestart = false
 			app.shouldStop = true
 		end
@@ -9,10 +10,23 @@ function quit()
 	end, 'quit')
 end
 
+function playOhNo()
+	-- Only on quatro, so it doesn't get old when debugging
+	if app.hostname ~= 'quatro' then return end
+	ohno = Sound 'media/ohno.ogg'
+	if ohno then
+		ohno:play(0)
+		while ohno.playing do
+			yield()
+		end
+	end
+end
+
 function restart()
 	quitting = true
 	addTask(function()
 		if confirm 'Takrar Başlat?' then
+			playOhNo()
 			app.shouldRestart = true
 			app.shouldStop = true
 		end
@@ -35,6 +49,7 @@ function poweroff()
 	else
 		addTask(function()
 			if confirm 'Gerçekten güç kapalı?' then
+				playOhNo()
 				print 'Turning the power off'
 				local process = SubProcess()
 				process:set 'sudo'
