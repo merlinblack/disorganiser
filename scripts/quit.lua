@@ -15,7 +15,7 @@ function playOhNo()
 	if app.hostname ~= 'quatro' then return end
 	ohno = Sound 'media/ohno.ogg'
 	if ohno then
-		ohno:play(0)
+		ohno:play()
 		while ohno.playing do
 			yield()
 		end

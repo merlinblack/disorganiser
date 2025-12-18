@@ -2,6 +2,7 @@
 #define __SOUND_CLIP_BINDING_H
 
 #include "LuaBinding.h"
+#include "lauxlib.h"
 #include "lua.h"
 #include "soundclip.h"
 
@@ -39,10 +40,10 @@ struct SoundClipBinding
   static int create(lua_State* L)
   {
     const char* filename = luaL_checkstring(L, -1);
-    SoundClipPtr s = std::make_shared<SoundClip>(filename);
+    SoundClipPtr sound = std::make_shared<SoundClip>(filename);
 
-    if (s->isLoaded()) {
-      push(L, s);
+    if (sound->isLoaded()) {
+      push(L, sound);
     }
     else {
       lua_pushnil(L);
@@ -52,15 +53,16 @@ struct SoundClipBinding
 
   static int play(lua_State* L)
   {
-    SoundClipPtr s = fromStack(L, 1);
-    s->play(luaL_checkinteger(L, -1));
+    SoundClipPtr sound = fromStack(L, 1);
+    int loop = luaL_opt(L, lua_tointeger, 2, 0);
+    sound->play(loop);
     return 0;
   }
 
   static int stop(lua_State* L)
   {
-    SoundClipPtr s = fromStack(L, 1);
-    s->stop();
+    SoundClipPtr sound = fromStack(L, 1);
+    sound->stop();
     return 0;
   }
 };
