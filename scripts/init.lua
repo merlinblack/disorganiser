@@ -40,7 +40,19 @@ write 'Welcome to the konsole!'
 pt(getTasks())
 
 machines = {
-	vimes = function() mainMenu:activate() end,
+	vimes = function()
+		mainScreen:activate()
+
+		addTask(function()
+			wait(50)
+			weatherTrends:buildDataTable(true)
+		end, 'initial weather trend build')
+
+		addTask(function()
+			wait(10)
+			weatherGraphs:buildGraphs(true)
+		end, 'initial graph build')
+	end,
 	threepio = function() miniMenu:activate() end,
 	quatro = function()
 		quatroDisplay:activate()

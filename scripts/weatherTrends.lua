@@ -60,10 +60,6 @@ function WeatherTrends:build()
 	end
 
 	addTask(updateTask, 'weatherTrends')
-	addTask(function()
-		wait(50)
-		self:buildDataTable(true)
-	end, 'initial weather trend build')
 
 	self.renderList:add(clockRenderList)
 end

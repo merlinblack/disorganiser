@@ -77,10 +77,6 @@ function WeatherGraphs:build()
 	end
 
 	addTask(updateTask, 'weatherGraphs')
-	addTask(function()
-		wait(10)
-		self:buildGraphs(true)
-	end, 'initial graph build')
 
 	self.renderList:add(clockRenderList)
 end
