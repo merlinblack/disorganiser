@@ -17,7 +17,7 @@ TexturePtr Texture::createFromFile(const SDL_Renderer* renderer,
     SDL_FreeSurface(loadedSurface);
   }
   else {
-    SDL_Log(SDL_GetError());
+    SDL_Log("%s", SDL_GetError());
   }
 
   return std::move(texture);
@@ -32,7 +32,7 @@ bool Texture::createFromSurface(const SDL_Renderer* renderer,
   texture = SDL_CreateTextureFromSurface(const_cast<SDL_Renderer*>(renderer),
                                          surface);
   if (!texture) {
-    SDL_Log(SDL_GetError());
+    SDL_Log("%s", SDL_GetError());
   }
   return texture == nullptr;
 }
