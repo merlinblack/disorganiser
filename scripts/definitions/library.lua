@@ -270,6 +270,8 @@ WeatherGraphs = {}
 WeatherTrends = {}
 ---@class QuatroDisplay : Screen
 QuatroDisplay = {}
+---@class Animation
+Animation = {}
 
 -- Globals defined in .config/disorganiser/config.lua
 ---@table

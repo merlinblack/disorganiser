@@ -139,8 +139,8 @@ local function compositePlacedImage(image, gorillaFile, compositeFile)
 
 	desc = string.sub(image.name, 1, string.find(image.name, '.png') - 1)
 	desc = desc:gsub('-', '_')
-	desc = desc .. ' = { x = ' .. image.x .. ', y = ' .. image.y
-	desc = desc .. ', w = ' .. image.w .. ', h = ' .. image.h .. ' },'
+	desc = desc .. ' = { ' .. image.x .. ', ' .. image.y
+	desc = desc .. ', ' .. image.w .. ', ' .. image.h .. ' },'
 	gorillaFile:write(desc .. '\n')
 end
 
@@ -181,6 +181,6 @@ function MakeAtlas(width, height, directory, compositeFile)
 		print 'Failed to fit all images.'
 	else
 		processPlacedImages(canvas, compositeFile)
-		print('Fited all images within a canvas of ' .. canvas.w .. 'x' .. canvas.h)
+		print('Fitted all images within a canvas of ' .. canvas.w .. 'x' .. canvas.h)
 	end
 end
