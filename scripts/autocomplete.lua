@@ -63,18 +63,20 @@ function getCompletions(where, str)
 
 	if type(g) == 'table' then
 		for k, v in pairs(g) do
-			if string.find(k, str) == 1 and string.sub(k, 1, 1) ~= '_' then
-				table.insert(ret, prefix .. dottype .. k)
+			if dottype ~= ':' or type(v) == 'function' then
+				if string.find(k, str) == 1 and string.sub(k, 1, 1) ~= '_' then
+					table.insert(ret, prefix .. dottype .. k)
+				end
 			end
 		end
 		if g.__luaclass then
-			for k, v in pairs(getLuaClassMembers(g)) do
+			for _, v in pairs(getLuaClassMembers(g, dottype)) do
 				if string.find(v, str) == 1 then table.insert(ret, prefix .. dottype .. v) end
 			end
 		end
 	else
 		-- Retrieve class info if any
-		for k, v in pairs(getClassInfo(g)) do
+		for _, v in pairs(getClassInfo(g, dottype)) do
 			if string.find(v, str) == 1 then table.insert(ret, prefix .. dottype .. v) end
 		end
 	end
@@ -83,14 +85,14 @@ function getCompletions(where, str)
 end
 
 function getTable(where, tblname)
-	--print( 'Looking up:', tblname, where )
+	--print('Looking up:', tblname, where)
 	local lastdot = string.find(tblname:reverse(), '%.')
-	--print( 'Lastdot',  lastdot )
+	--print('Lastdot', lastdot)
 	if lastdot == nil then return where[tblname] end
 	local prefix = string.sub(tblname, 1, #tblname - lastdot)
 	local tbl = getTable(where, prefix)
 	local subscript = string.sub(tblname, #tblname - string.find(tblname:reverse(), '%.') + 2)
-	--print( "Subscript:", subscript, tblname, where )
+	--print('Subscript:', subscript, tblname, where)
 	if tbl then
 		return tbl[subscript]
 	else
@@ -106,7 +108,7 @@ function getIdenticalPrefixLength(tbl, start)
 	while allSame == true do
 		if l > #tbl[1] then return #tbl[1] end
 		str = string.sub(tbl[1], 1, l)
-		for k, v in pairs(tbl) do
+		for _, v in pairs(tbl) do
 			if string.find(v, str) ~= 1 then allSame = false end
 		end
 		l = l + 1
@@ -114,15 +116,15 @@ function getIdenticalPrefixLength(tbl, start)
 	return l - 2
 end
 
-function getClassInfo(cls)
+function getClassInfo(cls, dottype)
 	local ret = {}
 	local mt = getmetatable(cls)
 	if mt then
-		for k, v in pairs(mt) do
+		for k, _ in pairs(mt) do
 			if string.sub(k, 1, 1) ~= '_' then table.insert(ret, k) end
 		end
-		if mt.__properties then
-			for k, v in pairs(mt.__properties) do
+		if mt.__properties and dottype == '.' then
+			for k, _ in pairs(mt.__properties) do
 				if string.sub(k, 1, 1) ~= '_' then table.insert(ret, k) end
 			end
 		end
@@ -131,11 +133,13 @@ function getClassInfo(cls)
 	return ret
 end
 
-function getLuaClassMembers(cls)
+function getLuaClassMembers(cls, dottype)
 	local ret = {}
-	if cls.__base then ret = getLuaClassMembers(cls.__base) end
-	for k, _ in pairs(cls) do
-		if string.sub(k, 1, 1) ~= '_' then table.insertOnce(ret, k) end
+	if cls.__base then ret = getLuaClassMembers(cls.__base, dottype) end
+	for k, v in pairs(getmetatable(cls).__index) do
+		if dottype ~= ':' or type(v) == 'function' then
+			if string.sub(k, 1, 1) ~= '_' then table.insertOnce(ret, k) end
+		end
 	end
 	return ret
 end
