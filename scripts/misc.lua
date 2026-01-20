@@ -157,8 +157,8 @@ end
 
 function printf(...) print(string.format(...)) end
 
-function play(file)
+function play(file, volume, loop)
 	s = Sound('./media/sound/' .. file)
-	if s then s:play(0) end
+	if s then s:play(volume, loop) end
 	return s
 end

@@ -1,6 +1,7 @@
 #ifndef __SOUND_CLIP_BINDING_H
 #define __SOUND_CLIP_BINDING_H
 
+#include <SDL_mixer.h>
 #include "LuaBinding.h"
 #include "lauxlib.h"
 #include "lua.h"
@@ -54,8 +55,9 @@ struct SoundClipBinding
   static int play(lua_State* L)
   {
     SoundClipPtr sound = fromStack(L, 1);
-    int loop = luaL_opt(L, lua_tointeger, 2, 0);
-    sound->play(loop);
+    int volume = luaL_opt(L, lua_tointeger, 2, MIX_MAX_VOLUME);
+    int loop = luaL_opt(L, lua_tointeger, 3, 0);
+    sound->play(volume, loop);
     return 0;
   }
 

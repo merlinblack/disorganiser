@@ -19,7 +19,7 @@ class SoundClip {
   bool isLoaded() { return chunk != nullptr; }
   bool isPlaying() { return is_playing; }
 
-  void play(int loop);
+  void play(int volume, int loop);
   void stop();
 
   static void channelFinishedCallback(int channel);

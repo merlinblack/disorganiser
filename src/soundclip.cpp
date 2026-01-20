@@ -20,13 +20,15 @@ SoundClip::~SoundClip()
   Mix_FreeChunk(chunk);
 }
 
-void SoundClip::play(int loop)
+void SoundClip::play(int volume, int loop)
 {
+  SDL_Log("Playing sound at volume %d and looping %d times.", volume, loop);
   channel = Mix_PlayChannel(-1, chunk, loop);
   if (channel == -1) {
     SDL_Log("No available sound channels left");
     return;  // No available channel
   }
+  Mix_Volume(channel, volume);
   playing[channel] = this;
   is_playing = true;
   Mix_ChannelFinished(channelFinishedCallback);
