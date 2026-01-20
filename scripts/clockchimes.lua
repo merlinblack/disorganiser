@@ -1,6 +1,7 @@
 require 'misc'
 
 clockchimes = true
+clockchimesvolume = 64
 
 function clockChimesTask()
 	while clockchimes do
@@ -12,10 +13,10 @@ function clockChimesTask()
 
 		if seconds == 0 then
 			if hour == 12 and minutes == 0 then
-				play 'ticktokstrike.mp3'
+				play('ticktokstrike.mp3', clockchimesvolume)
 			else
 				if hour > 6 and hour < 22 then
-					if minutes == 0 or minutes == 30 then play 'dingdong.mp3' end
+					if minutes == 0 then play('dingdong.mp3', clockchimesvolume) end
 				end
 			end
 		end
