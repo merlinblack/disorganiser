@@ -137,10 +137,10 @@ function valuesToKeys(t)
 	return r
 end
 
-function dirList(path) return io.popen('ls ' .. path):lines() end
+function dirList(path) return io.popen("bash -c 'ls -1 " .. path .. "'"):lines() end
 
 function fileExists(path)
-	local success, retReason, retValue = os.execute('stat ' .. path .. ' > /dev/null 2>&1')
+	local _, _, retValue = os.execute('stat ' .. path .. ' > /dev/null 2>&1')
 
 	return retValue == 0
 end
