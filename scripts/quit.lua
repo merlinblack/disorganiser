@@ -1,3 +1,5 @@
+require 'misc'
+
 function quit()
 	quitting = true
 	addTask(function()
@@ -13,9 +15,8 @@ end
 function playOhNo()
 	-- Only on quatro, so it doesn't get old when debugging
 	if app.hostname ~= 'quatro' then return end
-	ohno = Sound 'media/ohno.ogg'
+	ohno = play 'ohno.ogg'
 	if ohno then
-		ohno:play()
 		while ohno.playing do
 			yield()
 		end

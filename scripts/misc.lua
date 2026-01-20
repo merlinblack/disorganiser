@@ -156,3 +156,9 @@ function fileReadable(name)
 end
 
 function printf(...) print(string.format(...)) end
+
+function play(file)
+	s = Sound('./media/sound/' .. file)
+	if s then s:play(0) end
+	return s
+end

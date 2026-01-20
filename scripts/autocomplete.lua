@@ -37,7 +37,7 @@ function autoCompleteClear() doubleTab.str = nil end
 
 function complete(str)
 	local possibles = getCompletions(keywords, str)
-	for k, v in pairs(getCompletions(_G, str)) do
+	for _, v in pairs(getCompletions(_G, str)) do
 		table.insert(possibles, v)
 	end
 	if #possibles > 0 then str = string.sub(possibles[1], 1, getIdenticalPrefixLength(possibles, #str)) end
