@@ -55,6 +55,7 @@ machines = {
 	end,
 	threepio = function() miniMenu:activate() end,
 	quatro = function()
+		require 'clockchimes'
 		quatroDisplay:activate()
 		addTask(quatroUpdateTask, 'quatroUpdate')
 	end,
