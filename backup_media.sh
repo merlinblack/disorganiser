@@ -2,6 +2,11 @@
 
 source $HOME/.local/bin/ANSI
 
+if [ ! -d ~/Dropbox/Zips ]; then
+  echo -e "${RED}Can not find Dropbox Zips directory${NC}"
+  exit 1
+fi
+
 echo -e "${PURPLE}Tarring media directory and moving to Dropbox${NC}"
 
 tar cvzf media.tgz media | lolcat
