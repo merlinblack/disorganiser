@@ -19,13 +19,12 @@ function Button.create(rect, captionText, font, func, textColor, frameColor, bac
 
 	local fadeFrameColor = frameColor:clone()
 	fadeFrameColor.a = fadeFrameColor.a // 3
-	local rectangle <close> = RoundedRectangle(frameColor, rect, 15, fadeFrameColor)
-	btnWidget.pressedRenderList:add(rectangle)
+	local pressedRectangle <close> = RoundedRectangle(frameColor, rect, 15, fadeFrameColor)
+	btnWidget.pressedRenderList:add(pressedRectangle)
 	btnWidget.pressedRenderList:add(btnWidget.captionRenderList)
 
 	btnWidget.renderList = RenderList()
 	btnWidget.renderList:add(btnWidget.normalRenderList)
-
 	btnWidget:setCaption(captionText, textColor, font)
 
 	btnWidget.font = font
@@ -41,6 +40,9 @@ function Button:init(rect)
 	self.normalRenderList = RenderList()
 	self.pressedRenderList = RenderList()
 	self.captionRenderList = RenderList()
+	self.shouldReverseFunc = nil
+	self.font = nil
+	self.textColor = nil
 end
 
 function Button:setCaption(captionText, textColor, font)
@@ -113,12 +115,22 @@ end
 
 function Button:lostMouse() self.hasMouse = false end
 
+function Button:update() self:updateRenderList() end
+
 function Button:updateRenderList()
 	local pressed = self.pressedRenderList
 	local normal = self.normalRenderList
+	local force
 
-	if self.shouldReverseFunc and self:shouldReverseFunc() then
-		normal, pressed = pressed, normal
+	if self.shouldReverseFunc then
+		local shouldReverse = self:shouldReverseFunc()
+
+		if shouldReverse then
+			normal, pressed = pressed, normal
+		end
+
+		force = shouldReverse == self.shouldReversePrevious
+		self.shouldReversePrevious = shouldReverse
 	end
 
 	if self.hasMouse then
@@ -129,7 +141,7 @@ function Button:updateRenderList()
 			self.renderList:shouldRender()
 		end
 	end
-	if (not self.pressed or not self.hasMouse) and self.usingPressedRenderList then
+	if (not self.pressed or not self.hasMouse) and (self.usingPressedRenderList or force) then
 		self.usingPressedRenderList = false
 		self.renderList:clear()
 		self.renderList:add(normal)

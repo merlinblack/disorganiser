@@ -2,6 +2,9 @@ require 'gui/screen'
 require 'gui/inputgroup'
 local json = require 'json'
 
+require 'screensaver'
+require 'clockchimes'
+
 class 'QuatroDisplay'(Screen)
 
 function QuatroDisplay:build()
@@ -81,10 +84,28 @@ function QuatroDisplay:buildPageTwo()
 	)
 
 	btn[2] = btn[2] + vSpacing
-	self.pageTwoInput:addButton(btn, 'Caffine', function()
-		caffine = not caffine
-		self:setPage(1)
-	end, textcolor, framecolor, backcolor, self.pages[2], function() return not caffine end)
+	caffineBtn = self.pageTwoInput:addButton(
+		btn,
+		'Caffine',
+		function() caffine = not caffine end,
+		textcolor,
+		framecolor,
+		backcolor,
+		self.pages[2],
+		function() return caffine end
+	)
+
+	btn[2] = btn[2] + vSpacing
+	chimesBtn = self.pageTwoInput:addButton(
+		btn,
+		'Chimes',
+		function() clockchimes = not clockchimes end,
+		textcolor,
+		framecolor,
+		backcolor,
+		self.pages[2],
+		function() return clockchimes end
+	)
 
 	btn[1] = btn[1] + hSpacing
 	btn[2] = top

@@ -172,8 +172,8 @@ Texture = {}
 ---@field playing boolean
 ---@overload fun(path:string):Sound
 Sound = {}
--- Play the sound loop times
-function Sound:play(loop) end
+-- Play the sound loop times at volume
+function Sound:play(volume, loop) end
 -- Stop playback if playing
 function Sound:stop() end
 

@@ -2,6 +2,7 @@ require 'gui/screen'
 require 'clock'
 require 'suspend'
 
+caffine = false
 screenSaverTimeoutMinutes = 5
 
 class 'ScreenSaver'(Screen)
