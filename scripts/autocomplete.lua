@@ -136,7 +136,7 @@ end
 function getLuaClassMembers(cls, dottype)
 	local ret = {}
 	if cls.__base then ret = getLuaClassMembers(cls.__base, dottype) end
-	for k, v in pairs(getmetatable(cls).__index) do
+	for k, v in pairs(cls) do
 		if dottype ~= ':' or type(v) == 'function' then
 			if string.sub(k, 1, 1) ~= '_' then table.insertOnce(ret, k) end
 		end
