@@ -91,7 +91,10 @@ function Button:setCaption(captionText, textColor, font)
 end
 
 function Button:mouseClick(time, x, y, button)
-	if self:intersects(x, y) and self.pressed then self:callAction(time, x, y, button) end
+	if self:intersects(x, y) and self.pressed then
+		self:callAction(time, x, y, button)
+		self:updateRenderList()
+	end
 end
 
 function Button:mouseDown(time, x, y, button)
