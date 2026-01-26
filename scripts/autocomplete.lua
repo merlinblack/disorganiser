@@ -70,7 +70,7 @@ function getCompletions(where, str)
 			end
 		end
 		if g.__luaclass then
-			for _, v in pairs(getLuaClassMembers(g, dottype)) do
+			for _, v in pairs(getLuaClassMembers(g.__class, dottype)) do
 				if string.find(v, str) == 1 then table.insert(ret, prefix .. dottype .. v) end
 			end
 		end
@@ -80,6 +80,8 @@ function getCompletions(where, str)
 			if string.find(v, str) == 1 then table.insert(ret, prefix .. dottype .. v) end
 		end
 	end
+
+	table.sort(ret)
 
 	return ret
 end

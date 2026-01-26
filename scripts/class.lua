@@ -30,6 +30,8 @@ function class(name)
 
 	local newclass = _G[name]
 
+	newclass.__class = newclass
+
 	local metatable = {
 		__call = function(...)
 			local obj = {}
