@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 sudo dnf install \
+  git \
   cmake \
   gcc-c++ \
   lua-json \
