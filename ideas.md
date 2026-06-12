@@ -1,5 +1,6 @@
 # Some ideas
 
+- Update to SDL3
 - On the weather graph - show where 12am is
 - Add support for sound - DONE
 - Email notification
