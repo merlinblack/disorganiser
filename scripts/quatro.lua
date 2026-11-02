@@ -197,6 +197,7 @@ end
 function QuatroDisplay:activate(noUpdatePrevious)
 	Screen.activate(self, noUpdatePrevious)
 	self:setPage(1)
+	self:updateData()
 end
 
 function QuatroDisplay:updateClock()
